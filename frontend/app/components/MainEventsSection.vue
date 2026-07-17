@@ -1,11 +1,11 @@
 <script setup lang="ts">
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const { fetchEvents } = useMainEvents()
 const { data: events } = await useAsyncData(
-  'main-events',
+  () => `main-events-${locale.value}`,
   () => fetchEvents(),
-  freshOnNavigate(),
+  { ...freshOnNavigate(), watch: [locale] },
 )
 
 const featured = computed(() =>

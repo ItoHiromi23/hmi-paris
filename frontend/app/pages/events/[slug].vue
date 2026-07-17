@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const route = useRoute()
 const slug = computed(() => String(route.params.slug))
@@ -7,9 +7,9 @@ const slug = computed(() => String(route.params.slug))
 const { fetchEventBySlug, formatJaDate, formatPrice } = useMainEvents()
 const { slotsLabel } = useAvailability()
 const { data: event, refresh: refreshEvent } = await useAsyncData(
-  () => `event-${slug.value}`,
+  () => `event-${slug.value}-${locale.value}`,
   () => fetchEventBySlug(slug.value),
-  { watch: [slug] },
+  { watch: [slug, locale] },
 )
 
 onMounted(() => {
@@ -60,21 +60,23 @@ useSeoMeta({
           </p>
           <SectionHeading
             class="mt-4"
-            eyebrow="イベント詳細"
+            :eyebrow="t('events.detailEyebrow')"
             :title="event.title"
           />
           <p
             v-if="event.eventDate"
             class="mt-4 text-sm text-[var(--muted-fg)]"
           >
-            開催日：{{ formatJaDate(event.eventDate) }}
-            <span v-if="event.venue"> ／ 会場：{{ event.venue }}</span>
+            {{ t('events.date') }}: {{ formatJaDate(event.eventDate) }}
+            <span v-if="event.venue"> · {{ t('events.venue') }}: {{ event.venue }}</span>
           </p>
           <p class="mt-6 whitespace-pre-line text-base leading-relaxed text-[var(--muted-fg)]">
             {{ event.description }}
           </p>
 
-          <h3 class="font-display mt-12 text-2xl text-[var(--event-navy)]">含まれるもの</h3>
+          <h3 class="font-display mt-12 text-2xl text-[var(--event-navy)]">
+            {{ t('events.inclusions') }}
+          </h3>
           <ul v-if="event.inclusions.length" class="mt-6 space-y-4">
             <li
               v-for="item in event.inclusions"
@@ -90,7 +92,7 @@ useSeoMeta({
             v-if="event.notes"
             class="mt-10 rounded-lg border border-[var(--event-gold)]/30 bg-[var(--event-cream)] p-5 text-sm leading-relaxed text-[var(--body)]"
           >
-            <span class="font-semibold text-[var(--event-navy)]">ご注意：</span>
+            <span class="font-semibold text-[var(--event-navy)]">{{ t('events.notes') }}</span>
             {{ event.notes }}
           </p>
         </div>
@@ -99,40 +101,40 @@ useSeoMeta({
           id="buy-panel"
           class="reveal glass-panel h-fit border-[var(--event-gold)]/20 p-8 sm:p-10"
         >
-          <p class="section-label !text-[var(--event-maroon)]">参考料金</p>
+          <p class="section-label !text-[var(--event-maroon)]">{{ t('events.refPrice') }}</p>
           <p
             v-if="event.priceFrom != null"
             class="font-display mt-2 text-5xl text-[var(--event-navy)]"
           >
             {{ formatPrice(event.priceFrom, event.currency) }}
           </p>
-          <p v-else class="mt-2 text-[var(--muted-fg)]">お問い合わせください</p>
+          <p v-else class="mt-2 text-[var(--muted-fg)]">{{ t('events.askContact') }}</p>
           <p class="mt-2 text-sm text-[var(--muted-fg)]">
-            オンライン決済で1枠を確保できます
+            {{ t('events.onlineHold') }}
           </p>
           <dl class="mt-10 space-y-5 text-sm text-[var(--heading)]">
             <div class="flex justify-between border-t border-[var(--line)] pt-4">
-              <dt class="text-[var(--muted-fg)]">予約枠</dt>
+              <dt class="text-[var(--muted-fg)]">{{ t('events.slots') }}</dt>
               <dd :class="event.soldOut ? 'text-[var(--alert)]' : 'text-[var(--teal)]'">
                 {{ availabilityText }}
                 <span
                   v-if="!event.bookingUnlimited && event.slotsTotal != null"
                   class="text-[var(--muted-fg)]"
                 >
-                  （全{{ event.slotsTotal }}枠）
+                  {{ t('events.slotsTotal', { n: event.slotsTotal }) }}
                 </span>
               </dd>
             </div>
             <div v-if="event.eventDate" class="flex justify-between border-t border-[var(--line)] pt-4">
-              <dt class="text-[var(--muted-fg)]">開催日</dt>
+              <dt class="text-[var(--muted-fg)]">{{ t('events.date') }}</dt>
               <dd>{{ formatJaDate(event.eventDate) }}</dd>
             </div>
             <div v-if="event.venue" class="flex justify-between border-t border-[var(--line)] pt-4">
-              <dt class="text-[var(--muted-fg)]">会場</dt>
+              <dt class="text-[var(--muted-fg)]">{{ t('events.venue') }}</dt>
               <dd class="text-right">{{ event.venue }}</dd>
             </div>
             <div v-if="event.label" class="flex justify-between border-t border-[var(--line)] pt-4">
-              <dt class="text-[var(--muted-fg)]">形態</dt>
+              <dt class="text-[var(--muted-fg)]">{{ t('events.format') }}</dt>
               <dd>{{ event.label }}</dd>
             </div>
           </dl>

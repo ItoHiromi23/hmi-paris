@@ -1,23 +1,30 @@
 <script setup lang="ts">
 import type { CmsBundle } from '~/types/cms'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const { fetchPackages } = useTourPackages()
 const { data: packages } = await useAsyncData(
-  'home-packages',
+  () => `home-packages-${locale.value}`,
   () => fetchPackages(),
-  freshOnNavigate(),
+  { ...freshOnNavigate(), watch: [locale] },
 )
 const cms = inject<Ref<CmsBundle | null>>('cms', ref(null))
+const { field } = useCmsLocale()
 
 const featured = computed(() => (packages.value || []).slice(0, 3))
 const moreTrips = computed(() => (packages.value || []).slice(3, 6))
 const s = computed(() => cms.value?.settings)
 
+const heroTitle = computed(() => field('cms.settings.heroTitle', s.value?.heroTitle))
+const heroEyebrow = computed(() => field('cms.settings.heroEyebrow', s.value?.heroEyebrow))
+const heroSubtitle = computed(() => field('cms.settings.heroSubtitle', s.value?.heroSubtitle))
+const packagesEyebrow = computed(() => field('cms.settings.packagesEyebrow', s.value?.packagesEyebrow))
+const packagesTitle = computed(() => field('cms.settings.packagesTitle', s.value?.packagesTitle))
+const packagesIntro = computed(() => field('cms.settings.packagesIntro', s.value?.packagesIntro))
+
 useReveal()
 
-const { locale } = useI18n()
 useSeoMeta({
   title: () => t('meta.title'),
   description: () => t('meta.description'),
@@ -29,12 +36,12 @@ useSeoMeta({
   <div>
     <PageHero
       centered
-      :title="s?.heroTitle || ''"
-      :eyebrow="s?.heroEyebrow || ''"
+      :title="heroTitle"
+      :eyebrow="heroEyebrow"
       :image="s?.heroImageUrl || ''"
     >
       <div class="space-y-3 text-base text-white sm:text-lg">
-        <p>{{ s?.heroSubtitle }}</p>
+        <p>{{ heroSubtitle }}</p>
       </div>
       <template #actions>
         <NuxtLink :to="localePath('/packages')" class="btn-primary">
@@ -55,12 +62,12 @@ useSeoMeta({
       <div class="container-wide">
         <div class="reveal flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p class="section-label">{{ s?.packagesEyebrow }}</p>
+            <p class="section-label">{{ packagesEyebrow }}</p>
             <h2 class="font-display mt-3 text-3xl text-[var(--heading)] sm:text-5xl">
-              {{ s?.packagesTitle }}
+              {{ packagesTitle }}
             </h2>
             <p class="mt-3 max-w-xl text-[var(--muted-fg)]">
-              {{ s?.packagesIntro }}
+              {{ packagesIntro }}
             </p>
           </div>
           <NuxtLink :to="localePath('/packages')" class="btn-ghost-dark !py-3">

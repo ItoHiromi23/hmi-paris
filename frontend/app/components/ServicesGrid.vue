@@ -2,10 +2,17 @@
 import type { CmsBundle } from '~/types/cms'
 
 const cms = inject<Ref<CmsBundle | null>>('cms', ref(null))
+const { field, listItem } = useCmsLocale()
 
-const services = computed(() => cms.value?.services || [])
-const eyebrow = computed(() => cms.value?.settings.servicesEyebrow || '')
-const title = computed(() => cms.value?.settings.servicesTitle || '')
+const services = computed(() =>
+  (cms.value?.services || []).map((service, index) =>
+    listItem('cms.services', index, service, ['title', 'category', 'description']),
+  ),
+)
+const eyebrow = computed(() =>
+  field('cms.settings.servicesEyebrow', cms.value?.settings.servicesEyebrow),
+)
+const title = computed(() => field('cms.settings.servicesTitle', cms.value?.settings.servicesTitle))
 </script>
 
 <template>

@@ -36,12 +36,13 @@ export function slotsLabel(info: {
   usesSessions?: boolean
   nextSessionAt?: string | null
 }) {
-  if (info.bookingUnlimited || info.available == null) return 'Open'
-  if (info.soldOut || (info.available != null && info.available <= 0)) return 'Sold out'
+  const { t } = useI18n()
+  if (info.bookingUnlimited || info.available == null) return t('common.open')
+  if (info.soldOut || (info.available != null && info.available <= 0)) return t('common.soldOut')
   if (info.usesSessions) {
-    return `${info.available} seats open`
+    return t('common.seatsOpen', { n: info.available })
   }
-  return `${info.available} slots left`
+  return t('common.slotsLeft', { n: info.available })
 }
 
 export function useAvailability() {

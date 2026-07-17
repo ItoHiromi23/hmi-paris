@@ -4,10 +4,18 @@ import type { CmsBundle } from '~/types/cms'
 const { t } = useI18n()
 const localePath = useLocalePath()
 const cms = inject<Ref<CmsBundle | null>>('cms', ref(null))
-const services = computed(() => cms.value?.services || [])
+const { field, listItem } = useCmsLocale()
+const services = computed(() => {
+  const rows = cms.value?.services || []
+  return rows.map((service, index) =>
+    listItem(`cms.services`, index, service, ['title', 'category', 'description']),
+  )
+})
 
-const title = computed(() => cms.value?.settings.servicesTitle || '')
-const eyebrow = computed(() => cms.value?.settings.servicesEyebrow || '')
+const title = computed(() => field('cms.settings.servicesTitle', cms.value?.settings.servicesTitle))
+const eyebrow = computed(() =>
+  field('cms.settings.servicesEyebrow', cms.value?.settings.servicesEyebrow),
+)
 
 const serviceImages: Record<string, string> = {
   star: '/images/paris-placeholder.svg',

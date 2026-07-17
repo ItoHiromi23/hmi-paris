@@ -8,7 +8,9 @@ withDefaults(
   { variant: 'contact' },
 )
 
+const localePath = useLocalePath()
 const cms = inject<Ref<CmsBundle | null>>('cms', ref(null))
+const { field } = useCmsLocale()
 const s = computed(() => cms.value?.settings)
 </script>
 
@@ -24,28 +26,28 @@ const s = computed(() => cms.value?.settings)
       <div class="reveal mx-auto max-w-3xl">
         <template v-if="variant === 'reservation'">
           <p class="section-label !text-[#5eead4]">
-            {{ s?.reservationEyebrow }}
+            {{ field('cms.settings.reservationEyebrow', s?.reservationEyebrow) }}
           </p>
           <h2 class="font-display mt-3 text-3xl sm:text-5xl">
-            {{ s?.reservationTitle }}
+            {{ field('cms.settings.reservationTitle', s?.reservationTitle) }}
           </h2>
           <span class="mx-auto mt-5 block h-px w-14 bg-[var(--sun)]" />
           <p class="mx-auto mt-5 max-w-xl text-white/90">
-            {{ s?.reservationSubtitle }}
+            {{ field('cms.settings.reservationSubtitle', s?.reservationSubtitle) }}
           </p>
-          <NuxtLink to="/contact" class="btn-primary mt-10 inline-flex">
-            {{ s?.reservationButton }}
+          <NuxtLink :to="localePath('/contact')" class="btn-primary mt-10 inline-flex">
+            {{ field('cms.settings.reservationButton', s?.reservationButton) }}
           </NuxtLink>
         </template>
         <template v-else>
           <h2 class="font-display text-3xl leading-snug sm:text-4xl lg:text-5xl">
-            {{ s?.contactCtaTitle }}
+            {{ field('cms.settings.contactCtaTitle', s?.contactCtaTitle) }}
           </h2>
           <p class="mx-auto mt-6 max-w-xl text-white/90">
-            {{ s?.contactCtaSubtitle }}
+            {{ field('cms.settings.contactCtaSubtitle', s?.contactCtaSubtitle) }}
           </p>
-          <NuxtLink to="/contact" class="btn-primary mt-10 inline-flex">
-            {{ s?.contactCtaButton }}
+          <NuxtLink :to="localePath('/contact')" class="btn-primary mt-10 inline-flex">
+            {{ field('cms.settings.contactCtaButton', s?.contactCtaButton) }}
           </NuxtLink>
         </template>
       </div>

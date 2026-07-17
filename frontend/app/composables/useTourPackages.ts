@@ -49,9 +49,21 @@ export function formatPrice(amount: number, currency = 'EUR') {
 
 export function useTourPackages() {
   const config = useRuntimeConfig()
+  const { bySlug } = useCmsLocale()
   const strapiUrl = String(config.public.strapiUrl || 'http://127.0.0.1:1337')
     .replace(/\/$/, '')
     .replace('://localhost', '://127.0.0.1')
+
+  function localize(pkg: TourPackage): TourPackage {
+    return bySlug('cms.packages', pkg, [
+      'title',
+      'summary',
+      'description',
+      'destination',
+      'region',
+      'highlights',
+    ])
+  }
 
   async function fetchPackages(options: { liveAvailability?: boolean } = {}): Promise<TourPackage[]> {
     try {
@@ -68,7 +80,7 @@ export function useTourPackages() {
 
       if (!data?.data?.length) return []
 
-      const mapped = data.data.map((item) => mapPackage(strapiUrl, item))
+      const mapped = data.data.map((item) => localize(mapPackage(strapiUrl, item)))
 
       // Skip N+1 availability calls on list/home SSR — use Strapi fields; detail pages enrich live.
       if (!options.liveAvailability) return mapped
@@ -115,7 +127,7 @@ export function useTourPackages() {
 
       const mapped = mapPackage(strapiUrl, item)
       const live = await fetchAvailability('package', slug, strapiUrl)
-      return {
+      return localize({
         ...mapped,
         ...(live
           ? {
@@ -128,7 +140,7 @@ export function useTourPackages() {
               nextSessionAt: live.nextSessionAt,
             }
           : {}),
-      }
+      })
     } catch (err) {
       console.error('[packages] Failed to load package from Strapi', slug, err)
       return null

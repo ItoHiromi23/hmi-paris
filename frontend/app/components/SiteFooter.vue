@@ -3,6 +3,7 @@ import type { CmsBundle } from '~/types/cms'
 
 const { t } = useI18n()
 const localePath = useLocalePath()
+const { field } = useCmsLocale()
 const cms = inject<Ref<CmsBundle | null>>('cms', ref(null))
 const s = computed(() => cms.value?.settings)
 const year = new Date().getFullYear()
@@ -17,7 +18,7 @@ const year = new Date().getFullYear()
           {{ s?.brandTagline }}
         </p>
         <p class="mt-5 max-w-sm text-sm leading-relaxed text-white/85">
-          {{ s?.footerBlurb }}
+          {{ field('cms.settings.footerBlurb', s?.footerBlurb) }}
         </p>
       </div>
 

@@ -50,20 +50,41 @@
     "empty": "No events are listed right now",
     "detailCta": "View details",
     "fromPrice": "From",
-    "back": "← Back to events"
+    "back": "← Back to events",
+    "detailEyebrow": "Event details",
+    "date": "Date",
+    "venue": "Venue",
+    "inclusions": "What's included",
+    "notes": "Please note:",
+    "refPrice": "Indicative price",
+    "askContact": "Please contact us",
+    "onlineHold": "Secure one spot with online payment",
+    "slots": "Availability",
+    "slotsTotal": "({n} total)",
+    "format": "Format",
+    "categoryFallback": "Seasonal special event"
   },
   "packages": {
     "eyebrow": "Tour list",
     "title": "Find your Paris experience",
     "intro": "Choose a private experience by area. Bookings and questions are always welcome.",
-    "viewDetails": "View details →",
+    "viewDetails": "View tour details →",
     "days": "{n} days",
     "from": "From",
     "buy": "Buy this package",
     "allTours": "All tours",
     "overview": "Overview",
     "itinerary": "Itinerary",
-    "notFound": "Package not found"
+    "notFound": "Package not found",
+    "priceLabel": "Price (from)",
+    "priceHint": "Choose a date and time, then pay online (private tour — 1 booking reserves that slot).",
+    "reservation": "Reservation",
+    "destination": "Destination",
+    "region": "Area",
+    "duration": "Duration",
+    "upcomingSeats": "upcoming seats",
+    "totalSlots": "total {n}",
+    "booked": "{n} booked"
   },
   "styles": {
     "vertical": "Travel styles",
@@ -71,7 +92,7 @@
     "cta": "Ask about this"
   },
   "why": {
-    "cta": "Learn more"
+    "cta": "About HMI Paris"
   },
   "footer": {
     "services": "Services",
@@ -101,15 +122,330 @@
     "p3": "Get in touch at"
   },
   "contact": {
-    "title": "Contact us",
+    "title": "Get in touch",
     "eyebrow": "Contact",
+    "studio": "Paris studio",
+    "intro": "Tell us which service you need (tour, private car, airport transfer, interpreting, or custom), your preferred dates, and group size (1–6).",
     "thanks": "Thank you",
-    "interest": "Interest",
-    "message": "Message"
+    "demoNote": "This demo form does not send yet. It will work after Strapi or email integration.",
+    "name": "Name",
+    "email": "Email",
+    "interest": "Service of interest",
+    "interestPh": "e.g. Airport transfer / Montmartre tour",
+    "message": "Message",
+    "submit": "Send message"
+  },
+  "cookies": {
+    "label": "Cookies",
+    "title": "About cookies",
+    "body": "We use cookies required for the site to work. Analytics or marketing cookies are used only with your consent, following CNIL guidance. See our",
+    "policy": "cookie policy",
+    "and": "and",
+    "privacy": "privacy policy",
+    "frNote": "You can accept or refuse non-essential cookies. Refusing does not block browsing.",
+    "refuse": "Refuse all",
+    "accept": "Accept all",
+    "more": "Manage cookie settings"
+  },
+  "checkout": {
+    "buyEvent": "Buy this event",
+    "bookDate": "Book a date & time",
+    "hint": "Private tour · each date/time can only be booked once · busy days are disabled",
+    "online": "Online checkout",
+    "amountDue": "Amount due:",
+    "close": "Close",
+    "sameDayHint": "Same day is fine with different hours. The same hour cannot be booked twice.",
+    "stepDate": "1. Choose a date",
+    "busyLegend": "Busy = reserved",
+    "loadingCalendar": "Loading calendar…",
+    "busy": "Busy",
+    "openSlots": "{n} open",
+    "stepTime": "2. Choose a time",
+    "dayReserved": "This day is fully reserved. Pick another date.",
+    "reserved": "Reserved",
+    "selectDateFirst": "Select an available date first",
+    "selected": "Selected:",
+    "stepDetails": "3. Your details",
+    "name": "Name",
+    "email": "Email *",
+    "phone": "Phone",
+    "namePh": "Jane Doe",
+    "emailPh": "you{'@'}example.com",
+    "phonePh": "+33 …",
+    "connecting": "Connecting…",
+    "pay": "Pay with Stripe",
+    "errNoDates": "No upcoming dates available for this package",
+    "errAllBusy": "All upcoming dates are fully reserved",
+    "errSoldOut": "Sold out — bookings are closed",
+    "errPickSlot": "Please select an available date and time",
+    "errEmail": "Please enter your email address",
+    "errCheckout": "Could not start checkout. Check Stripe settings or availability."
   },
   "common": {
     "soldOut": "Sold out",
     "available": "Available",
-    "loading": "Loading…"
+    "loading": "Loading…",
+    "open": "Open",
+    "seatsOpen": "{n} seats open",
+    "slotsLeft": "{n} slots left"
+  },
+  "cms": {
+    "settings": {
+      "studioLocation": "Le Marais · 4th arrondissement, Paris",
+      "footerBlurb": "From sightseeing tours and private cars to interpreting and airport transfers — Paris-based Japanese staff support your whole stay.",
+      "heroEyebrow": "HMI Paris · English & Japanese support",
+      "heroTitle": "Feel at ease in Paris — in your language.",
+      "heroSubtitle": "Tours, private cars, interpreting and airport transfers. Paris-based Japanese staff support your stay.",
+      "servicesEyebrow": "Our services",
+      "servicesTitle": "Five ways we support your Paris stay",
+      "whyEyebrow": "Why HMI Paris",
+      "whyItalic": "What guests value",
+      "whyTitle": "Clear support, every step of the way.",
+      "feesEyebrow": "Pricing",
+      "feesTitle": "Fee guide",
+      "packagesEyebrow": "Featured experiences",
+      "packagesTitle": "Paris packages by area",
+      "packagesIntro": "Montmartre, Le Marais, the Louvre, Versailles, the Seine — carefully chosen private experiences.",
+      "newsEyebrow": "News",
+      "newsTitle": "Updates",
+      "contactCtaTitle": "Questions about your Paris stay? We’re happy to help.",
+      "contactCtaSubtitle": "Quotes and consultations are free. Contact us in English or Japanese.",
+      "contactCtaButton": "Contact us",
+      "reservationEyebrow": "Booking",
+      "reservationTitle": "Make your day in Paris special.",
+      "reservationSubtitle": "Even if dates or themes are still open, feel free to ask.",
+      "reservationButton": "Contact us",
+      "tourDetailsEyebrow": "Practical details",
+      "tourDetailsTitle": "Tour details",
+      "cancellationEyebrow": "Cancellations",
+      "cancellationTitle": "Cancellation policy",
+      "notesEyebrow": "Please note",
+      "notesTitle": "Before you book"
+    },
+    "fees": {
+      "0": { "label": "3 hours" },
+      "1": { "label": "4 hours" },
+      "2": { "label": "6 hours" },
+      "3": { "label": "8 hours" },
+      "4": { "label": "Each extra hour" }
+    },
+    "feeNotes": {
+      "0": "After 20:00, €55 per hour applies.",
+      "1": "Prices are per group (1–6 guests).",
+      "2": "Transport, meals and tickets are not included."
+    },
+    "news": {
+      "0": { "title": "Our website is now live." },
+      "1": { "title": "Summer tour bookings are now open." },
+      "2": { "title": "Airport transfer hours have been extended." }
+    },
+    "tourDetails": {
+      "0": {
+        "label": "Group size",
+        "value": "1–6 guests per group"
+      },
+      "1": {
+        "label": "Included",
+        "value": "Japanese-speaking assistant guide"
+      },
+      "2": {
+        "label": "Not included",
+        "value": "Transport, meals and tickets"
+      },
+      "3": {
+        "label": "Meeting point",
+        "value": "Hotel lobby, or a place you choose"
+      },
+      "4": {
+        "label": "Start time",
+        "value": "Choose a start between 09:00 and 16:00.\n€55/hour after 20:00. Tours end by 22:00."
+      },
+      "5": {
+        "label": "Payment deadline",
+        "value": "Within 72 hours of the booking confirmation email"
+      },
+      "6": {
+        "label": "Payment methods",
+        "value": "Credit card (Visa / Mastercard) or bank transfer"
+      },
+      "7": {
+        "label": "Booking confirmation",
+        "value": "After payment is confirmed, we email your voucher. Bring a printout or show it on your phone."
+      },
+      "8": {
+        "label": "What to wear / bring",
+        "value": "Comfortable shoes, weather-ready clothes, and water. Montmartre and Le Marais have hills and cobblestones."
+      }
+    },
+    "cancellation": {
+      "0": { "label": "Up to 30 days before" },
+      "1": { "label": "Up to 14 days before" },
+      "2": { "label": "13 days before to the day" },
+      "3": { "label": "When tickets are arranged" }
+    },
+    "cancellationNotes": {
+      "0": "Arriving more than 30 minutes late without notice is treated as a cancellation.",
+      "1": "Tickets we arrange are non-refundable (100% fee from booking)."
+    },
+    "importantNotes": {
+      "0": "Transport, admission and meals are not included in course prices. We can arrange them on request.",
+      "1": "Many museums and sights need timed tickets — we recommend booking ahead."
+    },
+    "services": {
+      "0": {
+        "title": "Paris day tours",
+        "category": "Day tours",
+        "description": "Mont Saint-Michel, Versailles, the Louvre and more — small private groups with a Japanese-speaking guide."
+      },
+      "1": {
+        "title": "Private car & Japanese guide",
+        "category": "Car & guide",
+        "description": "Explore Paris at your pace with a private car and Japanese-speaking guide."
+      },
+      "2": {
+        "title": "Airport transfers",
+        "category": "Airport transfer",
+        "description": "Transfers between CDG / Orly and your hotel, with Japanese-language support."
+      },
+      "3": {
+        "title": "Interpreting & escort",
+        "category": "Interpreting",
+        "description": "On-site support for meetings, inspections, trade shows and shopping trips."
+      },
+      "4": {
+        "title": "Custom arrangements",
+        "category": "Custom",
+        "description": "Need something not listed? We’ll propose a plan tailored to your stay."
+      }
+    },
+    "reasons": {
+      "0": {
+        "title": "Paris-based Japanese staff",
+        "description": "If something comes up on the ground, we support you on the spot — in Japanese or English."
+      },
+      "1": {
+        "title": "Fully private",
+        "description": "No shared rides. Your booking is exclusive to your group."
+      },
+      "2": {
+        "title": "Trusted local network",
+        "description": "Years of Paris know-how help us arrange high-quality experiences."
+      },
+      "3": {
+        "title": "Support during your stay",
+        "description": "From arrival to departure, we stay in touch and help when you need us."
+      }
+    },
+    "packages": {
+      "classic-paris-essentials": {
+        "title": "Classic Paris essentials",
+        "summary": "A Louvre morning, Île de la Cité, and an easy afternoon by the Seine.",
+        "description": "Three unhurried days: timed Louvre entry, a guided walk on Île de la Cité, and café time by the river.",
+        "destination": "Louvre & Île de la Cité",
+        "region": "Paris",
+        "highlights": {
+          "0": "Timed Louvre entry",
+          "1": "Île de la Cité walk",
+          "2": "Seine-side café"
+        }
+      },
+      "montmartre-after-dark": {
+        "title": "Montmartre after dark",
+        "summary": "Village lanes, Sacré-Cœur at sunset, and a rooftop dinner with city lights.",
+        "description": "A twilight walk through quiet Montmartre streets, golden hour at Sacré-Cœur, then rooftop dining.",
+        "destination": "Montmartre",
+        "region": "Paris",
+        "highlights": {
+          "0": "Sacré-Cœur sunset",
+          "1": "Hidden stairways",
+          "2": "Rooftop dinner"
+        }
+      },
+      "le-marais-private-walk": {
+        "title": "Le Marais private walk",
+        "summary": "Hôtels particuliers, Place des Vosges, and local sweet stops.",
+        "description": "A half-day private guide through Le Marais: courtyards, Place des Vosges, and favourite tasting spots.",
+        "destination": "Le Marais",
+        "region": "Paris",
+        "highlights": {
+          "0": "Place des Vosges",
+          "1": "Courtyard access",
+          "2": "Sweets & falafel"
+        }
+      },
+      "versailles-royal-day": {
+        "title": "Versailles royal day",
+        "summary": "Palace, gardens and Trianon — with return transfers from Paris.",
+        "description": "Skip-the-line palace entry, garden guiding, free time at Marie Antoinette’s hamlet, transfers included.",
+        "destination": "Versailles",
+        "region": "Paris",
+        "highlights": {
+          "0": "Priority entry",
+          "1": "Gardens & Trianon",
+          "2": "Paris transfers"
+        }
+      },
+      "left-bank-literary-trail": {
+        "title": "Left Bank literary trail",
+        "summary": "Saint-Germain bookshops, café culture, and dusk in the Luxembourg Gardens.",
+        "description": "A gentle route via Shakespeare and Company, Saint-Germain cafés and the Luxembourg Gardens.",
+        "destination": "Saint-Germain & Latin Quarter",
+        "region": "Paris",
+        "highlights": {
+          "0": "Shakespeare and Company",
+          "1": "Café terraces",
+          "2": "Luxembourg Gardens"
+        }
+      },
+      "seine-twilight-cruise": {
+        "title": "Seine twilight cruise",
+        "summary": "The Eiffel Tower, Musée d’Orsay and Notre-Dame from the river at night.",
+        "description": "Evening boarding, champagne on board, landmarks from the water. Riverside dinner optional.",
+        "destination": "River Seine",
+        "region": "Paris",
+        "highlights": {
+          "0": "Twilight departure",
+          "1": "Champagne on board",
+          "2": "Optional riverside dinner"
+        }
+      }
+    },
+    "events": {
+      "arc-de-triomphe-2026": {
+        "title": "Prix de l’Arc de Triomphe 2026 viewing bus tour",
+        "label": "Shared bus tour",
+        "badgeText": "2026 10.4 SUN Arc de Triomphe viewing bus tour",
+        "category": "Seasonal special event",
+        "summary": "The 105th Prix de l’Arc de Triomphe at Longchamp — top jockeys and horses, with a Japanese-speaking guide.",
+        "description": "A special bus tour to watch the Qatar Prix de l’Arc de Triomphe at Longchamp. Experience European racing atmosphere up close, with Japanese guidance even if it’s your first race day.",
+        "venue": "Longchamp Racecourse (Paris)",
+        "ctaLabel": "View details",
+        "notes": "Programme may change with weather or race conditions. Details are confirmed at booking.",
+        "inclusions": {
+          "0": "Round-trip bus to Longchamp",
+          "1": "Standing ticket (Pelouse de l’Arrivée)",
+          "2": "Paddock access",
+          "3": "Course map & betting guide",
+          "4": "Japanese-speaking guide"
+        }
+      },
+      "paris-christmas-lights-2026": {
+        "title": "Paris Christmas lights evening stroll",
+        "label": "Seasonal tour",
+        "badgeText": "December 2026 Christmas season",
+        "category": "Seasonal special event",
+        "summary": "Champs-Élysées, Opéra and other winter light spots with a Japanese-speaking guide.",
+        "description": "Paris wrapped in lights at year-end. Enjoy markets and window displays on a safe evening walk — private or small group.",
+        "venue": "Central Paris",
+        "ctaLabel": "View details",
+        "notes": "Dates may adjust for weather or crowds.",
+        "inclusions": {
+          "0": "Japanese-speaking guide",
+          "1": "Champs-Élysées & Opéra highlights",
+          "2": "Hot-drink break (venue dependent)",
+          "3": "Meeting-point guide"
+        }
+      }
+    }
   }
 }

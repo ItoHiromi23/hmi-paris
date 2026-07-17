@@ -11,6 +11,8 @@ const props = defineProps<{
   availableLabel?: string
 }>()
 
+const { t } = useI18n()
+
 const open = ref(false)
 const loading = ref(false)
 const error = ref('')
@@ -28,7 +30,7 @@ const form = reactive({
 const isEvent = computed(() => props.productType === 'event')
 const needsSession = computed(() => !isEvent.value)
 const buyLabel = computed(() =>
-  isEvent.value ? 'Buy this event' : 'Book a date & time',
+  isEvent.value ? t('checkout.buyEvent') : t('checkout.bookDate'),
 )
 
 const dateOptions = computed(() => buildSessionDayOptions(sessions.value))
@@ -63,9 +65,9 @@ async function loadSessions() {
     selectedDate.value = firstOpenDate.value
     selectedSessionId.value = ''
     if (!sessions.value.length) {
-      error.value = 'No upcoming dates available for this package'
+      error.value = t('checkout.errNoDates')
     } else if (!firstOpenDate.value) {
-      error.value = 'All upcoming dates are fully reserved'
+      error.value = t('checkout.errAllBusy')
     }
   } finally {
     loadingSessions.value = false
@@ -100,15 +102,15 @@ onBeforeUnmount(() => {
 async function startCheckout() {
   error.value = ''
   if (props.soldOut) {
-    error.value = 'Sold out — bookings are closed'
+    error.value = t('checkout.errSoldOut')
     return
   }
   if (needsSession.value && !selectedSessionId.value) {
-    error.value = 'Please select an available date and time'
+    error.value = t('checkout.errPickSlot')
     return
   }
   if (!form.customerEmail.trim()) {
-    error.value = 'Please enter your email address'
+    error.value = t('checkout.errEmail')
     return
   }
   loading.value = true
@@ -134,7 +136,7 @@ async function startCheckout() {
         : ''
     error.value =
       msg ||
-      'Could not start checkout. Check Stripe settings or availability.'
+      t('checkout.errCheckout')
     loading.value = false
   }
 }
@@ -156,13 +158,13 @@ async function startCheckout() {
       class="btn-ghost-dark w-full cursor-not-allowed opacity-70"
       disabled
     >
-      Sold out
+      {{ t('common.soldOut') }}
     </button>
     <button v-else type="button" class="btn-primary w-full" @click="openCheckout">
       {{ buyLabel }}
     </button>
     <p v-if="!soldOut" class="mt-2 text-center text-xs text-[var(--muted-fg)]">
-      Private tour · each date/time can only be booked once · busy days are disabled
+      {{ t('checkout.hint') }}
     </p>
 
     <Teleport to="body">
@@ -180,7 +182,7 @@ async function startCheckout() {
           <div class="shrink-0 border-b border-[var(--line)] px-5 py-4 sm:px-8 sm:py-5">
             <div class="flex items-start justify-between gap-4">
               <div class="min-w-0">
-                <p class="section-label">Online checkout</p>
+                <p class="section-label">{{ t('checkout.online') }}</p>
                 <h2
                   id="buy-title"
                   class="font-display mt-1 truncate text-xl text-[var(--heading)] sm:text-2xl"
@@ -188,21 +190,21 @@ async function startCheckout() {
                   {{ packageTitle }}
                 </h2>
                 <p class="mt-1 text-sm text-[var(--muted-fg)]">
-                  Amount due:
+                  {{ t('checkout.amountDue') }}
                   <span class="font-semibold text-[var(--teal)]">{{ priceLabel }}</span>
                 </p>
               </div>
               <button
                 type="button"
                 class="shrink-0 rounded-lg px-3 py-2 text-sm text-[var(--muted-fg)] hover:bg-[var(--paper)] hover:text-[var(--heading)]"
-                aria-label="Close"
+                :aria-label="t('checkout.close')"
                 @click="open = false"
               >
                 ✕
               </button>
             </div>
             <p class="mt-2 hidden text-xs text-[var(--muted-fg)] sm:block">
-              Same day is fine with different hours. The same hour cannot be booked twice.
+              {{ t('checkout.sameDayHint') }}
             </p>
           </div>
 
@@ -218,18 +220,18 @@ async function startCheckout() {
                 <div v-if="needsSession" class="space-y-4">
                   <div class="flex items-end justify-between gap-3">
                     <p class="text-[11px] uppercase tracking-[0.2em] text-[var(--teal)]">
-                      1. Choose a date
+                      {{ t('checkout.stepDate') }}
                     </p>
                     <p class="text-[11px] text-[var(--muted-fg)]">
                       <span
                         class="inline-block h-2 w-2 rounded-full bg-[var(--alert)] align-middle"
                       />
-                      Busy = reserved
+                      {{ t('checkout.busyLegend') }}
                     </p>
                   </div>
 
                   <p v-if="loadingSessions" class="text-sm text-[var(--muted-fg)]">
-                    Loading calendar…
+                    {{ t('checkout.loadingCalendar') }}
                   </p>
 
                   <div
@@ -275,20 +277,24 @@ async function startCheckout() {
                         class="mt-1.5 block text-[10px] font-semibold uppercase tracking-wide"
                         :class="day.busy ? 'text-[var(--alert)]' : 'text-[var(--teal)]'"
                       >
-                        {{ day.busy ? 'Busy' : `${day.open} open` }}
+                        {{
+                          day.busy
+                            ? t('checkout.busy')
+                            : t('checkout.openSlots', { n: day.open })
+                        }}
                       </span>
                     </button>
                   </div>
 
                   <p class="text-[11px] uppercase tracking-[0.2em] text-[var(--teal)]">
-                    2. Choose a time
+                    {{ t('checkout.stepTime') }}
                   </p>
 
                   <div
                     v-if="selectedDay?.busy"
                     class="rounded-lg bg-[var(--alert)]/10 px-3 py-3 text-sm text-[var(--alert)]"
                   >
-                    This day is fully reserved. Pick another date.
+                    {{ t('checkout.dayReserved') }}
                   </div>
 
                   <div v-else-if="selectedDate" class="grid grid-cols-2 gap-2">
@@ -324,17 +330,19 @@ async function startCheckout() {
                               : 'text-[var(--teal)]'
                         "
                       >
-                        {{ slot.soldOut ? 'Reserved' : 'Available' }}
+                        {{ slot.soldOut ? t('checkout.reserved') : t('common.available') }}
                       </span>
                     </button>
                   </div>
-                  <p v-else class="text-sm text-[var(--muted-fg)]">Select an available date first</p>
+                  <p v-else class="text-sm text-[var(--muted-fg)]">
+                    {{ t('checkout.selectDateFirst') }}
+                  </p>
 
                   <p
                     v-if="selectedSession && !selectedSession.soldOut"
                     class="rounded-lg bg-[var(--paper)] px-3 py-2 text-sm text-[var(--heading)]"
                   >
-                    Selected:
+                    {{ t('checkout.selected') }}
                     {{ formatSessionDay(selectedSession.startsAt) }}
                     ·
                     {{ formatSessionTime(selectedSession.startsAt) }}–{{
@@ -348,44 +356,44 @@ async function startCheckout() {
                     v-if="needsSession"
                     class="text-[11px] uppercase tracking-[0.2em] text-[var(--teal)]"
                   >
-                    3. Your details
+                    {{ t('checkout.stepDetails') }}
                   </p>
 
                   <label class="block">
-                    <span class="text-[11px] uppercase tracking-[0.2em] text-[var(--teal)]"
-                      >Name</span
-                    >
+                    <span class="text-[11px] uppercase tracking-[0.2em] text-[var(--teal)]">{{
+                      t('checkout.name')
+                    }}</span>
                     <input
                       v-model="form.customerName"
                       type="text"
                       autocomplete="name"
                       class="mt-2 w-full border-b border-[var(--line)] bg-transparent py-3 text-[var(--heading)] outline-none focus:border-[var(--teal)]"
-                      placeholder="Jane Doe"
+                      :placeholder="t('checkout.namePh')"
                     />
                   </label>
                   <label class="block">
-                    <span class="text-[11px] uppercase tracking-[0.2em] text-[var(--teal)]"
-                      >Email *</span
-                    >
+                    <span class="text-[11px] uppercase tracking-[0.2em] text-[var(--teal)]">{{
+                      t('checkout.email')
+                    }}</span>
                     <input
                       v-model="form.customerEmail"
                       type="email"
                       required
                       autocomplete="email"
                       class="mt-2 w-full border-b border-[var(--line)] bg-transparent py-3 text-[var(--heading)] outline-none focus:border-[var(--teal)]"
-                      placeholder="you@example.com"
+                      :placeholder="t('checkout.emailPh')"
                     />
                   </label>
                   <label class="block">
-                    <span class="text-[11px] uppercase tracking-[0.2em] text-[var(--teal)]"
-                      >Phone</span
-                    >
+                    <span class="text-[11px] uppercase tracking-[0.2em] text-[var(--teal)]">{{
+                      t('checkout.phone')
+                    }}</span>
                     <input
                       v-model="form.customerPhone"
                       type="tel"
                       autocomplete="tel"
                       class="mt-2 w-full border-b border-[var(--line)] bg-transparent py-3 text-[var(--heading)] outline-none focus:border-[var(--teal)]"
-                      placeholder="+33 ..."
+                      :placeholder="t('checkout.phonePh')"
                     />
                   </label>
 
@@ -405,14 +413,14 @@ async function startCheckout() {
                   :disabled="loading"
                   @click="open = false"
                 >
-                  Close
+                  {{ t('checkout.close') }}
                 </button>
                 <button
                   type="submit"
                   class="btn-primary w-full !py-3 sm:flex-[1.4]"
                   :disabled="loading || (needsSession && !selectedSessionId)"
                 >
-                  {{ loading ? 'Connecting…' : 'Pay with Stripe' }}
+                  {{ loading ? t('checkout.connecting') : t('checkout.pay') }}
                 </button>
               </div>
             </div>

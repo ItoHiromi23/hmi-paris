@@ -1,10 +1,11 @@
 <script setup lang="ts">
 const { t } = useI18n()
+const { locale } = useI18n()
 const { fetchPackages } = useTourPackages()
 const { data: packages, pending } = await useAsyncData(
-  'all-packages',
+  () => `all-packages-${locale.value}`,
   () => fetchPackages(),
-  freshOnNavigate(),
+  { ...freshOnNavigate(), watch: [locale] },
 )
 
 useReveal()

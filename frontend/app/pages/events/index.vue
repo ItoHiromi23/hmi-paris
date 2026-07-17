@@ -1,11 +1,11 @@
 <script setup lang="ts">
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const { fetchEvents, formatJaDate } = useMainEvents()
 const { data: events } = await useAsyncData(
-  'events-index',
+  () => `events-index-${locale.value}`,
   () => fetchEvents(),
-  freshOnNavigate(),
+  { ...freshOnNavigate(), watch: [locale] },
 )
 
 useReveal()

@@ -4,10 +4,16 @@ import type { CmsBundle } from '~/types/cms'
 const { t } = useI18n()
 const localePath = useLocalePath()
 const cms = inject<Ref<CmsBundle | null>>('cms', ref(null))
+const { field, listItem } = useCmsLocale()
 
-const reasons = computed(() => cms.value?.reasons || [])
-const title = computed(() => cms.value?.settings.whyTitle || '')
-const italic = computed(() => cms.value?.settings.whyItalic || '')
+const reasons = computed(() => {
+  const rows = cms.value?.reasons || []
+  return rows.map((reason, index) =>
+    listItem('cms.reasons', index, reason, ['title', 'description']),
+  )
+})
+const title = computed(() => field('cms.settings.whyTitle', cms.value?.settings.whyTitle))
+const italic = computed(() => field('cms.settings.whyItalic', cms.value?.settings.whyItalic))
 </script>
 
 <template>

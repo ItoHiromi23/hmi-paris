@@ -1,11 +1,11 @@
 <script setup lang="ts">
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const { fetchPackages } = useTourPackages()
 const { data: packages } = await useAsyncData(
-  'home-packages',
+  () => `dest-packages-${locale.value}`,
   () => fetchPackages(),
-  freshOnNavigate(),
+  { ...freshOnNavigate(), watch: [locale] },
 )
 
 const destinations = computed(() => {

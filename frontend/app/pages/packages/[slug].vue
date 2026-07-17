@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const route = useRoute()
 const slug = computed(() => String(route.params.slug))
@@ -7,9 +7,9 @@ const slug = computed(() => String(route.params.slug))
 const { fetchPackageBySlug, formatPrice } = useTourPackages()
 const { slotsLabel } = useAvailability()
 const { data: pkg, refresh: refreshPackage } = await useAsyncData(
-  () => `package-${slug.value}`,
+  () => `package-${slug.value}-${locale.value}`,
   () => fetchPackageBySlug(slug.value),
-  { watch: [slug] },
+  { watch: [slug, locale] },
 )
 
 // Only re-fetch after Stripe checkout — not on every new-tab open
@@ -75,38 +75,43 @@ function scrollToBuy() {
         </div>
 
         <aside id="buy-panel" class="reveal glass-panel h-fit p-8 sm:p-10">
-          <p class="section-label">料金（目安）</p>
+          <p class="section-label">{{ t('packages.priceLabel') }}</p>
           <p class="font-display mt-2 text-5xl text-[var(--teal)]">
             {{ formatPrice(pkg.priceFrom, pkg.currency) }}
           </p>
           <p class="mt-2 text-sm text-[var(--muted-fg)]">
-            Choose a date and time, then pay online (private tour — 1 booking reserves that slot).
+            {{ t('packages.priceHint') }}
           </p>
           <dl class="mt-10 space-y-5 text-sm text-[var(--heading)]">
             <div class="flex justify-between border-t border-[var(--line)] pt-4">
-              <dt class="text-[var(--muted-fg)]">Reservation</dt>
+              <dt class="text-[var(--muted-fg)]">{{ t('packages.reservation') }}</dt>
               <dd :class="pkg.soldOut ? 'text-[var(--alert)]' : 'text-[var(--teal)]'">
                 {{ availabilityText }}
                 <span
                   v-if="!pkg.bookingUnlimited && pkg.slotsTotal != null"
                   class="text-[var(--muted-fg)]"
                 >
-                  ({{ pkg.usesSessions ? 'upcoming seats' : `total ${pkg.slotsTotal}` }} /
-                  {{ pkg.slotsSold }} booked)
+                  ({{
+                    pkg.usesSessions
+                      ? t('packages.upcomingSeats')
+                      : t('packages.totalSlots', { n: pkg.slotsTotal })
+                  }}
+                  /
+                  {{ t('packages.booked', { n: pkg.slotsSold }) }})
                 </span>
               </dd>
             </div>
             <div class="flex justify-between border-t border-[var(--line)] pt-4">
-              <dt class="text-[var(--muted-fg)]">目的地</dt>
+              <dt class="text-[var(--muted-fg)]">{{ t('packages.destination') }}</dt>
               <dd>{{ pkg.destination }}</dd>
             </div>
             <div class="flex justify-between border-t border-[var(--line)] pt-4">
-              <dt class="text-[var(--muted-fg)]">エリア</dt>
+              <dt class="text-[var(--muted-fg)]">{{ t('packages.region') }}</dt>
               <dd>{{ pkg.region }}</dd>
             </div>
             <div class="flex justify-between border-t border-[var(--line)] pt-4">
-              <dt class="text-[var(--muted-fg)]">期間</dt>
-              <dd>{{ pkg.durationDays }}日間</dd>
+              <dt class="text-[var(--muted-fg)]">{{ t('packages.duration') }}</dt>
+              <dd>{{ t('packages.days', { n: pkg.durationDays }) }}</dd>
             </div>
           </dl>
           <div class="mt-10">
@@ -118,7 +123,9 @@ function scrollToBuy() {
               :sold-out="pkg.soldOut"
               :available-label="availabilityText"
             />
-            <NuxtLink to="/contact" class="btn-ghost-dark mt-3 w-full">お問い合わせ</NuxtLink>
+            <NuxtLink :to="localePath('/contact')" class="btn-ghost-dark mt-3 w-full">
+              {{ t('nav.contact') }}
+            </NuxtLink>
           </div>
         </aside>
       </div>

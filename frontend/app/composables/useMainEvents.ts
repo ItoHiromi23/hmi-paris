@@ -23,7 +23,7 @@ function mapEvent(strapiUrl: string, item: StrapiMainEvent): MainEvent {
     slug: item.slug,
     label: item.label || '',
     badgeText: item.badgeText || '',
-    category: item.category || '季節限定・特別イベント',
+    category: item.category || '',
     summary: item.summary || '',
     description: item.description || '',
     inclusions: Array.isArray(item.inclusions) ? item.inclusions : [],
@@ -32,7 +32,7 @@ function mapEvent(strapiUrl: string, item: StrapiMainEvent): MainEvent {
     venue: item.venue || '',
     priceFrom: item.priceFrom != null ? Number(item.priceFrom) : null,
     currency: item.currency || 'EUR',
-    ctaLabel: item.ctaLabel || '詳細を見る',
+    ctaLabel: item.ctaLabel || '',
     featured: Boolean(item.featured),
     sortOrder: item.sortOrder ?? 0,
     notes: item.notes || '',
@@ -44,21 +44,62 @@ function mapEvent(strapiUrl: string, item: StrapiMainEvent): MainEvent {
   }
 }
 
-/** 日本語向け：例）2026年10月4日（日） */
+/** Locale-aware date: 4 Oct 2026 (Sun) / 2026年10月4日（日） */
 export function formatJaDate(iso: string | null | undefined) {
   if (!iso) return ''
   const d = new Date(`${iso}T12:00:00`)
   if (Number.isNaN(d.getTime())) return iso
-  const weekdays = ['日', '月', '火', '水', '木', '金', '土']
-  return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日（${weekdays[d.getDay()]}）`
+
+  let locale = 'en'
+  try {
+    locale = useI18n().locale.value
+  } catch {
+    /* outside setup */
+  }
+
+  if (locale === 'ja') {
+    const weekdays = ['日', '月', '火', '水', '木', '金', '土']
+    return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日（${weekdays[d.getDay()]}）`
+  }
+
+  return d.toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    weekday: 'short',
+  })
 }
 
 export function useMainEvents() {
   const config = useRuntimeConfig()
+  const { bySlug } = useCmsLocale()
+  const { t } = useI18n()
   const strapiUrl = String(config.public.strapiUrl || 'http://127.0.0.1:1337')
     .replace(/\/$/, '')
     .replace('://localhost', '://127.0.0.1')
   const { formatPrice } = useTourPackages()
+
+  function localize(event: MainEvent): MainEvent {
+    const localized = bySlug('cms.events', event, [
+      'title',
+      'label',
+      'badgeText',
+      'category',
+      'summary',
+      'description',
+      'venue',
+      'ctaLabel',
+      'notes',
+      'inclusions',
+    ])
+    if (!localized.category) {
+      localized.category = t('events.categoryFallback')
+    }
+    if (!localized.ctaLabel) {
+      localized.ctaLabel = t('events.detailCta')
+    }
+    return localized
+  }
 
   async function fetchEvents(options: { liveAvailability?: boolean } = {}): Promise<MainEvent[]> {
     try {
@@ -71,7 +112,7 @@ export function useMainEvents() {
       })
 
       if (!data?.data?.length) return []
-      const mapped = data.data.map((item) => mapEvent(strapiUrl, item))
+      const mapped = data.data.map((item) => localize(mapEvent(strapiUrl, item)))
       if (!options.liveAvailability) return mapped
 
       return Promise.all(
@@ -106,7 +147,7 @@ export function useMainEvents() {
       const item = data?.data?.[0]
       if (!item) return null
 
-      const mapped = mapEvent(strapiUrl, item)
+      const mapped = localize(mapEvent(strapiUrl, item))
       const live = await fetchAvailability('event', slug, strapiUrl)
       if (!live) return mapped
       return {
