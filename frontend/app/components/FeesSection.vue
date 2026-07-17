@@ -1,21 +1,16 @@
 <script setup lang="ts">
 import type { CmsBundle } from '~/types/cms'
-import { HMI_FEES, HMI_FEE_NOTES } from '~/data/hmiContent'
 
 const cms = inject<Ref<CmsBundle | null>>('cms', ref(null))
 
-const fees = computed(() =>
-  cms.value?.fees?.length
-    ? cms.value.fees
-    : HMI_FEES.map((f, i) => ({ ...f, id: i, sortOrder: i })),
-)
-const notes = computed(() => cms.value?.feeNotes?.length ? cms.value.feeNotes : [...HMI_FEE_NOTES])
-const eyebrow = computed(() => cms.value?.settings.feesEyebrow || '料金について')
-const title = computed(() => cms.value?.settings.feesTitle || '料金のご案内')
+const fees = computed(() => cms.value?.fees || [])
+const notes = computed(() => cms.value?.feeNotes || [])
+const eyebrow = computed(() => cms.value?.settings.feesEyebrow || '')
+const title = computed(() => cms.value?.settings.feesTitle || '')
 </script>
 
 <template>
-  <section id="fees" class="py-16 sm:py-24">
+  <section v-if="fees.length" id="fees" class="py-16 sm:py-24">
     <div class="container-wide">
       <div class="reveal">
         <SectionHeading :eyebrow="eyebrow" :title="title" />

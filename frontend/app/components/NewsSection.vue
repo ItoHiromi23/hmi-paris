@@ -1,20 +1,15 @@
 <script setup lang="ts">
 import type { CmsBundle } from '~/types/cms'
-import { HMI_NEWS } from '~/data/hmiContent'
 
 const cms = inject<Ref<CmsBundle | null>>('cms', ref(null))
 
-const news = computed(() =>
-  cms.value?.news?.length
-    ? cms.value.news
-    : HMI_NEWS.map((n, i) => ({ id: i, dateLabel: n.date, title: n.title, sortOrder: i })),
-)
-const eyebrow = computed(() => cms.value?.settings.newsEyebrow || 'お知らせ')
-const title = computed(() => cms.value?.settings.newsTitle || '新着情報')
+const news = computed(() => cms.value?.news || [])
+const eyebrow = computed(() => cms.value?.settings.newsEyebrow || '')
+const title = computed(() => cms.value?.settings.newsTitle || '')
 </script>
 
 <template>
-  <section id="news" class="py-16 sm:py-20">
+  <section v-if="news.length" id="news" class="py-16 sm:py-20">
     <div class="container-wide">
       <div class="reveal flex flex-wrap items-end gap-4">
         <h2 class="font-display text-4xl text-[var(--heading)] sm:text-5xl">{{ title }}</h2>

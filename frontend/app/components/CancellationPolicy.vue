@@ -1,24 +1,15 @@
 <script setup lang="ts">
 import type { CmsBundle } from '~/types/cms'
-import { HMI_CANCELLATION, HMI_CANCELLATION_NOTES } from '~/data/hmiContent'
 
 const cms = inject<Ref<CmsBundle | null>>('cms', ref(null))
-const rows = computed(() =>
-  cms.value?.cancellation?.length
-    ? cms.value.cancellation
-    : HMI_CANCELLATION.map((c, i) => ({ ...c, id: i, sortOrder: i })),
-)
-const notes = computed(() =>
-  cms.value?.cancellationNotes?.length
-    ? cms.value.cancellationNotes
-    : [...HMI_CANCELLATION_NOTES],
-)
-const eyebrow = computed(() => cms.value?.settings.cancellationEyebrow || 'キャンセルについて')
-const title = computed(() => cms.value?.settings.cancellationTitle || 'キャンセルポリシー')
+const rows = computed(() => cms.value?.cancellation || [])
+const notes = computed(() => cms.value?.cancellationNotes || [])
+const eyebrow = computed(() => cms.value?.settings.cancellationEyebrow || '')
+const title = computed(() => cms.value?.settings.cancellationTitle || '')
 </script>
 
 <template>
-  <section class="border-y border-[var(--line)] bg-[var(--surface)]/60 py-16 sm:py-20">
+  <section v-if="rows.length" class="border-y border-[var(--line)] bg-[var(--surface)]/60 py-16 sm:py-20">
     <div class="container-site max-w-4xl">
       <div class="reveal">
         <SectionHeading :eyebrow="eyebrow" :title="title" />

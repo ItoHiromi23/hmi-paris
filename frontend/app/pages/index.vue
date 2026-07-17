@@ -26,18 +26,12 @@ useSeoMeta({
   <div>
     <PageHero
       centered
-      :title="s?.heroTitle || 'どんな場面でも、日本語で安心を。'"
-      :eyebrow="s?.heroEyebrow || 'HMI Paris ・ 日本語サポート'"
-      :image="
-        s?.heroImageUrl ||
-        'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=2000&q=80'
-      "
+      :title="s?.heroTitle || ''"
+      :eyebrow="s?.heroEyebrow || ''"
+      :image="s?.heroImageUrl || ''"
     >
       <div class="space-y-3 text-base text-white sm:text-lg">
         <p>{{ s?.heroSubtitle }}</p>
-        <p class="text-white/80">
-          完全プライベート ・ パリ在住日本人スタッフ ・ エリア別体験
-        </p>
       </div>
       <template #actions>
         <NuxtLink to="/packages" class="btn-primary">ツアーを探す</NuxtLink>
@@ -50,13 +44,13 @@ useSeoMeta({
     <DestinationStrip />
     <MainEventsSection />
 
-    <section id="trips" class="py-8 sm:py-12">
+    <section v-if="featured.length" id="trips" class="py-8 sm:py-12">
       <div class="container-wide">
         <div class="reveal flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p class="section-label">{{ s?.packagesEyebrow || 'おすすめ体験' }}</p>
+            <p class="section-label">{{ s?.packagesEyebrow }}</p>
             <h2 class="font-display mt-3 text-3xl text-[var(--heading)] sm:text-5xl">
-              {{ s?.packagesTitle || '人気のパリパッケージ' }}
+              {{ s?.packagesTitle }}
             </h2>
             <p class="mt-3 max-w-xl text-[var(--muted-fg)]">
               {{ s?.packagesIntro }}

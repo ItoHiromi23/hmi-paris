@@ -20,14 +20,15 @@
   --sky: #38bdf8;
 
   --heading: #122033;
-  --body: #3d4f63;
-  --muted-fg: #66788c;
+  --body: #2f4054;
+  /* Dark enough for WCAG AA on white / paper backgrounds */
+  --muted-fg: #4a5c70;
   --on-dark: #ffffff;
   --alert: #dc6b5f;
 
   /* Aliases used site-wide */
   --amber: var(--teal);
-  --amber-bright: var(--teal-bright);
+  --amber-bright: #0d9488;
   --amber-deep: var(--sun);
   --copper: var(--sun-deep);
   --warm-white: var(--heading);
@@ -38,7 +39,7 @@
   --indigo: var(--heading);
   --indigo-deep: var(--void);
   --brass: var(--teal);
-  --brass-soft: var(--teal-bright);
+  --brass-soft: #0d9488;
   --brass-btn: var(--sun);
   --muted: var(--muted-fg);
   --radius: 1.25rem;

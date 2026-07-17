@@ -1,17 +1,14 @@
 <script setup lang="ts">
 import type { CmsBundle } from '~/types/cms'
-import { HMI_IMPORTANT_NOTES } from '~/data/hmiContent'
 
 const cms = inject<Ref<CmsBundle | null>>('cms', ref(null))
-const notes = computed(() =>
-  cms.value?.importantNotes?.length ? cms.value.importantNotes : [...HMI_IMPORTANT_NOTES],
-)
-const eyebrow = computed(() => cms.value?.settings.notesEyebrow || 'ご注意事項')
-const title = computed(() => cms.value?.settings.notesTitle || 'ご確認ください')
+const notes = computed(() => cms.value?.importantNotes || [])
+const eyebrow = computed(() => cms.value?.settings.notesEyebrow || '')
+const title = computed(() => cms.value?.settings.notesTitle || '')
 </script>
 
 <template>
-  <section class="py-16 sm:py-20">
+  <section v-if="notes.length" class="py-16 sm:py-20">
     <div class="container-site max-w-4xl">
       <div class="reveal">
         <SectionHeading :eyebrow="eyebrow" :title="title" />

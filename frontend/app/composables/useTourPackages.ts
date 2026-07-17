@@ -1,6 +1,5 @@
 import type { StrapiMedia, StrapiTourPackage, TourPackage } from '~/types/package'
 import { computeAvailability } from '~/types/package'
-import { FALLBACK_PACKAGES } from '~/composables/useFallbackPackages'
 import { fetchAvailability } from '~/composables/useAvailability'
 
 function mediaUrl(strapiUrl: string, media?: StrapiMedia | null): string | null {
@@ -50,7 +49,6 @@ export function formatPrice(amount: number, currency = 'EUR') {
 
 export function useTourPackages() {
   const config = useRuntimeConfig()
-  // Prefer 127.0.0.1 — Node often resolves "localhost" to ::1 while Strapi may listen on IPv4 only
   const strapiUrl = String(config.public.strapiUrl || 'http://127.0.0.1:1337')
     .replace(/\/$/, '')
     .replace('://localhost', '://127.0.0.1')
@@ -68,17 +66,14 @@ export function useTourPackages() {
         },
       )
 
-      if (!data?.data?.length) return FALLBACK_PACKAGES
+      if (!data?.data?.length) return []
 
-      // Enrich with live availability (pending holds + sold) so UI matches checkout
-      const mapped = await Promise.all(
+      return Promise.all(
         data.data.map(async (item) => {
           const base = mapPackage(strapiUrl, item)
-          const fallback = FALLBACK_PACKAGES.find((p) => p.slug === base.slug)
           const live = await fetchAvailability('package', base.slug, strapiUrl)
           return {
             ...base,
-            heroImageUrl: base.heroImageUrl || fallback?.heroImageUrl || null,
             ...(live
               ? {
                   bookingUnlimited: live.bookingUnlimited,
@@ -93,10 +88,9 @@ export function useTourPackages() {
           }
         }),
       )
-      return mapped
     } catch (err) {
-      console.error('[packages] Failed to load from Strapi — using fallback', err)
-      return FALLBACK_PACKAGES
+      console.error('[packages] Failed to load from Strapi', err)
+      return []
     }
   }
 
@@ -113,17 +107,12 @@ export function useTourPackages() {
       )
 
       const item = data?.data?.[0]
-      if (!item) {
-        return FALLBACK_PACKAGES.find((p) => p.slug === slug) || null
-      }
+      if (!item) return null
 
       const mapped = mapPackage(strapiUrl, item)
       const live = await fetchAvailability('package', slug, strapiUrl)
-      const fallback = FALLBACK_PACKAGES.find((p) => p.slug === mapped.slug)
       return {
         ...mapped,
-        heroImageUrl: mapped.heroImageUrl || fallback?.heroImageUrl || null,
-        description: mapped.description || fallback?.description || '',
         ...(live
           ? {
               bookingUnlimited: live.bookingUnlimited,
@@ -138,7 +127,7 @@ export function useTourPackages() {
       }
     } catch (err) {
       console.error('[packages] Failed to load package from Strapi', slug, err)
-      return FALLBACK_PACKAGES.find((p) => p.slug === slug) || null
+      return null
     }
   }
 

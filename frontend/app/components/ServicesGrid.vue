@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import type { CmsBundle } from '~/types/cms'
-import { HMI_SERVICES } from '~/data/hmiContent'
 
 const cms = inject<Ref<CmsBundle | null>>('cms', ref(null))
 
-const services = computed(() => cms.value?.services?.length ? cms.value.services : HMI_SERVICES.map((s, i) => ({ ...s, id: i, sortOrder: i })))
-const eyebrow = computed(() => cms.value?.settings.servicesEyebrow || 'Our services')
-const title = computed(() => cms.value?.settings.servicesTitle || 'Five services to support your stay in Paris')
+const services = computed(() => cms.value?.services || [])
+const eyebrow = computed(() => cms.value?.settings.servicesEyebrow || '')
+const title = computed(() => cms.value?.settings.servicesTitle || '')
 </script>
 
 <template>
-  <section id="services" class="py-20 sm:py-28">
+  <section v-if="services.length" id="services" class="py-20 sm:py-28">
     <div class="container-site">
       <div class="reveal">
         <SectionHeading :eyebrow="eyebrow" :title="title" />

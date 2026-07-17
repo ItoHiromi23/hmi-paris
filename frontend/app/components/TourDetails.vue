@@ -1,19 +1,14 @@
 <script setup lang="ts">
 import type { CmsBundle } from '~/types/cms'
-import { HMI_TOUR_DETAILS } from '~/data/hmiContent'
 
 const cms = inject<Ref<CmsBundle | null>>('cms', ref(null))
-const rows = computed(() =>
-  cms.value?.tourDetails?.length
-    ? cms.value.tourDetails
-    : HMI_TOUR_DETAILS.map((t, i) => ({ ...t, id: i, sortOrder: i })),
-)
-const eyebrow = computed(() => cms.value?.settings.tourDetailsEyebrow || '実施詳細')
-const title = computed(() => cms.value?.settings.tourDetailsTitle || 'ツアー詳細')
+const rows = computed(() => cms.value?.tourDetails || [])
+const eyebrow = computed(() => cms.value?.settings.tourDetailsEyebrow || '')
+const title = computed(() => cms.value?.settings.tourDetailsTitle || '')
 </script>
 
 <template>
-  <section class="py-16 sm:py-20">
+  <section v-if="rows.length" class="py-16 sm:py-20">
     <div class="container-site">
       <div class="reveal">
         <SectionHeading :eyebrow="eyebrow" :title="title" />

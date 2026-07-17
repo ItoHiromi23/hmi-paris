@@ -1,20 +1,11 @@
 <script setup lang="ts">
 import type { CmsBundle } from '~/types/cms'
-import { HMI_SERVICES } from '~/data/hmiContent'
 
 const cms = inject<Ref<CmsBundle | null>>('cms', ref(null))
-const services = computed(() =>
-  cms.value?.services?.length
-    ? cms.value.services
-    : HMI_SERVICES.map((s, i) => ({ ...s, id: i, sortOrder: i })),
-)
+const services = computed(() => cms.value?.services || [])
 
-const title = computed(
-  () => cms.value?.settings.servicesTitle || 'パリ滞在を支える5つのサービス',
-)
-const eyebrow = computed(
-  () => cms.value?.settings.servicesEyebrow || '旅行スタイル',
-)
+const title = computed(() => cms.value?.settings.servicesTitle || '')
+const eyebrow = computed(() => cms.value?.settings.servicesEyebrow || '')
 
 const serviceImages: Record<string, string> = {
   star: 'https://images.unsplash.com/photo-1431274172761-fca41d930114?auto=format&fit=crop&w=1000&q=70',
@@ -36,7 +27,7 @@ function stackTop(index: number) {
 
 <template>
   <!-- overflow-x only — sticky stacking breaks with overflow-y:hidden -->
-  <section id="services" class="relative overflow-x-clip bg-[var(--bg)] py-16 sm:py-24">
+  <section v-if="services.length" id="services" class="relative overflow-x-clip bg-[var(--bg)] py-16 sm:py-24">
     <div
       class="pointer-events-none absolute inset-0 opacity-40"
       style="

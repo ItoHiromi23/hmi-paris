@@ -23,32 +23,29 @@ const s = computed(() => cms.value?.settings)
     <div class="container-site relative text-center">
       <div class="reveal mx-auto max-w-3xl">
         <template v-if="variant === 'reservation'">
-          <p class="section-label !text-[var(--teal-bright)]">
-            {{ s?.reservationEyebrow || 'ご予約' }}
+          <p class="section-label !text-[#5eead4]">
+            {{ s?.reservationEyebrow }}
           </p>
           <h2 class="font-display mt-3 text-3xl sm:text-5xl">
-            {{ s?.reservationTitle || 'パリで、特別な一日を。' }}
+            {{ s?.reservationTitle }}
           </h2>
           <span class="mx-auto mt-5 block h-px w-14 bg-[var(--sun)]" />
-          <p class="mx-auto mt-5 max-w-xl text-white/80">
+          <p class="mx-auto mt-5 max-w-xl text-white/90">
             {{ s?.reservationSubtitle }}
           </p>
           <NuxtLink to="/contact" class="btn-primary mt-10 inline-flex">
-            {{ s?.reservationButton || 'お問い合わせ' }}
+            {{ s?.reservationButton }}
           </NuxtLink>
         </template>
         <template v-else>
           <h2 class="font-display text-3xl leading-snug sm:text-4xl lg:text-5xl">
-            {{
-              s?.contactCtaTitle ||
-              'パリ滞在に関するご相談は、お気軽にお問い合わせください。'
-            }}
+            {{ s?.contactCtaTitle }}
           </h2>
-          <p class="mx-auto mt-6 max-w-xl text-white/80">
+          <p class="mx-auto mt-6 max-w-xl text-white/90">
             {{ s?.contactCtaSubtitle }}
           </p>
           <NuxtLink to="/contact" class="btn-primary mt-10 inline-flex">
-            {{ s?.contactCtaButton || 'お問い合わせはこちら' }}
+            {{ s?.contactCtaButton }}
           </NuxtLink>
         </template>
       </div>

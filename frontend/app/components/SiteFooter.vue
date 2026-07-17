@@ -9,18 +9,18 @@ const s = computed(() => cms.value?.settings)
   <footer class="bg-[var(--void)] text-white">
     <div class="container-site grid gap-12 py-16 md:grid-cols-3 md:gap-10">
       <div>
-        <p class="text-2xl font-semibold tracking-[0.12em]">{{ s?.brandName || 'HMI' }}</p>
-        <p class="font-display mt-1 text-lg italic text-[var(--teal-bright)]">
-          {{ s?.brandTagline || 'paris' }}
+        <p class="text-2xl font-semibold tracking-[0.12em]">{{ s?.brandName }}</p>
+        <p class="font-display mt-1 text-lg italic text-[#5eead4]">
+          {{ s?.brandTagline }}
         </p>
-        <p class="mt-5 max-w-sm text-sm leading-relaxed text-white/75">
+        <p class="mt-5 max-w-sm text-sm leading-relaxed text-white/85">
           {{ s?.footerBlurb }}
         </p>
       </div>
 
       <div>
         <p class="font-display text-xl">サービス</p>
-        <ul class="mt-5 space-y-3 text-sm text-white/75">
+        <ul class="mt-5 space-y-3 text-sm text-white/85">
           <li><a href="/#services" class="hover:text-white">観光ツアー</a></li>
           <li><a href="/#services" class="hover:text-white">専用車＆ガイド</a></li>
           <li><a href="/#services" class="hover:text-white">空港送迎</a></li>
@@ -31,7 +31,7 @@ const s = computed(() => cms.value?.settings)
 
       <div>
         <p class="font-display text-xl">会社情報</p>
-        <ul class="mt-5 space-y-3 text-sm text-white/75">
+        <ul class="mt-5 space-y-3 text-sm text-white/85">
           <li><NuxtLink to="/about" class="hover:text-white">会社概要</NuxtLink></li>
           <li><NuxtLink to="/contact" class="hover:text-white">お問い合わせ</NuxtLink></li>
           <li><NuxtLink to="/privacy" class="hover:text-white">プライバシーポリシー</NuxtLink></li>
@@ -51,7 +51,7 @@ const s = computed(() => cms.value?.settings)
 
     <div class="border-t border-white/10">
       <div
-        class="container-site flex flex-col gap-3 py-6 text-xs tracking-wide text-white/55 sm:flex-row sm:items-center sm:justify-between"
+        class="container-site flex flex-col gap-3 py-6 text-xs tracking-wide text-white/75 sm:flex-row sm:items-center sm:justify-between"
       >
         <span>© {{ new Date().getFullYear() }} HMI Paris. Tous droits réservés.</span>
         <div class="flex flex-wrap gap-x-4 gap-y-1">

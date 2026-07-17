@@ -1,3 +1,11 @@
+export default defineEventHandler((event) => {
+  const config = useRuntimeConfig()
+  const site = String(config.public.siteUrl || 'https://hmiparis.fr').replace(/\/$/, '')
+
+  setHeader(event, 'Content-Type', 'text/plain; charset=utf-8')
+  setHeader(event, 'Cache-Control', 'public, max-age=3600')
+
+  return `# HMI Paris
 User-agent: *
 Allow: /
 
@@ -23,7 +31,9 @@ Allow: /
 User-agent: Applebot-Extended
 Allow: /
 
-Sitemap: /sitemap.xml
+Sitemap: ${site}/sitemap.xml
 
 # Prefer curated maps for agents
 # See also: /llms.txt /llms-full.txt /agents.txt
+`
+})
