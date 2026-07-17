@@ -301,15 +301,13 @@ async function setPublicPermissions(strapi: Core.Strapi) {
   }
 }
 
-async function clearCollection(strapi: Core.Strapi, uid: string) {
-  const entries = await strapi.db.query(uid).findMany()
-  for (const entry of entries) {
-    await strapi.documents(uid as any).delete({ documentId: entry.documentId })
-  }
-}
-
 async function seedCollection(strapi: Core.Strapi, uid: string, rows: Record<string, unknown>[]) {
-  await clearCollection(strapi, uid)
+  // Non-destructive: only seed when the collection is empty so admin edits persist.
+  const count = await strapi.db.query(uid).count()
+  if (count > 0) {
+    strapi.log.info(`Skip seed (${count} existing) → ${uid}`)
+    return
+  }
   for (const row of rows) {
     await strapi.documents(uid as any).create({
       data: row,
@@ -320,7 +318,12 @@ async function seedCollection(strapi: Core.Strapi, uid: string, rows: Record<str
 }
 
 async function seedPackages(strapi: Core.Strapi) {
-  await clearCollection(strapi, UID.package)
+  // Non-destructive: only seed when there are no packages yet.
+  const count = await strapi.db.query(UID.package).count()
+  if (count > 0) {
+    strapi.log.info(`Skip seed (${count} existing) → ${UID.package}`)
+    return
+  }
   for (const pkg of SEED_PACKAGES) {
     await strapi.documents(UID.package).create({
       data: {
@@ -337,19 +340,16 @@ async function seedPackages(strapi: Core.Strapi) {
 }
 
 async function seedSettings(strapi: Core.Strapi) {
+  // Non-destructive: only create settings when none exist; never overwrite edits.
   const existing = await strapi.documents(UID.settings).findFirst({})
   if (existing?.documentId) {
-    await strapi.documents(UID.settings).update({
-      documentId: existing.documentId,
-      data: SEED_SETTINGS,
-      status: 'published',
-    })
-  } else {
-    await strapi.documents(UID.settings).create({
-      data: SEED_SETTINGS,
-      status: 'published',
-    })
+    strapi.log.info('Skip seed (settings exist) → site settings')
+    return
   }
+  await strapi.documents(UID.settings).create({
+    data: SEED_SETTINGS,
+    status: 'published',
+  })
   strapi.log.info('Seeded site settings (JA)')
 }
 
@@ -359,22 +359,17 @@ export default {
   async bootstrap({ strapi }: { strapi: Core.Strapi }) {
     await setPublicPermissions(strapi)
 
-    const settings = await strapi.documents(UID.settings).findFirst({})
-    const needsJapanese = !settings?.heroTitle?.includes('日本語')
-
-    if (needsJapanese) {
-      await seedPackages(strapi)
-      await seedCollection(strapi, UID.service, [...SEED_SERVICES])
-      await seedCollection(strapi, UID.why, [...SEED_REASONS])
-      await seedCollection(strapi, UID.fee, [...SEED_FEES])
-      await seedCollection(strapi, UID.news, [...SEED_NEWS])
-      await seedCollection(strapi, UID.tourDetail, [...SEED_TOUR_DETAILS])
-      await seedCollection(strapi, UID.cancel, [...SEED_CANCEL])
-      await seedCollection(strapi, UID.note, [...SEED_NOTES])
-      await seedSettings(strapi)
-    } else {
-      strapi.log.info('Japanese content already present — skip reseed')
-    }
+    // Each seed is non-destructive: it only fills in defaults when the
+    // collection is empty, so admin edits are never overwritten on boot.
+    await seedPackages(strapi)
+    await seedCollection(strapi, UID.service, [...SEED_SERVICES])
+    await seedCollection(strapi, UID.why, [...SEED_REASONS])
+    await seedCollection(strapi, UID.fee, [...SEED_FEES])
+    await seedCollection(strapi, UID.news, [...SEED_NEWS])
+    await seedCollection(strapi, UID.tourDetail, [...SEED_TOUR_DETAILS])
+    await seedCollection(strapi, UID.cancel, [...SEED_CANCEL])
+    await seedCollection(strapi, UID.note, [...SEED_NOTES])
+    await seedSettings(strapi)
 
     // Main events: seed only when empty (admin can add/delete freely)
     const eventCount = await strapi.db.query(UID.event).count()
