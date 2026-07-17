@@ -8,13 +8,25 @@
     "description": "Notes for fees, important info, or cancellation footnotes"
   },
   "options": { "draftAndPublish": true },
+  "pluginOptions": {
+    "i18n": { "localized": true }
+  },
   "attributes": {
-    "text": { "type": "text", "required": true },
+    "text": {
+      "type": "text",
+      "required": true,
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
     "kind": {
       "type": "enumeration",
       "enum": ["fee", "important", "cancellation"],
-      "required": true
+      "required": true,
+      "pluginOptions": { "i18n": { "localized": false } }
     },
-    "sortOrder": { "type": "integer", "default": 0 }
+    "sortOrder": {
+      "type": "integer",
+      "default": 0,
+      "pluginOptions": { "i18n": { "localized": false } }
+    }
   }
 }

@@ -8,10 +8,29 @@
     "description": "Cancellation policy fee rows"
   },
   "options": { "draftAndPublish": true },
+  "pluginOptions": {
+    "i18n": { "localized": true }
+  },
   "attributes": {
-    "label": { "type": "string", "required": true },
-    "fee": { "type": "string", "required": true },
-    "alert": { "type": "boolean", "default": false },
-    "sortOrder": { "type": "integer", "default": 0 }
+    "label": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "fee": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": { "i18n": { "localized": false } }
+    },
+    "alert": {
+      "type": "boolean",
+      "default": false,
+      "pluginOptions": { "i18n": { "localized": false } }
+    },
+    "sortOrder": {
+      "type": "integer",
+      "default": 0,
+      "pluginOptions": { "i18n": { "localized": false } }
+    }
   }
 }

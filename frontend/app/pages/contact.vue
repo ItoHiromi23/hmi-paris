@@ -2,7 +2,6 @@
 import type { CmsBundle } from '~/types/cms'
 
 const { t } = useI18n()
-const { field } = useCmsLocale()
 useReveal()
 const cms = inject<Ref<CmsBundle | null>>('cms', ref(null))
 const s = computed(() => cms.value?.settings)
@@ -33,7 +32,7 @@ useSeoMeta({
       image="/images/paris-placeholder.svg"
     >
       <p class="text-white/95">
-        {{ field('cms.settings.contactCtaSubtitle', s?.contactCtaSubtitle) }}
+        {{ s?.contactCtaSubtitle }}
       </p>
     </PageHero>
 
@@ -48,7 +47,7 @@ useSeoMeta({
             {{ t('contact.intro') }}
           </p>
           <p class="mt-4 text-sm text-[var(--muted-fg)]">
-            {{ field('cms.settings.studioLocation', s?.studioLocation) }} · {{ s?.contactPhone }}
+            {{ s?.studioLocation }} · {{ s?.contactPhone }}
           </p>
         </div>
 

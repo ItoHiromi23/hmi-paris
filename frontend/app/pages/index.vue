@@ -10,18 +10,17 @@ const { data: packages } = await useAsyncData(
   { ...freshOnNavigate(), watch: [locale] },
 )
 const cms = inject<Ref<CmsBundle | null>>('cms', ref(null))
-const { field } = useCmsLocale()
 
 const featured = computed(() => (packages.value || []).slice(0, 3))
 const moreTrips = computed(() => (packages.value || []).slice(3, 6))
 const s = computed(() => cms.value?.settings)
 
-const heroTitle = computed(() => field('cms.settings.heroTitle', s.value?.heroTitle))
-const heroEyebrow = computed(() => field('cms.settings.heroEyebrow', s.value?.heroEyebrow))
-const heroSubtitle = computed(() => field('cms.settings.heroSubtitle', s.value?.heroSubtitle))
-const packagesEyebrow = computed(() => field('cms.settings.packagesEyebrow', s.value?.packagesEyebrow))
-const packagesTitle = computed(() => field('cms.settings.packagesTitle', s.value?.packagesTitle))
-const packagesIntro = computed(() => field('cms.settings.packagesIntro', s.value?.packagesIntro))
+const heroTitle = computed(() => s.value?.heroTitle || '')
+const heroEyebrow = computed(() => s.value?.heroEyebrow || '')
+const heroSubtitle = computed(() => s.value?.heroSubtitle || '')
+const packagesEyebrow = computed(() => s.value?.packagesEyebrow || '')
+const packagesTitle = computed(() => s.value?.packagesTitle || '')
+const packagesIntro = computed(() => s.value?.packagesIntro || '')
 
 useReveal()
 

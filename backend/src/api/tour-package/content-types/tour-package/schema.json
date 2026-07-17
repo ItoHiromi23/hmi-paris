@@ -10,86 +10,108 @@
   "options": {
     "draftAndPublish": true
   },
-  "pluginOptions": {},
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
   "attributes": {
     "title": {
       "type": "string",
-      "required": true
+      "required": true,
+      "pluginOptions": { "i18n": { "localized": true } }
     },
     "slug": {
       "type": "uid",
       "targetField": "title",
-      "required": true
+      "required": true,
+      "pluginOptions": { "i18n": { "localized": false } }
     },
     "summary": {
-      "type": "text"
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
     },
     "description": {
-      "type": "richtext"
+      "type": "richtext",
+      "pluginOptions": { "i18n": { "localized": true } }
     },
     "destination": {
       "type": "string",
-      "required": true
+      "required": true,
+      "pluginOptions": { "i18n": { "localized": true } }
     },
     "region": {
-      "type": "string"
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
     },
     "durationDays": {
       "type": "integer",
       "required": true,
-      "min": 1
+      "min": 1,
+      "pluginOptions": { "i18n": { "localized": false } }
     },
     "priceFrom": {
       "type": "decimal",
-      "required": true
+      "required": true,
+      "pluginOptions": { "i18n": { "localized": false } }
     },
     "currency": {
       "type": "string",
-      "default": "EUR"
+      "default": "EUR",
+      "pluginOptions": { "i18n": { "localized": false } }
     },
     "featured": {
       "type": "boolean",
-      "default": false
+      "default": false,
+      "pluginOptions": { "i18n": { "localized": false } }
     },
     "difficulty": {
       "type": "enumeration",
       "enum": ["easy", "moderate", "challenging"],
-      "default": "moderate"
+      "default": "moderate",
+      "pluginOptions": { "i18n": { "localized": false } }
     },
     "highlights": {
-      "type": "json"
+      "type": "json",
+      "pluginOptions": { "i18n": { "localized": true } }
     },
     "heroImage": {
       "type": "media",
       "multiple": false,
       "required": false,
-      "allowedTypes": ["images"]
+      "allowedTypes": ["images"],
+      "pluginOptions": { "i18n": { "localized": false } }
     },
     "gallery": {
       "type": "media",
       "multiple": true,
       "required": false,
-      "allowedTypes": ["images"]
+      "allowedTypes": ["images"],
+      "pluginOptions": { "i18n": { "localized": false } }
     },
     "bookingUnlimited": {
       "type": "boolean",
-      "default": false
+      "default": false,
+      "pluginOptions": { "i18n": { "localized": false } }
     },
     "slotsTotal": {
       "type": "integer",
       "default": 10,
-      "min": 0
+      "min": 0,
+      "pluginOptions": { "i18n": { "localized": false } }
     },
     "slotsSold": {
       "type": "integer",
       "default": 0,
-      "min": 0
+      "min": 0,
+      "pluginOptions": { "i18n": { "localized": false } }
     },
     "sessions": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::tour-session.tour-session",
-      "mappedBy": "tourPackage"
+      "mappedBy": "tourPackage",
+      "pluginOptions": { "i18n": { "localized": false } }
     }
   }
 }

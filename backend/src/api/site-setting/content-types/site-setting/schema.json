@@ -8,41 +8,151 @@
     "description": "Global brand copy, hero, and CTAs"
   },
   "options": { "draftAndPublish": true },
+  "pluginOptions": {
+    "i18n": { "localized": true }
+  },
   "attributes": {
-    "brandName": { "type": "string", "default": "HMI" },
-    "brandTagline": { "type": "string", "default": "paris" },
-    "contactEmail": { "type": "email" },
-    "contactPhone": { "type": "string" },
-    "studioLocation": { "type": "string" },
-    "footerBlurb": { "type": "text" },
-    "heroEyebrow": { "type": "string" },
-    "heroTitle": { "type": "string" },
-    "heroSubtitle": { "type": "text" },
-    "heroImageUrl": { "type": "string" },
-    "servicesEyebrow": { "type": "string" },
-    "servicesTitle": { "type": "string" },
-    "whyEyebrow": { "type": "string" },
-    "whyItalic": { "type": "string" },
-    "whyTitle": { "type": "string" },
-    "feesEyebrow": { "type": "string" },
-    "feesTitle": { "type": "string" },
-    "packagesEyebrow": { "type": "string" },
-    "packagesTitle": { "type": "string" },
-    "packagesIntro": { "type": "text" },
-    "newsEyebrow": { "type": "string" },
-    "newsTitle": { "type": "string" },
-    "contactCtaTitle": { "type": "text" },
-    "contactCtaSubtitle": { "type": "text" },
-    "contactCtaButton": { "type": "string" },
-    "reservationEyebrow": { "type": "string" },
-    "reservationTitle": { "type": "string" },
-    "reservationSubtitle": { "type": "text" },
-    "reservationButton": { "type": "string" },
-    "tourDetailsEyebrow": { "type": "string" },
-    "tourDetailsTitle": { "type": "string" },
-    "cancellationEyebrow": { "type": "string" },
-    "cancellationTitle": { "type": "string" },
-    "notesEyebrow": { "type": "string" },
-    "notesTitle": { "type": "string" }
+    "brandName": {
+      "type": "string",
+      "default": "HMI",
+      "pluginOptions": { "i18n": { "localized": false } }
+    },
+    "brandTagline": {
+      "type": "string",
+      "default": "paris",
+      "pluginOptions": { "i18n": { "localized": false } }
+    },
+    "contactEmail": {
+      "type": "email",
+      "pluginOptions": { "i18n": { "localized": false } }
+    },
+    "contactPhone": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": false } }
+    },
+    "studioLocation": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "footerBlurb": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "heroEyebrow": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "heroTitle": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "heroSubtitle": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "heroImageUrl": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": false } }
+    },
+    "servicesEyebrow": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "servicesTitle": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "whyEyebrow": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "whyItalic": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "whyTitle": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "feesEyebrow": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "feesTitle": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "packagesEyebrow": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "packagesTitle": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "packagesIntro": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "newsEyebrow": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "newsTitle": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "contactCtaTitle": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "contactCtaSubtitle": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "contactCtaButton": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "reservationEyebrow": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "reservationTitle": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "reservationSubtitle": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "reservationButton": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "tourDetailsEyebrow": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "tourDetailsTitle": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "cancellationEyebrow": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "cancellationTitle": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "notesEyebrow": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "notesTitle": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    }
   }
 }

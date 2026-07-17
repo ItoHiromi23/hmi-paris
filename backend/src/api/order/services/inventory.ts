@@ -248,11 +248,20 @@ export async function ensureCapacityDefaults(strapi: Core.Strapi) {
     [UID.package, { slotsTotal: 10, slotsSold: 0, bookingUnlimited: false }],
     [UID.event, { slotsTotal: 20, slotsSold: 0, bookingUnlimited: false }],
   ] as const) {
-    const rows = await strapi.db.query(uid).findMany()
-    for (const row of rows) {
+    const rows = await strapi.documents(uid as any).findMany({ locale: 'en', limit: 200 })
+    const seen = new Set<string>()
+    for (const row of rows as Array<{
+      documentId?: string
+      slotsTotal?: number | null
+      slotsSold?: number | null
+      bookingUnlimited?: boolean | null
+    }>) {
+      if (!row.documentId || seen.has(row.documentId)) continue
+      seen.add(row.documentId)
       if (row.slotsTotal != null) continue
       await strapi.documents(uid as any).update({
         documentId: row.documentId,
+        locale: 'en',
         data: {
           slotsTotal: defaults.slotsTotal,
           slotsSold: row.slotsSold ?? defaults.slotsSold,
@@ -264,12 +273,26 @@ export async function ensureCapacityDefaults(strapi: Core.Strapi) {
   }
 }
 
-/** Seed next N weeks of Tue/Thu/Sat sessions (Paris local hours) */
+function sessionSlotKey(packageSlug: string, startsAt: string | Date) {
+  return `${packageSlug}|${new Date(startsAt).toISOString()}`
+}
+
+/**
+ * Ensure upcoming bookable slots exist without wiping reservations.
+ * Never deletes sessions. Only creates missing packageSlug+startsAt rows,
+ * then reconciles sold counters from paid orders (survives redeploys).
+ */
 export async function ensureTourSessions(strapi: Core.Strapi, weeks = 6) {
-  const packageRows = await strapi.db.query(UID.package).findMany()
+  const packageRows = await strapi.documents(UID.package as any).findMany({
+    locale: 'en',
+    limit: 200,
+  })
   const packages = [
     ...new Map(
-      packageRows.map((p: { slug: string; documentId: string }) => [p.slug, p]),
+      (packageRows as unknown as Array<{ slug: string; documentId: string }>).map((p) => [
+        p.slug,
+        p,
+      ]),
     ).values(),
   ]
   if (!packages.length) return
@@ -282,45 +305,22 @@ export async function ensureTourSessions(strapi: Core.Strapi, weeks = 6) {
     { hour: 17, label: 'Evening' },
   ]
   const weekdays = [2, 4, 6] // Tue, Thu, Sat
-  const expectedPerPackage = weeks * weekdays.length * hours.length
-  const existingOpen = await strapi.db.query(UID.session).count({
-    where: { sessionStatus: 'open' },
-  })
-  const expectedTotal = packages.length * expectedPerPackage
-
-  const sampleLabels = await strapi.db.query(UID.session).findMany({
-    where: { sessionStatus: 'open' },
-    limit: 50,
-  })
-  const hasNewSchedule = sampleLabels.some(
-    (row: { label?: string }) => row.label === 'Midday' || row.label === 'Evening',
-  )
-
-  // Skip only when count matches AND schedule includes midday/evening hours
-  if (
-    hasNewSchedule &&
-    existingOpen >= expectedTotal - 6 &&
-    existingOpen <= expectedTotal + 6
-  ) {
-    await ensurePrivateTourCapacity(strapi)
-    strapi.log.info(`Tour sessions already present (${existingOpen} open) — skip session seed`)
-    return
-  }
-
-  // Clear old / incomplete rows before reseed
-  const existing = await strapi.db.query(UID.session).findMany()
-  for (const row of existing) {
-    await strapi.documents(UID.session as any).delete({ documentId: row.documentId })
-  }
-  if (existing.length) {
-    strapi.log.info(`Cleared ${existing.length} tour sessions before reseed`)
-  }
-
   const capacity = 1
-  let created = 0
+
+  const existing = await strapi.db.query(UID.session).findMany()
+  const byKey = new Map<string, { documentId: string; sold?: number }>()
+  for (const row of existing) {
+    if (!row.packageSlug || !row.startsAt) continue
+    byKey.set(sessionSlotKey(String(row.packageSlug), row.startsAt as string), {
+      documentId: row.documentId as string,
+      sold: Number(row.sold || 0),
+    })
+  }
 
   const start = new Date()
   start.setUTCHours(0, 0, 0, 0)
+
+  let created = 0
 
   for (const pkg of packages) {
     for (let day = 0; day < weeks * 7; day++) {
@@ -341,8 +341,10 @@ export async function ensureTourSessions(strapi: Core.Strapi, weeks = 6) {
           ),
         )
         const endsAt = new Date(startsAt.getTime() + 2 * 60 * 60 * 1000)
+        const key = sessionSlotKey(pkg.slug, startsAt)
+        if (byKey.has(key)) continue
 
-        await strapi.documents(UID.session as any).create({
+        const createdRow = await strapi.documents(UID.session as any).create({
           data: {
             tourPackage: pkg.documentId,
             packageSlug: pkg.slug,
@@ -355,15 +357,226 @@ export async function ensureTourSessions(strapi: Core.Strapi, weeks = 6) {
           },
           status: 'published',
         })
+        byKey.set(key, {
+          documentId: createdRow.documentId as string,
+          sold: 0,
+        })
         created++
       }
     }
   }
 
-  strapi.log.info(
-    `Seeded ${created} tour sessions (${weeks} weeks × ${hours.length} hours, capacity 1 — private)`,
-  )
+  if (created > 0) {
+    strapi.log.info(
+      `Added ${created} missing tour sessions (non-destructive, ${weeks} weeks ahead)`,
+    )
+  } else {
+    strapi.log.info(
+      `Tour sessions up to date (${byKey.size} existing) — no wipe, no create`,
+    )
+  }
+
   await ensurePrivateTourCapacity(strapi)
+  await reconcileInventoryFromOrders(strapi)
+}
+
+/**
+ * Rebuild session/product sold counters from paid orders so redeploys
+ * cannot leave inventory empty while Order rows still exist.
+ * Also recreates missing sessions referenced by paid bookings.
+ */
+export async function reconcileInventoryFromOrders(strapi: Core.Strapi) {
+  const paidOrders = await strapi.db.query(UID.order).findMany({
+    where: { status: 'paid' },
+  })
+  if (!paidOrders.length) return
+
+  type SessionAgg = {
+    slots: number
+    packageSlug: string
+    startsAt?: string | null
+    endsAt?: string | null
+    orderDocumentIds: string[]
+  }
+
+  const bySessionId = new Map<string, SessionAgg>()
+  const bySlotKey = new Map<string, SessionAgg>()
+  const productSold = new Map<string, number>() // `${productType}|${slug}`
+
+  for (const order of paidOrders) {
+    const slots = Number(order.slotsReserved || 1)
+    const packageSlug = String(order.packageSlug || '')
+    const productType = (order.productType || 'package') as ProductType
+    const sessionDocumentId = order.sessionDocumentId
+      ? String(order.sessionDocumentId)
+      : ''
+    const startsAt = order.sessionStartsAt
+      ? new Date(order.sessionStartsAt as string).toISOString()
+      : null
+    const endsAt = order.sessionEndsAt
+      ? new Date(order.sessionEndsAt as string).toISOString()
+      : null
+
+    if (sessionDocumentId || (packageSlug && startsAt)) {
+      const aggKey = sessionDocumentId || sessionSlotKey(packageSlug, startsAt!)
+      const target = sessionDocumentId ? bySessionId : bySlotKey
+      const prev = target.get(aggKey) || {
+        slots: 0,
+        packageSlug,
+        startsAt,
+        endsAt,
+        orderDocumentIds: [],
+      }
+      prev.slots += slots
+      if (packageSlug) prev.packageSlug = packageSlug
+      if (startsAt) prev.startsAt = startsAt
+      if (endsAt) prev.endsAt = endsAt
+      if (order.documentId) prev.orderDocumentIds.push(String(order.documentId))
+      target.set(aggKey, prev)
+    } else if (packageSlug) {
+      const key = `${productType}|${packageSlug}`
+      productSold.set(key, (productSold.get(key) || 0) + slots)
+    }
+  }
+
+  const allSessions = await strapi.db.query(UID.session).findMany()
+  type SessionRow = {
+    documentId: string
+    packageSlug?: string
+    startsAt?: string
+    sold?: number
+  }
+  const sessionsByDocId = new Map<string, SessionRow>(
+    allSessions.map((s: SessionRow) => [s.documentId, s]),
+  )
+  const sessionsBySlot = new Map<string, SessionRow>()
+  for (const s of allSessions as SessionRow[]) {
+    if (!s.packageSlug || !s.startsAt) continue
+    sessionsBySlot.set(sessionSlotKey(String(s.packageSlug), s.startsAt), s)
+  }
+
+  const packageRowsForReconcile = (await strapi.documents(UID.package as any).findMany({
+    locale: 'en',
+    limit: 200,
+  })) as unknown as Array<{ slug: string; documentId: string }>
+  const packageBySlug = new Map(packageRowsForReconcile.map((p) => [p.slug, p]))
+
+  let sessionsUpdated = 0
+  let sessionsRestored = 0
+
+  async function applySoldToSession(
+    session: { documentId: string; sold?: number },
+    slots: number,
+  ) {
+    if (Number(session.sold || 0) === slots) return
+    await strapi.documents(UID.session as any).update({
+      documentId: session.documentId,
+      data: { sold: slots },
+      status: 'published',
+    })
+    sessionsUpdated++
+  }
+
+  // Paid orders keyed by current session document id
+  for (const [sessionDocumentId, agg] of bySessionId) {
+    let session = sessionsByDocId.get(sessionDocumentId)
+    if (!session && agg.packageSlug && agg.startsAt) {
+      session = sessionsBySlot.get(sessionSlotKey(agg.packageSlug, agg.startsAt))
+    }
+
+    if (!session && agg.packageSlug && agg.startsAt) {
+      const pkg = packageBySlug.get(agg.packageSlug)
+      const endsAt =
+        agg.endsAt ||
+        new Date(new Date(agg.startsAt).getTime() + 2 * 60 * 60 * 1000).toISOString()
+      const created = await strapi.documents(UID.session as any).create({
+        data: {
+          tourPackage: pkg?.documentId,
+          packageSlug: agg.packageSlug,
+          startsAt: agg.startsAt,
+          endsAt,
+          capacity: 1,
+          sold: agg.slots,
+          sessionStatus: 'open',
+          label: 'Restored booking',
+        },
+        status: 'published',
+      })
+      session = { documentId: created.documentId, sold: agg.slots }
+      sessionsRestored++
+
+      // Point orders at the restored session id
+      for (const orderDocumentId of agg.orderDocumentIds) {
+        await strapi.documents(UID.order as any).update({
+          documentId: orderDocumentId,
+          data: { sessionDocumentId: created.documentId },
+        })
+      }
+    }
+
+    if (session) {
+      await applySoldToSession(session, agg.slots)
+    }
+  }
+
+  // Paid orders matched only by package + start time
+  for (const [slotKey, agg] of bySlotKey) {
+    let session = sessionsBySlot.get(slotKey)
+    if (!session && agg.packageSlug && agg.startsAt) {
+      const pkg = packageBySlug.get(agg.packageSlug)
+      const endsAt =
+        agg.endsAt ||
+        new Date(new Date(agg.startsAt).getTime() + 2 * 60 * 60 * 1000).toISOString()
+      const created = await strapi.documents(UID.session as any).create({
+        data: {
+          tourPackage: pkg?.documentId,
+          packageSlug: agg.packageSlug,
+          startsAt: agg.startsAt,
+          endsAt,
+          capacity: 1,
+          sold: agg.slots,
+          sessionStatus: 'open',
+          label: 'Restored booking',
+        },
+        status: 'published',
+      })
+      session = { documentId: created.documentId, sold: agg.slots }
+      sessionsBySlot.set(slotKey, session)
+      sessionsRestored++
+
+      for (const orderDocumentId of agg.orderDocumentIds) {
+        await strapi.documents(UID.order as any).update({
+          documentId: orderDocumentId,
+          data: { sessionDocumentId: created.documentId },
+        })
+      }
+    }
+    if (session) {
+      await applySoldToSession(session, agg.slots)
+    }
+  }
+
+  // Event / package-level inventory (no session)
+  let productsUpdated = 0
+  for (const [key, slots] of productSold) {
+    const [productType, slug] = key.split('|') as [ProductType, string]
+    const uid = productUid(productType)
+    const product = await strapi.db.query(uid).findOne({ where: { slug } })
+    if (!product || product.bookingUnlimited) continue
+    if (Number(product.slotsSold || 0) === slots) continue
+    await strapi.documents(uid as any).update({
+      documentId: product.documentId,
+      data: { slotsSold: slots },
+      status: 'published',
+    })
+    productsUpdated++
+  }
+
+  if (sessionsUpdated || sessionsRestored || productsUpdated) {
+    strapi.log.info(
+      `Reconciled inventory from paid orders (sessions updated=${sessionsUpdated}, restored=${sessionsRestored}, products=${productsUpdated})`,
+    )
+  }
 }
 
 /** Force private-tour mode: each date/time holds exactly 1 booking */

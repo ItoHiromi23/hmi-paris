@@ -53,14 +53,23 @@ function sortByOrder<T extends { sortOrder: number }>(rows: T[]) {
   return [...rows].sort((a, b) => a.sortOrder - b.sortOrder)
 }
 
-async function fetchCollection<T>(path: string): Promise<T[]> {
+function strapiBaseUrl() {
   const config = useRuntimeConfig()
-  const strapiUrl = String(config.public.strapiUrl || '')
+  return String(config.public.strapiUrl || '')
     .replace(/\/$/, '')
     .replace('://localhost', '://127.0.0.1')
+}
+
+function cmsLocale(code: string) {
+  return code === 'ja' ? 'ja' : 'en'
+}
+
+async function fetchCollection<T>(path: string, locale: string): Promise<T[]> {
+  const strapiUrl = strapiBaseUrl()
   try {
     const data = await $fetch<{ data: T[] }>(`${strapiUrl}/api/${path}`, {
       query: {
+        locale,
         'pagination[pageSize]': 100,
         sort: 'sortOrder:asc',
       },
@@ -72,22 +81,26 @@ async function fetchCollection<T>(path: string): Promise<T[]> {
 }
 
 export function useCmsContent() {
-  async function fetchCms(): Promise<CmsBundle> {
-    const config = useRuntimeConfig()
-    const strapiUrl = String(config.public.strapiUrl || '')
-      .replace(/\/$/, '')
-      .replace('://localhost', '://127.0.0.1')
+  async function fetchCms(localeCode?: string): Promise<CmsBundle> {
+    const { locale } = useI18n()
+    const localeParam = cmsLocale(localeCode || locale.value)
+    const strapiUrl = strapiBaseUrl()
 
     const [settingsRes, services, reasons, fees, news, tourDetails, cancellation, notes] =
       await Promise.all([
-        $fetch<{ data: CmsSiteSettings | null }>(`${strapiUrl}/api/site-setting`).catch(() => null),
-        fetchCollection<CmsService & { documentId?: string }>('services'),
-        fetchCollection<CmsWhyReason & { documentId?: string }>('why-reasons'),
-        fetchCollection<CmsFeeTier & { documentId?: string }>('fee-tiers'),
-        fetchCollection<CmsNewsItem & { documentId?: string }>('news-items'),
-        fetchCollection<CmsTourDetail & { documentId?: string }>('tour-details'),
-        fetchCollection<CmsCancellationRule & { documentId?: string }>('cancellation-rules'),
-        fetchCollection<CmsSiteNote & { documentId?: string }>('site-notes'),
+        $fetch<{ data: CmsSiteSettings | null }>(`${strapiUrl}/api/site-setting`, {
+          query: { locale: localeParam },
+        }).catch(() => null),
+        fetchCollection<CmsService & { documentId?: string }>('services', localeParam),
+        fetchCollection<CmsWhyReason & { documentId?: string }>('why-reasons', localeParam),
+        fetchCollection<CmsFeeTier & { documentId?: string }>('fee-tiers', localeParam),
+        fetchCollection<CmsNewsItem & { documentId?: string }>('news-items', localeParam),
+        fetchCollection<CmsTourDetail & { documentId?: string }>('tour-details', localeParam),
+        fetchCollection<CmsCancellationRule & { documentId?: string }>(
+          'cancellation-rules',
+          localeParam,
+        ),
+        fetchCollection<CmsSiteNote & { documentId?: string }>('site-notes', localeParam),
       ])
 
     const settings: CmsSiteSettings = {

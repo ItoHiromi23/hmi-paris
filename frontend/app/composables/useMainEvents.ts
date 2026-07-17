@@ -70,41 +70,31 @@ export function formatJaDate(iso: string | null | undefined) {
   })
 }
 
+function cmsLocale(code: string) {
+  return code === 'ja' ? 'ja' : 'en'
+}
+
 export function useMainEvents() {
   const config = useRuntimeConfig()
-  const { bySlug } = useCmsLocale()
-  const { t } = useI18n()
+  const { t, locale } = useI18n()
   const strapiUrl = String(config.public.strapiUrl || 'http://127.0.0.1:1337')
     .replace(/\/$/, '')
     .replace('://localhost', '://127.0.0.1')
   const { formatPrice } = useTourPackages()
 
-  function localize(event: MainEvent): MainEvent {
-    const localized = bySlug('cms.events', event, [
-      'title',
-      'label',
-      'badgeText',
-      'category',
-      'summary',
-      'description',
-      'venue',
-      'ctaLabel',
-      'notes',
-      'inclusions',
-    ])
-    if (!localized.category) {
-      localized.category = t('events.categoryFallback')
+  function withFallbacks(event: MainEvent): MainEvent {
+    return {
+      ...event,
+      category: event.category || t('events.categoryFallback'),
+      ctaLabel: event.ctaLabel || t('events.detailCta'),
     }
-    if (!localized.ctaLabel) {
-      localized.ctaLabel = t('events.detailCta')
-    }
-    return localized
   }
 
   async function fetchEvents(options: { liveAvailability?: boolean } = {}): Promise<MainEvent[]> {
     try {
       const data = await $fetch<{ data: StrapiMainEvent[] }>(`${strapiUrl}/api/main-events`, {
         query: {
+          locale: cmsLocale(locale.value),
           populate: 'heroImage',
           'filters[publishedAt][$notNull]': 'true',
           sort: 'sortOrder:asc,eventDate:asc',
@@ -112,7 +102,7 @@ export function useMainEvents() {
       })
 
       if (!data?.data?.length) return []
-      const mapped = data.data.map((item) => localize(mapEvent(strapiUrl, item)))
+      const mapped = data.data.map((item) => withFallbacks(mapEvent(strapiUrl, item)))
       if (!options.liveAvailability) return mapped
 
       return Promise.all(
@@ -139,6 +129,7 @@ export function useMainEvents() {
     try {
       const data = await $fetch<{ data: StrapiMainEvent[] }>(`${strapiUrl}/api/main-events`, {
         query: {
+          locale: cmsLocale(locale.value),
           'filters[slug][$eq]': slug,
           populate: '*',
         },
@@ -147,7 +138,7 @@ export function useMainEvents() {
       const item = data?.data?.[0]
       if (!item) return null
 
-      const mapped = localize(mapEvent(strapiUrl, item))
+      const mapped = withFallbacks(mapEvent(strapiUrl, item))
       const live = await fetchAvailability('event', slug, strapiUrl)
       if (!live) return mapped
       return {

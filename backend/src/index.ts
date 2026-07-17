@@ -1,5 +1,19 @@
 import type { Core } from '@strapi/strapi'
 import { ensureCapacityDefaults, ensureTourSessions } from './api/order/services/inventory'
+import {
+  SEED_CANCEL,
+  SEED_EVENTS,
+  SEED_FEES,
+  SEED_NEWS,
+  SEED_NOTES,
+  SEED_PACKAGES,
+  SEED_REASONS,
+  SEED_SERVICES,
+  SEED_SETTINGS_EN,
+  SEED_SETTINGS_JA,
+  SEED_SETTINGS_SHARED,
+  SEED_TOUR_DETAILS,
+} from './bootstrap/cms-seed'
 
 const UID = {
   package: 'api::tour-package.tour-package',
@@ -15,246 +29,20 @@ const UID = {
   session: 'api::tour-session.tour-session',
 } as const
 
-const SEED_EVENTS = [
-  {
-    title: '凱旋門賞 2026 観戦バスツアー',
-    slug: 'arc-de-triomphe-2026',
-    label: '混乗バスツアー',
-    badgeText: '2026 10.4 SUN 凱旋門賞観戦バスツアー',
-    category: '季節限定・特別イベント',
-    summary:
-      'パリ・ロンシャン競馬場で開催される第105回凱旋門賞。世界トップクラスの騎手と名馬が競うヨーロッパ競馬の華やかな一日を、日本語ガイドとともに。',
-    description:
-      'パリ郊外のロンシャン競馬場で開催される凱旋門賞（Qatar Prix de l’Arc de Triomphe）を観戦する特別バスツアーです。ヨーロッパ競馬ならではの格式ある雰囲気と、出走馬・騎手の迫力を間近で体験できます。初めての競馬観戦でも安心の日本語ガイド同行付きです。',
-    inclusions: [
-      'ロンシャン競馬場までの往復送迎バス',
-      '立ち見チケット（Pelouse de l’Arrivée）',
-      'パドック入場',
-      '競馬場マップ・投票方法の説明資料',
-      '日本語ガイド同行',
-    ],
-    heroImageUrl: '',
-    eventDate: '2026-10-04',
-    venue: 'ロンシャン競馬場（パリ）',
-    priceFrom: 180,
-    currency: 'EUR',
-    ctaLabel: '詳細を見る',
-    featured: true,
-    sortOrder: 1,
-    notes: '天候・出走状況により内容が変更となる場合があります。詳細はお申し込み時にご案内します。',
-  },
-  {
-    title: 'パリ・クリスマスイルミネーション 夜の散策',
-    slug: 'paris-christmas-lights-2026',
-    label: '季節限定ツアー',
-    badgeText: '2026 12月 クリスマスシーズン',
-    category: '季節限定・特別イベント',
-    summary:
-      'シャンゼリゼ通りやオペラ座周辺など、パリの冬を彩る光の名所を日本語ガイドとゆっくり巡ります。',
-    description:
-      '年末のパリは街全体が光で包まれます。クリスマスマーケットやショーウィンドウを楽しみながら、安全に夜の散策をご案内します。少人数のプライベート／混乗いずれもご相談いただけます。',
-    inclusions: [
-      '日本語ガイド同行',
-      'シャンゼリゼ・オペラ周辺の名所巡り',
-      'ホットドリンクご休憩（店舗による）',
-      '集合場所までのご案内資料',
-    ],
-    heroImageUrl: '',
-    eventDate: '2026-12-15',
-    venue: 'パリ市内',
-    priceFrom: 95,
-    currency: 'EUR',
-    ctaLabel: '詳細を見る',
-    featured: true,
-    sortOrder: 2,
-    notes: '開催日は天候・混雑状況により調整する場合があります。',
-  },
+const EDITORIAL_UIDS = [
+  UID.package,
+  UID.event,
+  UID.service,
+  UID.why,
+  UID.fee,
+  UID.news,
+  UID.tourDetail,
+  UID.cancel,
+  UID.note,
+  UID.settings,
 ] as const
 
-const SEED_PACKAGES = [
-  {
-    title: 'クラシック・パリ入門',
-    slug: 'classic-paris-essentials',
-    summary: 'ルーヴルの朝、シテ島、セーヌ河畔で過ごすゆとりの午後。',
-    description: '慌ただしさのない3日間。時間指定のルーヴル入場、シテ島のガイド散策、河畔カフェでの休息も。',
-    destination: 'ルーヴル＆シテ島',
-    region: 'パリ',
-    durationDays: 3,
-    priceFrom: 890,
-    currency: 'EUR',
-    featured: true,
-    difficulty: 'easy',
-    highlights: ['ルーヴル時間指定入場', 'シテ島ウォーキング', 'セーヌ河畔カフェ'],
-  },
-  {
-    title: 'モンマルトル・アフターダーク',
-    slug: 'montmartre-after-dark',
-    summary: '村のような路地、サクレ・クールの夕景、屋上からの夜景ディナー。',
-    description: 'モンマルトルの静かな路地をたそがれに歩くプラン。サクレ・クールのゴールデンアワーの後は屋上ディナー。',
-    destination: 'モンマルトル',
-    region: 'パリ',
-    durationDays: 1,
-    priceFrom: 280,
-    currency: 'EUR',
-    featured: true,
-    difficulty: 'easy',
-    highlights: ['サクレ・クール夕景', '隠れた階段散策', '屋上ディナー'],
-  },
-  {
-    title: 'マレ地区プライベートウォーク',
-    slug: 'le-marais-private-walk',
-    summary: 'オテル・パルティキュリエ、ヴォージュ広場、話題のスイーツ巡り。',
-    description: 'マレ地区を半日プライベートガイド。中庭、ヴォージュ広場、地元おすすめの試食スポットへ。',
-    destination: 'マレ地区',
-    region: 'パリ',
-    durationDays: 1,
-    priceFrom: 195,
-    currency: 'EUR',
-    featured: true,
-    difficulty: 'easy',
-    highlights: ['ヴォージュ広場', '中庭アクセス', 'スイーツ＆ファラフェル'],
-  },
-  {
-    title: 'ヴェルサイユ・ロイヤルデー',
-    slug: 'versailles-royal-day',
-    summary: '宮殿・庭園・トリアノン。パリ市内からの往復送迎付き。',
-    description: 'スキップ・ザ・ラインで宮殿へ。庭園ガイド、マリー・アントワネットの集落で自由時間。送迎込み。',
-    destination: 'ヴェルサイユ',
-    region: 'パリ',
-    durationDays: 1,
-    priceFrom: 245,
-    currency: 'EUR',
-    featured: false,
-    difficulty: 'moderate',
-    highlights: ['優先入場', '庭園＆トリアノン', 'パリ送迎'],
-  },
-  {
-    title: '左岸文学散策',
-    slug: 'left-bank-literary-trail',
-    summary: 'サン＝ジェルマンの本屋、カフェ文化、黄昏のリュクサンブール。',
-    description: 'シェイクスピア・アンド・カンパニー、サン＝ジェルマンのカフェ、リュクサンブール公園をゆるやかに巡ります。',
-    destination: 'サン＝ジェルマン＆カルチエ・ラタン',
-    region: 'パリ',
-    durationDays: 1,
-    priceFrom: 165,
-    currency: 'EUR',
-    featured: false,
-    difficulty: 'easy',
-    highlights: ['シェイクスピア・アンド・カンパニー', 'カフェテラス', 'リュクサンブール公園'],
-  },
-  {
-    title: 'セーヌ夕暮れクルーズ',
-    slug: 'seine-twilight-cruise',
-    summary: 'エッフェル塔、オルセー、ノートルダムを川から眺める夜。',
-    description: '夕暮れの乗船。船上シャンパン、川面からの名所巡り。河岸ディナーはオプション。',
-    destination: 'セーヌ川',
-    region: 'パリ',
-    durationDays: 1,
-    priceFrom: 320,
-    currency: 'EUR',
-    featured: false,
-    difficulty: 'easy',
-    highlights: ['夕暮れ出発', '船上シャンパン', '河岸ディナー（任意）'],
-  },
-] as const
-
-const SEED_SERVICES = [
-  { title: 'パリ発観光ツアー', category: '日帰りツアー', description: 'モン・サン・ミッシェル、ヴェルサイユ、ルーヴルなど。日本人ガイド付き少人数プライベートツアー。', icon: 'star', sortOrder: 1 },
-  { title: '専用車＆日本語ガイド', category: '専用車＆ガイド', description: '専用車と日本語ガイドで、ご自身のペースでパリを巡ります。', icon: 'car', sortOrder: 2 },
-  { title: '空港送迎', category: '空港送迎', description: 'CDG／オルリーとホテル間の送迎。日本語サポート付き。', icon: 'plane', sortOrder: 3 },
-  { title: '通訳・エスコート・現地同行', category: '通訳・同行', description: '商談、視察、展示会、買い付けなど現地での同行サポート。', icon: 'chat', sortOrder: 4 },
-  { title: 'オーダーメイド手配', category: 'オーダーメイド', description: '掲載以外のご希望も。パリ滞在に合わせたカスタムプランをご提案します。', icon: 'plus', sortOrder: 5 },
-] as const
-
-const SEED_REASONS = [
-  { number: '01', title: 'パリ在住の日本人スタッフ', description: '現地で困ったことがあっても、日本語でその場サポートいたします。', sortOrder: 1 },
-  { number: '02', title: '完全プライベート', description: '相乗りなし。お客様のグループだけの貸切サービスです。', sortOrder: 2 },
-  { number: '03', title: '信頼できる現地ネットワーク', description: 'パリでの長年のネットワークと知見を活かし、質の高い手配を実現します。', sortOrder: 3 },
-  { number: '04', title: '滞在中も安心のサポート', description: '出発から帰国まで、滞在中もこまめにご連絡・サポートします。', sortOrder: 4 },
-] as const
-
-const SEED_FEES = [
-  { label: '3時間', price: '190€', sortOrder: 1 },
-  { label: '4時間', price: '235€', sortOrder: 2 },
-  { label: '6時間', price: '325€', sortOrder: 3 },
-  { label: '8時間', price: '400€', sortOrder: 4 },
-  { label: '追加1時間ごと', price: '+45€', sortOrder: 5 },
-] as const
-
-const SEED_NEWS = [
-  { dateLabel: '2026.06.01', title: 'ウェブサイトを公開しました。', sortOrder: 1 },
-  { dateLabel: '2026.05.20', title: '夏季観光ツアーの予約受付を開始しました。', sortOrder: 2 },
-  { dateLabel: '2026.04.15', title: '空港送迎サービスの営業時間を延長しました。', sortOrder: 3 },
-] as const
-
-const SEED_TOUR_DETAILS = [
-  { label: '参加人数', value: '1グループあたり1〜6名', sortOrder: 1 },
-  { label: '含まれるもの', value: '日本語アシスタントガイド', sortOrder: 2 },
-  { label: '含まれないもの', value: '交通費、飲食費、チケット代', sortOrder: 3 },
-  { label: '集合場所', value: 'ご滞在ホテルのロビー、またはご指定の場所', sortOrder: 4 },
-  { label: 'ツアー開始時間', value: '9:00〜16:00の間でご希望の時間をお選びください。\n※20:00以降は1時間あたり追加55€。終了は22:00まで。', sortOrder: 5 },
-  { label: 'お支払い期限', value: '予約確認メール送信後、72時間以内', sortOrder: 6 },
-  { label: 'お支払い方法', value: 'クレジットカード（Visa / Mastercard）、銀行振込', sortOrder: 7 },
-  { label: '予約確認', value: 'お支払い確認後、バウチャーをメールでお送りします。当日はプリントまたは画面表示をご持参ください。', sortOrder: 8 },
-  { label: '服装・持ち物', value: '歩きやすい靴、天候に合わせた服装、飲み物を。モンマルトルやマレは坂道・石畳が多いです。', sortOrder: 9 },
-] as const
-
-const SEED_CANCEL = [
-  { label: '参加日の30日前まで', fee: '0%', alert: false, sortOrder: 1 },
-  { label: '参加日の14日前まで', fee: '50%', alert: false, sortOrder: 2 },
-  { label: '参加日の13日前〜当日', fee: '100%', alert: true, sortOrder: 3 },
-  { label: 'チケット手配がある場合', fee: '100%', alert: true, sortOrder: 4 },
-] as const
-
-const SEED_NOTES = [
-  { kind: 'fee', text: '20:00以降は1時間あたり55€です。', sortOrder: 1 },
-  { kind: 'fee', text: '料金は1グループ（1〜6名）あたりです。', sortOrder: 2 },
-  { kind: 'fee', text: '交通費・飲食費・チケット代は含まれません。', sortOrder: 3 },
-  { kind: 'important', text: '交通費・入場料・お食事は各コース料金に含まれません。ご希望により手配も可能です。', sortOrder: 1 },
-  { kind: 'important', text: '多くの美術館・名所は時間帯予約が必要なため、事前のご予約をおすすめします。', sortOrder: 2 },
-  { kind: 'cancellation', text: '事前連絡なく集合時刻から30分以上遅刻された場合は、キャンセル扱いとなります。', sortOrder: 1 },
-  { kind: 'cancellation', text: '当社手配のチケットはキャンセル不可です。予約時点からキャンセル料100%が発生します。', sortOrder: 2 },
-] as const
-
-const SEED_SETTINGS = {
-  brandName: 'HMI',
-  brandTagline: 'paris',
-  contactEmail: 'info@hmiparis.com',
-  contactPhone: '+33 1 84 00 00 00',
-  studioLocation: 'マレ地区・パリ4区',
-  footerBlurb:
-    '観光ツアー、専用車サービスから通訳同行・空港送迎まで。パリ在住の日本人スタッフが、滞在全体を丁寧にサポートします。',
-  heroEyebrow: 'HMI Paris ・ 日本語サポート',
-  heroTitle: 'どんな場面でも、日本語で安心を。',
-  heroSubtitle:
-    '観光ツアー、専用車、通訳同行、空港送迎まで。パリ在住の日本人スタッフが、あなたの滞在を支えます。',
-  heroImageUrl: '',
-  servicesEyebrow: 'サービス一覧',
-  servicesTitle: 'パリ滞在を支える5つのサービス',
-  whyEyebrow: 'HMI Parisを選ぶ理由',
-  whyItalic: '選ばれるポイント',
-  whyTitle: '「日本語で安心」を、あらゆる場面で。',
-  feesEyebrow: '料金について',
-  feesTitle: '料金のご案内',
-  packagesEyebrow: 'おすすめ体験',
-  packagesTitle: 'パリのエリア別パッケージ',
-  packagesIntro: 'モンマルトル、マレ、ルーヴル、ヴェルサイユ、セーヌなど、厳選した体験をご用意しています。',
-  newsEyebrow: 'お知らせ',
-  newsTitle: '新着情報',
-  contactCtaTitle: 'パリ滞在に関するご相談は、お気軽にお問い合わせください。',
-  contactCtaSubtitle: 'お見積り・ご相談は無料です。日本語でご連絡ください。',
-  contactCtaButton: 'お問い合わせはこちら',
-  reservationEyebrow: 'ご予約',
-  reservationTitle: 'パリで、特別な一日を。',
-  reservationSubtitle: 'エリアやテーマ、日程が決まっていなくても大丈夫です。お気軽にご相談ください。',
-  reservationButton: 'お問い合わせ',
-  tourDetailsEyebrow: '実施詳細',
-  tourDetailsTitle: 'ツアー詳細',
-  cancellationEyebrow: 'キャンセルについて',
-  cancellationTitle: 'キャンセルポリシー',
-  notesEyebrow: 'ご注意事項',
-  notesTitle: 'ご確認ください',
-}
+const HAS_JP = /[\u3040-\u30ff\u4e00-\u9faf]/
 
 const PUBLIC_ACTIONS = [
   `${UID.package}.find`,
@@ -298,56 +86,301 @@ async function setPublicPermissions(strapi: Core.Strapi) {
   }
 }
 
-async function seedCollection(strapi: Core.Strapi, uid: string, rows: Record<string, unknown>[]) {
-  // Non-destructive: only seed when the collection is empty so admin edits persist.
-  const count = await strapi.db.query(uid).count()
-  if (count > 0) {
-    strapi.log.info(`Skip seed (${count} existing) → ${uid}`)
-    return
+async function ensureLocales(strapi: Core.Strapi) {
+  const localesService = strapi.plugin('i18n').service('locales')
+  const existing = await localesService.find()
+  const byCode = new Map(
+    (existing as Array<{ code: string; name?: string }>).map((l) => [l.code, l]),
+  )
+
+  if (!byCode.has('en')) {
+    await localesService.create({ code: 'en', name: 'English' })
+    strapi.log.info('Created locale: en')
   }
-  for (const row of rows) {
-    await strapi.documents(uid as any).create({
-      data: row,
-      status: 'published',
-    })
+  if (!byCode.has('ja')) {
+    await localesService.create({ code: 'ja', name: 'Japanese (ja)' })
+    strapi.log.info('Created locale: ja')
   }
-  strapi.log.info(`Seeded ${rows.length} → ${uid}`)
+
+  const currentDefault = await localesService.getDefaultLocale()
+  if (currentDefault !== 'en') {
+    await localesService.setDefaultLocale({ code: 'en' })
+    strapi.log.info('Set default locale → en')
+  }
 }
 
-async function seedPackages(strapi: Core.Strapi) {
-  // Non-destructive: only seed when there are no packages yet.
-  const count = await strapi.db.query(UID.package).count()
-  if (count > 0) {
-    strapi.log.info(`Skip seed (${count} existing) → ${UID.package}`)
-    return
+/** Create EN entry, then attach JA as a linked localization of the same document. */
+async function createLocalized(
+  strapi: Core.Strapi,
+  uid: string,
+  shared: Record<string, unknown>,
+  en: Record<string, unknown>,
+  ja: Record<string, unknown>,
+) {
+  const created = await strapi.documents(uid as any).create({
+    data: { ...shared, ...en },
+    locale: 'en',
+    status: 'published',
+  })
+  // Include shared fields when creating the JA locale — Strapi requires non-null
+  // required attributes (e.g. slug) even when they are marked non-localized.
+  await strapi.documents(uid as any).update({
+    documentId: created.documentId,
+    locale: 'ja',
+    data: { ...shared, ...ja },
+    status: 'published',
+  })
+  return created.documentId as string
+}
+
+async function updateLocalized(
+  strapi: Core.Strapi,
+  uid: string,
+  documentId: string,
+  shared: Record<string, unknown>,
+  en: Record<string, unknown>,
+  ja: Record<string, unknown>,
+) {
+  await strapi.documents(uid as any).update({
+    documentId,
+    locale: 'en',
+    data: { ...shared, ...en },
+    status: 'published',
+  })
+  await strapi.documents(uid as any).update({
+    documentId,
+    locale: 'ja',
+    data: { ...shared, ...ja },
+    status: 'published',
+  })
+}
+
+async function clearEditorial(strapi: Core.Strapi) {
+  for (const uid of EDITORIAL_UIDS) {
+    const rows = await strapi.documents(uid as any).findMany({ locale: 'en', limit: 200 })
+    const seen = new Set<string>()
+    for (const row of rows as Array<{ documentId?: string }>) {
+      if (!row.documentId || seen.has(row.documentId)) continue
+      seen.add(row.documentId)
+      await strapi.documents(uid as any).delete({
+        documentId: row.documentId,
+        locale: '*',
+      })
+    }
+    // Also wipe any JA-only leftovers
+    const jaRows = await strapi.documents(uid as any).findMany({ locale: 'ja', limit: 200 })
+    for (const row of jaRows as Array<{ documentId?: string }>) {
+      if (!row.documentId || seen.has(row.documentId)) continue
+      seen.add(row.documentId)
+      await strapi.documents(uid as any).delete({
+        documentId: row.documentId,
+        locale: '*',
+      })
+    }
   }
+  strapi.log.info('Cleared editorial CMS content for i18n reseed')
+}
+
+async function needsI18nReseed(strapi: Core.Strapi) {
+  const flag = String(process.env.CMS_RESEED || '').toLowerCase()
+  if (flag === '1' || flag === 'true' || flag === 'yes') return true
+
+  const enPkg = await strapi.documents(UID.package).findFirst({ locale: 'en' })
+  const jaPkg = await strapi.documents(UID.package).findFirst({ locale: 'ja' })
+
+  if (!enPkg && !jaPkg) return false // empty → normal seed
+  if (enPkg && jaPkg) {
+    // Old JA-only rows may have been assigned to default `en` after enabling i18n
+    if (enPkg.title && HAS_JP.test(String(enPkg.title))) return true
+    return false
+  }
+  // One locale missing → migrate
+  return true
+}
+
+async function findBySlug(strapi: Core.Strapi, uid: string, slug: string) {
+  const rows = (await strapi.documents(uid as any).findMany({
+    locale: 'en',
+    filters: { slug: { $eq: slug } },
+    limit: 1,
+  })) as unknown as Array<{ documentId: string }>
+  return rows[0]?.documentId || null
+}
+
+async function findBySortOrder(strapi: Core.Strapi, uid: string, sortOrder: number) {
+  const rows = (await strapi.documents(uid as any).findMany({
+    locale: 'en',
+    filters: { sortOrder: { $eq: sortOrder } },
+    limit: 1,
+  })) as unknown as Array<{ documentId: string }>
+  return rows[0]?.documentId || null
+}
+
+async function findByKindAndSortOrder(
+  strapi: Core.Strapi,
+  uid: string,
+  kind: string,
+  sortOrder: number,
+) {
+  const rows = (await strapi.documents(uid as any).findMany({
+    locale: 'en',
+    filters: {
+      kind: { $eq: kind },
+      sortOrder: { $eq: sortOrder },
+    },
+    limit: 1,
+  })) as unknown as Array<{ documentId: string }>
+  return rows[0]?.documentId || null
+}
+
+async function upsertLocalized(
+  strapi: Core.Strapi,
+  uid: string,
+  documentId: string | null,
+  shared: Record<string, unknown>,
+  en: Record<string, unknown>,
+  ja: Record<string, unknown>,
+) {
+  if (documentId) {
+    await updateLocalized(strapi, uid, documentId, shared, en, ja)
+    return documentId
+  }
+  return createLocalized(strapi, uid, shared, en, ja)
+}
+
+async function seedPackages(strapi: Core.Strapi, force: boolean) {
+  if (!force) {
+    const count = await strapi.documents(UID.package).count({ locale: 'en' })
+    if (count > 0) {
+      strapi.log.info(`Skip seed (${count} existing) → ${UID.package}`)
+      return
+    }
+  }
+
   for (const pkg of SEED_PACKAGES) {
-    await strapi.documents(UID.package).create({
-      data: {
-        ...pkg,
-        highlights: [...pkg.highlights],
+    const { en, ja, slug, ...shared } = pkg
+    const existingId = force ? await findBySlug(strapi, UID.package, slug) : null
+    await upsertLocalized(
+      strapi,
+      UID.package,
+      existingId,
+      {
+        ...shared,
+        slug,
+        highlights: [...en.highlights],
         slotsTotal: 10,
         slotsSold: 0,
         bookingUnlimited: false,
       },
-      status: 'published',
-    })
+      { ...en, highlights: [...en.highlights] },
+      { ...ja, highlights: [...ja.highlights] },
+    )
   }
-  strapi.log.info(`Seeded ${SEED_PACKAGES.length} tour packages (JA)`)
+  strapi.log.info(`Seeded ${SEED_PACKAGES.length} tour packages (EN + JA)`)
 }
 
-async function seedSettings(strapi: Core.Strapi) {
-  // Non-destructive: only create settings when none exist; never overwrite edits.
-  const existing = await strapi.documents(UID.settings).findFirst({})
-  if (existing?.documentId) {
+async function seedEvents(strapi: Core.Strapi, force: boolean) {
+  if (!force) {
+    const count = await strapi.documents(UID.event).count({ locale: 'en' })
+    if (count > 0) {
+      strapi.log.info(`Skip seed (${count} existing) → ${UID.event}`)
+      return
+    }
+  }
+
+  for (const event of SEED_EVENTS) {
+    const { en, ja, slug, ...shared } = event
+    const existingId = force ? await findBySlug(strapi, UID.event, slug) : null
+    await upsertLocalized(
+      strapi,
+      UID.event,
+      existingId,
+      {
+        ...shared,
+        slug,
+        inclusions: [...en.inclusions],
+        slotsTotal: 20,
+        slotsSold: 0,
+        bookingUnlimited: false,
+      },
+      { ...en, inclusions: [...en.inclusions] },
+      { ...ja, inclusions: [...ja.inclusions] },
+    )
+  }
+  strapi.log.info(`Seeded ${SEED_EVENTS.length} main events (EN + JA)`)
+}
+
+async function seedOrderedCollection(
+  strapi: Core.Strapi,
+  uid: string,
+  rows: ReadonlyArray<{
+    en: Record<string, unknown>
+    ja: Record<string, unknown>
+    sortOrder?: number
+    kind?: string
+    [key: string]: unknown
+  }>,
+  opts: { force: boolean; createOnly?: boolean },
+) {
+  const { force, createOnly = false } = opts
+  if (!force) {
+    const count = await strapi.documents(uid as any).count({ locale: 'en' })
+    if (count > 0) {
+      strapi.log.info(`Skip seed (${count} existing) → ${uid}`)
+      return
+    }
+  }
+
+  for (const row of rows) {
+    const { en, ja, ...shared } = row
+    const sortOrder = typeof shared.sortOrder === 'number' ? shared.sortOrder : undefined
+    const kind = typeof shared.kind === 'string' ? shared.kind : undefined
+
+    let existingId: string | null = null
+    // After a wipe, always create — looking up by sortOrder mid-seed would
+    // collide when several rows share the same sortOrder (e.g. site-notes by kind).
+    if (force && !createOnly && sortOrder != null) {
+      existingId = kind
+        ? await findByKindAndSortOrder(strapi, uid, kind, sortOrder)
+        : await findBySortOrder(strapi, uid, sortOrder)
+    }
+
+    await upsertLocalized(strapi, uid, existingId, shared as Record<string, unknown>, en, ja)
+  }
+  strapi.log.info(`Seeded ${rows.length} → ${uid} (EN + JA)`)
+}
+
+async function seedSettings(strapi: Core.Strapi, force: boolean) {
+  const existing = await strapi.documents(UID.settings).findFirst({ locale: 'en' })
+  if (existing?.documentId && !force) {
     strapi.log.info('Skip seed (settings exist) → site settings')
     return
   }
-  await strapi.documents(UID.settings).create({
-    data: SEED_SETTINGS,
-    status: 'published',
-  })
-  strapi.log.info('Seeded site settings (JA)')
+
+  await upsertLocalized(
+    strapi,
+    UID.settings,
+    existing?.documentId || null,
+    { ...SEED_SETTINGS_SHARED },
+    { ...SEED_SETTINGS_EN },
+    { ...SEED_SETTINGS_JA },
+  )
+  strapi.log.info('Seeded site settings (EN + JA)')
+}
+
+async function clearCollection(strapi: Core.Strapi, uid: string) {
+  const seen = new Set<string>()
+  for (const locale of ['en', 'ja'] as const) {
+    const rows = await strapi.documents(uid as any).findMany({ locale, limit: 200 })
+    for (const row of rows as Array<{ documentId?: string }>) {
+      if (!row.documentId || seen.has(row.documentId)) continue
+      seen.add(row.documentId)
+      await strapi.documents(uid as any).delete({
+        documentId: row.documentId,
+        locale: '*',
+      })
+    }
+  }
 }
 
 export default {
@@ -355,36 +388,44 @@ export default {
 
   async bootstrap({ strapi }: { strapi: Core.Strapi }) {
     await setPublicPermissions(strapi)
+    await ensureLocales(strapi)
 
-    // Each seed is non-destructive: it only fills in defaults when the
-    // collection is empty, so admin edits are never overwritten on boot.
-    await seedPackages(strapi)
-    await seedCollection(strapi, UID.service, [...SEED_SERVICES])
-    await seedCollection(strapi, UID.why, [...SEED_REASONS])
-    await seedCollection(strapi, UID.fee, [...SEED_FEES])
-    await seedCollection(strapi, UID.news, [...SEED_NEWS])
-    await seedCollection(strapi, UID.tourDetail, [...SEED_TOUR_DETAILS])
-    await seedCollection(strapi, UID.cancel, [...SEED_CANCEL])
-    await seedCollection(strapi, UID.note, [...SEED_NOTES])
-    await seedSettings(strapi)
-
-    // Main events: seed only when empty (admin can add/delete freely)
-    const eventCount = await strapi.db.query(UID.event).count()
-    if (eventCount === 0) {
-      for (const event of SEED_EVENTS) {
-        await strapi.documents(UID.event).create({
-          data: {
-            ...event,
-            inclusions: [...event.inclusions],
-            slotsTotal: 20,
-            slotsSold: 0,
-            bookingUnlimited: false,
-          },
-          status: 'published',
-        })
-      }
-      strapi.log.info(`Seeded ${SEED_EVENTS.length} main events`)
+    const wipe = ['1', 'true', 'yes'].includes(String(process.env.CMS_RESEED || '').toLowerCase())
+    const force = wipe || (await needsI18nReseed(strapi))
+    if (wipe) {
+      strapi.log.warn('CMS_RESEED set — wiping editorial CMS before EN + JA seed')
+      await clearEditorial(strapi)
+    } else if (force) {
+      strapi.log.warn('CMS i18n migrate — writing EN source + JA translations onto existing entries')
     }
+
+    const orderedOpts = { force, createOnly: wipe }
+
+    await seedPackages(strapi, force)
+    await seedEvents(strapi, force)
+    await seedOrderedCollection(strapi, UID.service, [...SEED_SERVICES], orderedOpts)
+    await seedOrderedCollection(strapi, UID.why, [...SEED_REASONS], orderedOpts)
+    await seedOrderedCollection(strapi, UID.fee, [...SEED_FEES], orderedOpts)
+    await seedOrderedCollection(strapi, UID.news, [...SEED_NEWS], orderedOpts)
+    await seedOrderedCollection(strapi, UID.tourDetail, [...SEED_TOUR_DETAILS], orderedOpts)
+    await seedOrderedCollection(strapi, UID.cancel, [...SEED_CANCEL], orderedOpts)
+
+    // Repair incomplete site-notes (older seed collapsed rows that share sortOrder)
+    const noteCount = await strapi.documents(UID.note).count({ locale: 'en' })
+    if (noteCount < SEED_NOTES.length) {
+      strapi.log.warn(
+        `Site notes incomplete (${noteCount}/${SEED_NOTES.length}) — clearing and reseeding`,
+      )
+      await clearCollection(strapi, UID.note)
+      await seedOrderedCollection(strapi, UID.note, [...SEED_NOTES], {
+        force: true,
+        createOnly: true,
+      })
+    } else {
+      await seedOrderedCollection(strapi, UID.note, [...SEED_NOTES], orderedOpts)
+    }
+
+    await seedSettings(strapi, force)
 
     await ensureCapacityDefaults(strapi)
     await ensureTourSessions(strapi, 6)
