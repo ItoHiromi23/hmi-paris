@@ -17,19 +17,23 @@ const props = withDefaults(
 )
 
 const image = computed(() => props.image || '/images/paris-placeholder.svg')
+const isLocalAsset = computed(() => image.value.startsWith('/'))
 const src = computed(() => optimizeImageUrl(image.value, props.compact ? 1400 : 1800, 68))
 const srcset = computed(() =>
-  imageSrcSet(image.value, props.compact ? [800, 1200, 1600] : [960, 1280, 1600, 2000]),
+  isLocalAsset.value
+    ? ''
+    : imageSrcSet(image.value, props.compact ? [800, 1200, 1600] : [960, 1280, 1600, 2000]),
 )
 
-if (props.priority) {
+// Preload only remote/optimized LCP images — skip local SVG placeholders
+if (props.priority && !isLocalAsset.value) {
   useHead({
     link: [
       {
         rel: 'preload',
         as: 'image',
         href: src.value,
-        imageSrcset: srcset.value,
+        imageSrcset: srcset.value || undefined,
         imageSizes: '100vw',
         fetchpriority: 'high',
       },
@@ -45,12 +49,12 @@ if (props.priority) {
   >
     <img
       :src="src"
-      :srcset="srcset"
+      :srcset="srcset || undefined"
       sizes="100vw"
       :alt="title"
       width="1800"
       height="1200"
-      class="absolute inset-0 h-full w-full object-cover ken-burns opacity-60"
+      class="absolute inset-0 h-full w-full object-cover opacity-60"
       :loading="priority ? 'eager' : 'lazy'"
       :fetchpriority="priority ? 'high' : 'auto'"
       decoding="async"
@@ -64,22 +68,23 @@ if (props.priority) {
       class="relative container-wide flex h-full min-h-[inherit] flex-col pb-16 pt-28 sm:pb-20 sm:pt-32"
       :class="centered ? 'items-center justify-center text-center' : 'justify-end'"
     >
-      <p v-if="eyebrow" class="section-label !text-[#5eead4] hero-animate drop-shadow">
+      <p v-if="eyebrow" class="section-label !text-[#5eead4] drop-shadow">
         {{ eyebrow }}
       </p>
+      <!-- LCP element: no fade/delay so paint is not deferred -->
       <h1
-        class="font-display hero-animate hero-animate-delay-1 mt-4 max-w-4xl text-[clamp(2.8rem,7.5vw,5.25rem)] leading-[0.95] tracking-tight text-white drop-shadow-[0_6px_24px_rgba(0,0,0,0.45)]"
+        class="font-display mt-4 max-w-4xl text-[clamp(2.8rem,7.5vw,5.25rem)] leading-[0.95] tracking-tight text-white drop-shadow-[0_6px_24px_rgba(0,0,0,0.45)]"
       >
         {{ title }}
       </h1>
       <div
-        class="hero-animate hero-animate-delay-2 mt-6 max-w-2xl text-white/95"
+        class="hero-animate mt-6 max-w-2xl text-white/95"
         :class="centered && 'mx-auto'"
       >
         <slot />
       </div>
       <div
-        class="hero-animate hero-animate-delay-3 mt-10 flex flex-wrap gap-4"
+        class="hero-animate hero-animate-delay-1 mt-10 flex flex-wrap gap-4"
         :class="centered && 'justify-center'"
       >
         <slot name="actions" />

@@ -60,7 +60,7 @@ export function useMainEvents() {
     .replace('://localhost', '://127.0.0.1')
   const { formatPrice } = useTourPackages()
 
-  async function fetchEvents(): Promise<MainEvent[]> {
+  async function fetchEvents(options: { liveAvailability?: boolean } = {}): Promise<MainEvent[]> {
     try {
       const data = await $fetch<{ data: StrapiMainEvent[] }>(`${strapiUrl}/api/main-events`, {
         query: {
@@ -71,9 +71,11 @@ export function useMainEvents() {
       })
 
       if (!data?.data?.length) return []
+      const mapped = data.data.map((item) => mapEvent(strapiUrl, item))
+      if (!options.liveAvailability) return mapped
+
       return Promise.all(
-        data.data.map(async (item) => {
-          const base = mapEvent(strapiUrl, item)
+        mapped.map(async (base) => {
           const live = await fetchAvailability('event', base.slug, strapiUrl)
           if (!live) return base
           return {

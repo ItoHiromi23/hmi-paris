@@ -75,7 +75,8 @@
 
 @layer components {
   .font-display {
-    font-family: 'Noto Serif JP', 'Cormorant Garamond', Georgia, serif;
+    font-family: 'Noto Serif JP', 'Noto Sans JP', Georgia, serif;
+    font-weight: 400;
   }
 
   .container-site {
@@ -233,19 +234,19 @@
 }
 
 .hero-animate {
-  animation: fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: fade-up 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .hero-animate-delay-1 {
-  animation-delay: 0.12s;
+  animation-delay: 0.08s;
 }
 
 .hero-animate-delay-2 {
-  animation-delay: 0.24s;
+  animation-delay: 0.14s;
 }
 
 .hero-animate-delay-3 {
-  animation-delay: 0.36s;
+  animation-delay: 0.2s;
 }
 
 .snap-x-row {

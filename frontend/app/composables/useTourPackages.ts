@@ -53,7 +53,7 @@ export function useTourPackages() {
     .replace(/\/$/, '')
     .replace('://localhost', '://127.0.0.1')
 
-  async function fetchPackages(): Promise<TourPackage[]> {
+  async function fetchPackages(options: { liveAvailability?: boolean } = {}): Promise<TourPackage[]> {
     try {
       const data = await $fetch<{ data: StrapiTourPackage[] }>(
         `${strapiUrl}/api/tour-packages`,
@@ -68,9 +68,13 @@ export function useTourPackages() {
 
       if (!data?.data?.length) return []
 
+      const mapped = data.data.map((item) => mapPackage(strapiUrl, item))
+
+      // Skip N+1 availability calls on list/home SSR — use Strapi fields; detail pages enrich live.
+      if (!options.liveAvailability) return mapped
+
       return Promise.all(
-        data.data.map(async (item) => {
-          const base = mapPackage(strapiUrl, item)
+        mapped.map(async (base) => {
           const live = await fetchAvailability('package', base.slug, strapiUrl)
           return {
             ...base,

@@ -49,13 +49,9 @@ export default defineNuxtConfig({
   devtools: { enabled: !isProd },
   modules: ['@nuxtjs/tailwindcss', '@nuxt/image'],
   css: [
-    '@fontsource/noto-sans-jp/japanese-400.css',
-    '@fontsource/noto-sans-jp/japanese-500.css',
-    '@fontsource/noto-sans-jp/japanese-600.css',
-    '@fontsource/noto-serif-jp/japanese-400.css',
-    '@fontsource/noto-serif-jp/japanese-600.css',
-    '@fontsource/cormorant-garamond/latin-400.css',
-    '@fontsource/cormorant-garamond/latin-600.css',
+    // Subsetted unicode-range files (not full japanese-*.css ~1MB each)
+    '@fontsource/noto-sans-jp/400.css',
+    '@fontsource/noto-serif-jp/400.css',
     '@fontsource/outfit/latin-400.css',
     '@fontsource/outfit/latin-600.css',
     '~/assets/css/main.css',
@@ -120,6 +116,9 @@ export default defineNuxtConfig({
     preset: 'node-server',
     compressPublicAssets: true,
     routeRules: {
+      '/': { swr: 60 },
+      '/packages': { swr: 60 },
+      '/events': { swr: 60 },
       '/**': { headers: securityHeaders },
       '/agents.txt': { headers: { 'Content-Type': 'text/plain; charset=utf-8' } },
       '/llms.txt': { headers: { 'Content-Type': 'text/plain; charset=utf-8' } },

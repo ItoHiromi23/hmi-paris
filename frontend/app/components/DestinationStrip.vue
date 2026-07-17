@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const { fetchPackages } = useTourPackages()
 const { data: packages } = await useAsyncData(
-  'destination-strip-packages',
+  'home-packages-ja',
   () => fetchPackages(),
   freshOnNavigate(),
 )
