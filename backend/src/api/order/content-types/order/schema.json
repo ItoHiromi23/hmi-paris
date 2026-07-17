@@ -1,0 +1,86 @@
+{
+  "kind": "collectionType",
+  "collectionName": "orders",
+  "info": {
+    "singularName": "order",
+    "pluralName": "orders",
+    "displayName": "Order",
+    "description": "Package purchase / payment records (Stripe)"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "orderNumber": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "productType": {
+      "type": "enumeration",
+      "enum": ["package", "event"],
+      "default": "package",
+      "required": true
+    },
+    "packageSlug": {
+      "type": "string",
+      "required": true
+    },
+    "packageTitle": {
+      "type": "string",
+      "required": true
+    },
+    "slotsReserved": {
+      "type": "integer",
+      "default": 1,
+      "min": 1
+    },
+    "sessionDocumentId": {
+      "type": "string"
+    },
+    "sessionStartsAt": {
+      "type": "datetime"
+    },
+    "sessionEndsAt": {
+      "type": "datetime"
+    },
+    "amount": {
+      "type": "decimal",
+      "required": true
+    },
+    "currency": {
+      "type": "string",
+      "required": true,
+      "default": "EUR"
+    },
+    "customerName": {
+      "type": "string"
+    },
+    "customerEmail": {
+      "type": "email"
+    },
+    "customerPhone": {
+      "type": "string"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["pending", "paid", "failed", "refunded", "cancelled"],
+      "default": "pending",
+      "required": true
+    },
+    "stripeSessionId": {
+      "type": "string",
+      "unique": true
+    },
+    "stripePaymentIntentId": {
+      "type": "string"
+    },
+    "paidAt": {
+      "type": "datetime"
+    },
+    "notes": {
+      "type": "text"
+    }
+  }
+}

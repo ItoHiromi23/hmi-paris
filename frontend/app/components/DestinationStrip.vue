@@ -1,0 +1,49 @@
+<script setup lang="ts">
+import { PARIS_DESTINATIONS } from '~/data/destinations'
+</script>
+
+<template>
+  <section class="py-16 sm:py-20">
+    <div class="container-wide">
+      <div class="reveal flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p class="section-label">人気のエリア</p>
+          <h2 class="font-display mt-3 text-3xl text-[var(--heading)] sm:text-5xl">
+            パリの名所を、エリアごとに
+          </h2>
+        </div>
+        <NuxtLink
+          to="/packages"
+          class="text-[12px] font-semibold uppercase tracking-[0.18em] text-[var(--teal)] hover:text-[var(--teal-bright)]"
+        >
+          すべてのツアー →
+        </NuxtLink>
+      </div>
+    </div>
+
+    <div class="container-wide mt-10">
+      <div class="snap-x-row reveal -mx-1 flex gap-4 overflow-x-auto pb-4 sm:gap-5">
+        <NuxtLink
+          v-for="dest in PARIS_DESTINATIONS"
+          :key="dest.name"
+          :to="dest.href"
+          class="group relative min-w-[78%] overflow-hidden rounded-[1.25rem] shadow-md sm:min-w-[42%] lg:min-w-[30%]"
+        >
+          <div class="relative aspect-[4/5]">
+            <img
+              :src="optimizeImageUrl(dest.image, 900, 68)"
+              :alt="dest.name"
+              class="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+              loading="lazy"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-[var(--void)]/80 via-[var(--void)]/20 to-transparent" />
+            <div class="absolute inset-x-0 bottom-0 p-6">
+              <h3 class="font-display text-3xl text-white">{{ dest.name }}</h3>
+              <p class="mt-2 text-sm text-white/85">{{ dest.tagline }}</p>
+            </div>
+          </div>
+        </NuxtLink>
+      </div>
+    </div>
+  </section>
+</template>

@@ -1,0 +1,94 @@
+{
+  "kind": "collectionType",
+  "collectionName": "main_events",
+  "info": {
+    "singularName": "main-event",
+    "pluralName": "main-events",
+    "displayName": "Main Event",
+    "description": "季節限定・特別イベント（追加・削除可能）"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "label": {
+      "type": "string"
+    },
+    "badgeText": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "text"
+    },
+    "description": {
+      "type": "richtext"
+    },
+    "inclusions": {
+      "type": "json"
+    },
+    "heroImageUrl": {
+      "type": "string"
+    },
+    "heroImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "eventDate": {
+      "type": "date"
+    },
+    "venue": {
+      "type": "string"
+    },
+    "priceFrom": {
+      "type": "decimal"
+    },
+    "currency": {
+      "type": "string",
+      "default": "EUR"
+    },
+    "ctaLabel": {
+      "type": "string",
+      "default": "詳細を見る"
+    },
+    "featured": {
+      "type": "boolean",
+      "default": true
+    },
+    "sortOrder": {
+      "type": "integer",
+      "default": 0
+    },
+    "notes": {
+      "type": "text"
+    },
+    "bookingUnlimited": {
+      "type": "boolean",
+      "default": false
+    },
+    "slotsTotal": {
+      "type": "integer",
+      "default": 20,
+      "min": 0
+    },
+    "slotsSold": {
+      "type": "integer",
+      "default": 0,
+      "min": 0
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "kind": "collectionType",
+  "collectionName": "why_reasons",
+  "info": {
+    "singularName": "why-reason",
+    "pluralName": "why-reasons",
+    "displayName": "Why Reason",
+    "description": "Reasons for choosing HMI Paris"
+  },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "number": { "type": "string", "required": true },
+    "title": { "type": "string", "required": true },
+    "description": { "type": "text", "required": true },
+    "sortOrder": { "type": "integer", "default": 0 }
+  }
+}

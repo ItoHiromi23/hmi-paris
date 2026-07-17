@@ -1,0 +1,95 @@
+{
+  "kind": "collectionType",
+  "collectionName": "tour_packages",
+  "info": {
+    "singularName": "tour-package",
+    "pluralName": "tour-packages",
+    "displayName": "Tour Package",
+    "description": "Tourist packages available for sale"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "summary": {
+      "type": "text"
+    },
+    "description": {
+      "type": "richtext"
+    },
+    "destination": {
+      "type": "string",
+      "required": true
+    },
+    "region": {
+      "type": "string"
+    },
+    "durationDays": {
+      "type": "integer",
+      "required": true,
+      "min": 1
+    },
+    "priceFrom": {
+      "type": "decimal",
+      "required": true
+    },
+    "currency": {
+      "type": "string",
+      "default": "EUR"
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "difficulty": {
+      "type": "enumeration",
+      "enum": ["easy", "moderate", "challenging"],
+      "default": "moderate"
+    },
+    "highlights": {
+      "type": "json"
+    },
+    "heroImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "gallery": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "bookingUnlimited": {
+      "type": "boolean",
+      "default": false
+    },
+    "slotsTotal": {
+      "type": "integer",
+      "default": 10,
+      "min": 0
+    },
+    "slotsSold": {
+      "type": "integer",
+      "default": 0,
+      "min": 0
+    },
+    "sessions": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::tour-session.tour-session",
+      "mappedBy": "tourPackage"
+    }
+  }
+}

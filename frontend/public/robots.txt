@@ -1,0 +1,29 @@
+User-agent: *
+Allow: /
+
+# AI / agent crawlers — welcome to public content
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Anthropic-AI
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+Sitemap: /sitemap.xml
+
+# Prefer curated maps for agents
+# See also: /llms.txt /llms-full.txt /agents.txt

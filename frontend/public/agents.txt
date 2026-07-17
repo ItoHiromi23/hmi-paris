@@ -1,0 +1,79 @@
+# agents.txt — HMI Paris
+# Version: 1.0
+# Updated: 2026-07-15
+# Spec inspiration: agentstxt.org / machine-readable agent policy
+
+## Identity
+name: HMI Paris
+type: travel-experience-studio
+description: Curated Paris tourist packages across neighbourhoods and landmarks.
+owner: HMI Paris
+contact: hello@hmiparis.fr
+location: Le Marais, Paris 4e, France
+website: https://hmiparis.fr
+
+## Discovery
+llms: /llms.txt
+llms-full: /llms-full.txt
+robots: /robots.txt
+sitemap: /sitemap.xml
+openapi: null
+well-known: /.well-known/agent-manifest.json
+
+## Terms of Use
+allow-read: public pages, package catalog, llms.txt, sitemap
+allow-cite: yes, with attribution to HMI Paris
+allow-summarize: yes
+disallow-scrape-sensitive: admin, CMS write APIs, customer PII
+disallow-impersonate: do not claim to be HMI Paris staff
+disallow-book-without-user: agents may draft enquiries but must not submit personal data without explicit user consent
+rate-limit-hint: be respectful; prefer /llms.txt over exhaustive HTML crawls
+
+## Brand Voice
+tone: editorial, calm, place-specific
+avoid: generic hype, invented discounts, non-Paris packages
+
+## Services
+- id: classic-paris-essentials
+  name: Classic Paris Essentials
+  url: /packages/classic-paris-essentials
+  price_from_eur: 890
+- id: montmartre-after-dark
+  name: Montmartre After Dark
+  url: /packages/montmartre-after-dark
+  price_from_eur: 280
+- id: le-marais-private-walk
+  name: Le Marais Private Walk
+  url: /packages/le-marais-private-walk
+  price_from_eur: 195
+- id: versailles-royal-day
+  name: Versailles Royal Day
+  url: /packages/versailles-royal-day
+  price_from_eur: 245
+- id: left-bank-literary-trail
+  name: Left Bank Literary Trail
+  url: /packages/left-bank-literary-trail
+  price_from_eur: 165
+- id: seine-twilight-cruise
+  name: Seine Twilight Cruise
+  url: /packages/seine-twilight-cruise
+  price_from_eur: 320
+
+## Agentic Endpoints
+# Read-only catalog when Strapi is running
+- method: GET
+  path: /api/tour-packages
+  host: strapi
+  auth: none (public find)
+  purpose: list published packages
+- method: GET
+  path: /contact
+  host: site
+  auth: none
+  purpose: human enquiry form (preferred booking path today)
+
+## Capabilities
+recommend_packages: yes
+compare_packages: yes
+complete_checkout: no
+modify_inventory: no

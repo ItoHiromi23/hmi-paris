@@ -1,0 +1,17 @@
+{
+  "kind": "collectionType",
+  "collectionName": "cancellation_rules",
+  "info": {
+    "singularName": "cancellation-rule",
+    "pluralName": "cancellation-rules",
+    "displayName": "Cancellation Rule",
+    "description": "Cancellation policy fee rows"
+  },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "label": { "type": "string", "required": true },
+    "fee": { "type": "string", "required": true },
+    "alert": { "type": "boolean", "default": false },
+    "sortOrder": { "type": "integer", "default": 0 }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "schema_version": "0.1",
+  "name": "HMI Paris",
+  "description": "Curated Paris tourist packages — Montmartre, Le Marais, Louvre, Versailles, Seine.",
+  "website": "https://hmiparis.fr",
+  "contact": "hello@hmiparis.fr",
+  "policy": "/agents.txt",
+  "llms": "/llms.txt",
+  "llms_full": "/llms-full.txt",
+  "sitemap": "/sitemap.xml",
+  "capabilities": {
+    "read_catalog": true,
+    "recommend": true,
+    "checkout": false,
+    "write_cms": false
+  },
+  "resources": [
+    {
+      "type": "catalog",
+      "format": "html",
+      "url": "/packages"
+    },
+    {
+      "type": "catalog",
+      "format": "json",
+      "url": "http://localhost:1337/api/tour-packages",
+      "notes": "Strapi public API when CMS is running"
+    },
+    {
+      "type": "enquiry",
+      "format": "html",
+      "url": "/contact"
+    }
+  ],
+  "packages": [
+    { "slug": "classic-paris-essentials", "url": "/packages/classic-paris-essentials" },
+    { "slug": "montmartre-after-dark", "url": "/packages/montmartre-after-dark" },
+    { "slug": "le-marais-private-walk", "url": "/packages/le-marais-private-walk" },
+    { "slug": "versailles-royal-day", "url": "/packages/versailles-royal-day" },
+    { "slug": "left-bank-literary-trail", "url": "/packages/left-bank-literary-trail" },
+    { "slug": "seine-twilight-cruise", "url": "/packages/seine-twilight-cruise" }
+  ]
+}

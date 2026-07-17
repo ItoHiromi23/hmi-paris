@@ -1,0 +1,20 @@
+{
+  "kind": "collectionType",
+  "collectionName": "site_notes",
+  "info": {
+    "singularName": "site-note",
+    "pluralName": "site-notes",
+    "displayName": "Site Note",
+    "description": "Notes for fees, important info, or cancellation footnotes"
+  },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "text": { "type": "text", "required": true },
+    "kind": {
+      "type": "enumeration",
+      "enum": ["fee", "important", "cancellation"],
+      "required": true
+    },
+    "sortOrder": { "type": "integer", "default": 0 }
+  }
+}

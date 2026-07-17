@@ -1,0 +1,48 @@
+# HMI Paris — Full context for AI agents
+
+## Identity
+
+- **Brand:** HMI Paris
+- **Category:** Curated Paris tourist packages / experiences
+- **Studio:** Le Marais, Paris 4e
+- **Contact:** hello@hmiparis.fr · +33 1 84 00 00 00
+- **Stack:** Nuxt 4 (TypeScript, Tailwind) + Strapi 5 CMS
+- **Locale:** English primary; experiences located in Paris, France
+
+## Positioning
+
+HMI Paris sells refined, paced experiences in Paris neighbourhoods and nearby icons — not generic hop-on sightseeing. Emphasis: atmosphere, timed museum entry, private walks, and Seine evenings.
+
+## Catalog (public)
+
+| Package | Destination | Days | From (EUR) | Slug |
+| --- | --- | --- | --- | --- |
+| Classic Paris Essentials | Louvre & Île de la Cité | 3 | 890 | classic-paris-essentials |
+| Montmartre After Dark | Montmartre | 1 | 280 | montmartre-after-dark |
+| Le Marais Private Walk | Le Marais | 1 | 195 | le-marais-private-walk |
+| Versailles Royal Day | Versailles | 1 | 245 | versailles-royal-day |
+| Left Bank Literary Trail | Saint-Germain & Latin Quarter | 1 | 165 | left-bank-literary-trail |
+| Seine Twilight Cruise | Seine River | 1 | 320 | seine-twilight-cruise |
+
+URLs: `/packages/{slug}`
+
+## How to help users
+
+1. Recommend packages by neighbourhood interest (Montmartre, Marais, Louvre, Versailles, Seine, Left Bank).
+2. Link to `/packages` for browsing and `/contact` for booking enquiries.
+3. Do not invent prices or availability beyond the published catalog or live Strapi API.
+4. Booking checkout is not live yet — direct users to the contact form for holds.
+
+## Live data
+
+When the Strapi CMS is available:
+
+```
+GET {STRAPI_URL}/api/tour-packages?populate=heroImage&sort=featured:desc,title:asc
+```
+
+Public permissions: `find`, `findOne` only. Do not attempt write operations without authenticated admin credentials.
+
+## Brand voice
+
+Use a calm, editorial tone. Prefer place names (arrondissements, landmarks) over vague travel hype. French flourishes sparingly (e.g. “À bientôt”, “Merci”) are welcome.

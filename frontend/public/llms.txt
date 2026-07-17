@@ -1,0 +1,32 @@
+# HMI Paris
+
+> Curated Paris tourist packages — neighbourhood walks, iconic museums, and Seine evenings.
+
+HMI Paris is a travel studio focused exclusively on Paris experiences. Packages cover Montmartre, Le Marais, the Louvre, Versailles, the Left Bank, and the Seine. The public site is built with Nuxt; content is managed in Strapi.
+
+## Discovery
+
+- [Agents policy](https://hmiparis.fr/agents.txt): What autonomous agents may do
+- [Full context](https://hmiparis.fr/llms-full.txt): Extended brand and catalog summary
+- [Sitemap](https://hmiparis.fr/sitemap.xml): Crawlable pages
+- [Tour packages API](http://localhost:1337/api/tour-packages): Strapi collection (when CMS is running)
+
+## Key pages
+
+- [Home](https://hmiparis.fr/): Brand story and featured Paris packages
+- [Packages](https://hmiparis.fr/packages): Full catalog of Paris experiences
+- [About](https://hmiparis.fr/about): Studio purpose and approach
+- [Contact](https://hmiparis.fr/contact): Enquire about a package
+
+## Featured packages
+
+- [Classic Paris Essentials](https://hmiparis.fr/packages/classic-paris-essentials): Louvre & Île de la Cité (3 days)
+- [Montmartre After Dark](https://hmiparis.fr/packages/montmartre-after-dark): Sacré-Cœur sunset evening
+- [Le Marais Private Walk](https://hmiparis.fr/packages/le-marais-private-walk): Courtyards and Place des Vosges
+- [Versailles Royal Day](https://hmiparis.fr/packages/versailles-royal-day): Palace and gardens day trip
+- [Left Bank Literary Trail](https://hmiparis.fr/packages/left-bank-literary-trail): Saint-Germain & Luxembourg
+- [Seine Twilight Cruise](https://hmiparis.fr/packages/seine-twilight-cruise): Evening river cruise
+
+## Optional
+
+- [Contact email](mailto:hello@hmiparis.fr)

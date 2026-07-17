@@ -1,0 +1,22 @@
+{
+  "kind": "collectionType",
+  "collectionName": "services",
+  "info": {
+    "singularName": "service",
+    "pluralName": "services",
+    "displayName": "Service",
+    "description": "Homepage services grid items"
+  },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "title": { "type": "string", "required": true },
+    "category": { "type": "string", "required": true },
+    "description": { "type": "text", "required": true },
+    "icon": {
+      "type": "enumeration",
+      "enum": ["star", "car", "plane", "chat", "plus"],
+      "default": "star"
+    },
+    "sortOrder": { "type": "integer", "default": 0 }
+  }
+}
