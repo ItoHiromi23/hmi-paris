@@ -175,10 +175,15 @@ export function registerAutoTranslateMiddleware(strapi: Core.Strapi) {
     const documentId = (result as { documentId?: string } | null)?.documentId
     if (!documentId) return result
 
-    const locale = String(context.params?.locale || (result as { locale?: string })?.locale || 'en')
+    // params shape differs by action (publish has no `data`) — read loosely
+    const params = context.params as {
+      locale?: string
+      data?: Record<string, unknown>
+    }
+    const locale = String(params.locale || (result as { locale?: string })?.locale || 'en')
     const data = {
       ...((result as Record<string, unknown>) || {}),
-      ...((context.params?.data as Record<string, unknown>) || {}),
+      ...(params.data || {}),
     }
 
     // Fire-and-forget so admin save stays fast; errors are logged inside
