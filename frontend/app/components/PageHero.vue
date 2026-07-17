@@ -57,14 +57,14 @@ if (props.priority) {
     />
     <div class="absolute inset-0 bg-[var(--void)]/40" />
     <div
-      class="absolute inset-0 bg-gradient-to-b from-[var(--void)]/65 via-[var(--void)]/25 to-[var(--bg)]"
+      class="absolute inset-0 bg-gradient-to-b from-[var(--void)]/70 via-[var(--void)]/50 to-[var(--void)]/75"
     />
 
     <div
       class="relative container-wide flex h-full min-h-[inherit] flex-col pb-16 pt-28 sm:pb-20 sm:pt-32"
       :class="centered ? 'items-center justify-center text-center' : 'justify-end'"
     >
-      <p v-if="eyebrow" class="section-label !text-[var(--teal-bright)] hero-animate drop-shadow">
+      <p v-if="eyebrow" class="section-label !text-[#5eead4] hero-animate drop-shadow">
         {{ eyebrow }}
       </p>
       <h1

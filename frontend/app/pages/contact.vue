@@ -82,7 +82,7 @@ useSeoMeta({
                 v-model="form.interest"
                 type="text"
                 placeholder="例：空港送迎 / モンマルトル観光"
-                class="mt-2 w-full border-b border-[var(--line)] bg-transparent py-3 text-[var(--heading)] outline-none transition focus:border-[var(--teal)] placeholder:text-[var(--muted-fg)]/50"
+                class="mt-2 w-full border-b border-[var(--line)] bg-transparent py-3 text-[var(--heading)] outline-none transition focus:border-[var(--teal)] placeholder:text-[var(--muted-fg)]"
               />
             </label>
             <label class="block">

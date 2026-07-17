@@ -35,7 +35,7 @@ const heroSrc = computed(() => props.event.heroImageUrl || fallbackHero)
             decoding="async"
           />
           <div
-            class="pointer-events-none absolute inset-0 bg-gradient-to-t from-[var(--event-navy)]/55 via-transparent to-transparent"
+            class="pointer-events-none absolute inset-0 bg-gradient-to-t from-[var(--event-navy)]/80 via-[var(--event-navy)]/35 to-transparent"
           />
           <div
             v-if="event.badgeText"

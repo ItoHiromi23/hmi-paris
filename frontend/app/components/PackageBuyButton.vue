@@ -320,7 +320,7 @@ async function startCheckout() {
                           slot.soldOut
                             ? 'text-[var(--alert)]'
                             : selectedSessionId === slot.sessionDocumentId
-                              ? 'text-white/85'
+                              ? 'text-white'
                               : 'text-[var(--teal)]'
                         "
                       >
