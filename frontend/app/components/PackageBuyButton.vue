@@ -87,6 +87,16 @@ async function openCheckout() {
   await loadSessions()
 }
 
+watch(open, (isOpen) => {
+  if (!import.meta.client) return
+  document.body.style.overflow = isOpen ? 'hidden' : ''
+})
+
+onBeforeUnmount(() => {
+  if (!import.meta.client) return
+  document.body.style.overflow = ''
+})
+
 async function startCheckout() {
   error.value = ''
   if (props.soldOut) {
@@ -158,193 +168,253 @@ async function startCheckout() {
     <Teleport to="body">
       <div
         v-if="open"
-        class="fixed inset-x-0 bottom-0 z-[80] flex items-end justify-center bg-[var(--void)]/50 p-4 sm:inset-0 sm:items-center"
+        class="fixed inset-0 z-[80] flex items-end justify-center bg-[var(--void)]/50 p-0 sm:items-center sm:p-6 md:p-8"
         @click.self="open = false"
       >
         <div
-          class="max-h-[90vh] w-full max-w-lg overflow-y-auto bg-white shadow-2xl"
+          class="flex w-full max-h-[min(92dvh,920px)] max-w-3xl flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:rounded-2xl"
           role="dialog"
           aria-modal="true"
           aria-labelledby="buy-title"
         >
-          <div class="border-b border-[var(--line)] px-6 py-5">
-            <p class="section-label">Online checkout</p>
-            <h2 id="buy-title" class="font-display mt-2 text-2xl text-[var(--heading)]">
-              {{ packageTitle }}
-            </h2>
-            <p class="mt-1 text-sm text-[var(--muted-fg)]">
-              Amount due:
-              <span class="font-semibold text-[var(--teal)]">{{ priceLabel }}</span>
-            </p>
-            <p class="mt-2 text-xs text-[var(--muted-fg)]">
-              Same day is fine with different hours (e.g. 12:00 and 17:00). The same hour cannot be
-              booked twice.
+          <div class="shrink-0 border-b border-[var(--line)] px-5 py-4 sm:px-8 sm:py-5">
+            <div class="flex items-start justify-between gap-4">
+              <div class="min-w-0">
+                <p class="section-label">Online checkout</p>
+                <h2
+                  id="buy-title"
+                  class="font-display mt-1 truncate text-xl text-[var(--heading)] sm:text-2xl"
+                >
+                  {{ packageTitle }}
+                </h2>
+                <p class="mt-1 text-sm text-[var(--muted-fg)]">
+                  Amount due:
+                  <span class="font-semibold text-[var(--teal)]">{{ priceLabel }}</span>
+                </p>
+              </div>
+              <button
+                type="button"
+                class="shrink-0 rounded-lg px-3 py-2 text-sm text-[var(--muted-fg)] hover:bg-[var(--paper)] hover:text-[var(--heading)]"
+                aria-label="Close"
+                @click="open = false"
+              >
+                ✕
+              </button>
+            </div>
+            <p class="mt-2 hidden text-xs text-[var(--muted-fg)] sm:block">
+              Same day is fine with different hours. The same hour cannot be booked twice.
             </p>
           </div>
 
-          <form class="space-y-5 px-6 py-6" @submit.prevent="startCheckout">
-            <div v-if="needsSession" class="space-y-4">
-              <div class="flex items-end justify-between gap-3">
-                <p class="text-[11px] uppercase tracking-[0.2em] text-[var(--teal)]">
-                  1. Choose a date
-                </p>
-                <p class="text-[11px] text-[var(--muted-fg)]">
-                  <span class="inline-block h-2 w-2 rounded-full bg-[var(--alert)] align-middle" />
-                  Busy = fully reserved
-                </p>
-              </div>
-
-              <p v-if="loadingSessions" class="text-sm text-[var(--muted-fg)]">Loading calendar…</p>
-
-              <div v-else class="grid grid-cols-3 gap-2 sm:grid-cols-4">
-                <button
-                  v-for="day in dateOptions"
-                  :key="day.key"
-                  type="button"
-                  class="rounded-xl border px-2 py-3 text-center text-sm transition"
-                  :disabled="day.busy"
-                  :aria-disabled="day.busy"
-                  :class="
-                    day.busy
-                      ? 'cursor-not-allowed border-[var(--line)] bg-[var(--paper)] opacity-60'
-                      : selectedDate === day.key
-                        ? 'border-[var(--teal)] bg-[var(--teal)]/10 text-[var(--heading)]'
-                        : 'border-[var(--line)] hover:border-[var(--teal)]'
-                  "
-                  @click="selectDate(day.key, day.busy)"
-                >
-                  <span
-                    class="block text-[10px] uppercase tracking-wider"
-                    :class="day.busy ? 'text-[var(--alert)]' : 'text-[var(--muted-fg)]'"
-                  >
-                    {{ day.weekday }}
-                  </span>
-                  <span
-                    class="mt-0.5 block text-lg font-semibold leading-none"
-                    :class="day.busy ? 'text-[var(--muted-fg)] line-through' : 'text-[var(--heading)]'"
-                  >
-                    {{ day.dayNum }}
-                  </span>
-                  <span class="mt-1 block text-[10px] text-[var(--muted-fg)]">{{ day.month }}</span>
-                  <span
-                    class="mt-2 block text-[10px] font-semibold uppercase tracking-wide"
-                    :class="day.busy ? 'text-[var(--alert)]' : 'text-[var(--teal)]'"
-                  >
-                    {{ day.busy ? 'Busy' : `${day.open} open` }}
-                  </span>
-                </button>
-              </div>
-
-              <p class="text-[11px] uppercase tracking-[0.2em] text-[var(--teal)]">
-                2. Choose a time
-              </p>
-
-              <div v-if="selectedDay?.busy" class="rounded-lg bg-[var(--alert)]/10 px-3 py-3 text-sm text-[var(--alert)]">
-                This day is fully reserved. Pick another date.
-              </div>
-
-              <div v-else-if="selectedDate" class="grid grid-cols-2 gap-2">
-                <button
-                  v-for="slot in timesForSelectedDate"
-                  :key="slot.sessionDocumentId"
-                  type="button"
-                  class="rounded-lg border px-3 py-3 text-left text-sm transition"
-                  :disabled="slot.soldOut"
-                  :class="
-                    slot.soldOut
-                      ? 'cursor-not-allowed border-[var(--line)] bg-[var(--paper)] opacity-60'
-                      : selectedSessionId === slot.sessionDocumentId
-                        ? 'border-[var(--teal)] bg-[var(--teal)] text-white'
-                        : 'border-[var(--line)] text-[var(--heading)] hover:border-[var(--teal)]'
-                  "
-                  @click="selectTime(slot)"
-                >
-                  <span
-                    class="block font-semibold"
-                    :class="slot.soldOut ? 'text-[var(--muted-fg)] line-through' : ''"
-                  >
-                    {{ formatSessionTime(slot.startsAt) }}
-                    <template v-if="slot.label"> · {{ slot.label }}</template>
-                  </span>
-                  <span
-                    class="mt-1 block text-[11px] font-medium"
-                    :class="
-                      slot.soldOut
-                        ? 'text-[var(--alert)]'
-                        : selectedSessionId === slot.sessionDocumentId
-                          ? 'text-white/85'
-                          : 'text-[var(--teal)]'
-                    "
-                  >
-                    {{ slot.soldOut ? 'Reserved' : 'Available' }}
-                  </span>
-                </button>
-              </div>
-              <p v-else class="text-sm text-[var(--muted-fg)]">Select an available date first</p>
-
-              <p
-                v-if="selectedSession && !selectedSession.soldOut"
-                class="rounded-lg bg-[var(--paper)] px-3 py-2 text-sm text-[var(--heading)]"
+          <form
+            class="flex min-h-0 flex-1 flex-col"
+            @submit.prevent="startCheckout"
+          >
+            <div class="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-5 sm:px-8 sm:py-6">
+              <div
+                class="grid gap-6 lg:grid-cols-2 lg:gap-8"
+                :class="needsSession ? '' : 'lg:grid-cols-1'"
               >
-                Selected:
-                {{ formatSessionDay(selectedSession.startsAt) }}
-                ·
-                {{ formatSessionTime(selectedSession.startsAt) }}–{{
-                  formatSessionTime(selectedSession.endsAt)
-                }}
-              </p>
+                <div v-if="needsSession" class="space-y-4">
+                  <div class="flex items-end justify-between gap-3">
+                    <p class="text-[11px] uppercase tracking-[0.2em] text-[var(--teal)]">
+                      1. Choose a date
+                    </p>
+                    <p class="text-[11px] text-[var(--muted-fg)]">
+                      <span
+                        class="inline-block h-2 w-2 rounded-full bg-[var(--alert)] align-middle"
+                      />
+                      Busy = reserved
+                    </p>
+                  </div>
+
+                  <p v-if="loadingSessions" class="text-sm text-[var(--muted-fg)]">
+                    Loading calendar…
+                  </p>
+
+                  <div
+                    v-else
+                    class="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-3 xl:grid-cols-4"
+                  >
+                    <button
+                      v-for="day in dateOptions"
+                      :key="day.key"
+                      type="button"
+                      class="rounded-xl border px-1.5 py-2.5 text-center text-sm transition sm:px-2 sm:py-3"
+                      :disabled="day.busy"
+                      :aria-disabled="day.busy"
+                      :class="
+                        day.busy
+                          ? 'cursor-not-allowed border-[var(--line)] bg-[var(--paper)] opacity-60'
+                          : selectedDate === day.key
+                            ? 'border-[var(--teal)] bg-[var(--teal)]/10 text-[var(--heading)]'
+                            : 'border-[var(--line)] hover:border-[var(--teal)]'
+                      "
+                      @click="selectDate(day.key, day.busy)"
+                    >
+                      <span
+                        class="block text-[10px] uppercase tracking-wider"
+                        :class="day.busy ? 'text-[var(--alert)]' : 'text-[var(--muted-fg)]'"
+                      >
+                        {{ day.weekday }}
+                      </span>
+                      <span
+                        class="mt-0.5 block text-lg font-semibold leading-none"
+                        :class="
+                          day.busy
+                            ? 'text-[var(--muted-fg)] line-through'
+                            : 'text-[var(--heading)]'
+                        "
+                      >
+                        {{ day.dayNum }}
+                      </span>
+                      <span class="mt-1 block text-[10px] text-[var(--muted-fg)]">{{
+                        day.month
+                      }}</span>
+                      <span
+                        class="mt-1.5 block text-[10px] font-semibold uppercase tracking-wide"
+                        :class="day.busy ? 'text-[var(--alert)]' : 'text-[var(--teal)]'"
+                      >
+                        {{ day.busy ? 'Busy' : `${day.open} open` }}
+                      </span>
+                    </button>
+                  </div>
+
+                  <p class="text-[11px] uppercase tracking-[0.2em] text-[var(--teal)]">
+                    2. Choose a time
+                  </p>
+
+                  <div
+                    v-if="selectedDay?.busy"
+                    class="rounded-lg bg-[var(--alert)]/10 px-3 py-3 text-sm text-[var(--alert)]"
+                  >
+                    This day is fully reserved. Pick another date.
+                  </div>
+
+                  <div v-else-if="selectedDate" class="grid grid-cols-2 gap-2">
+                    <button
+                      v-for="slot in timesForSelectedDate"
+                      :key="slot.sessionDocumentId"
+                      type="button"
+                      class="rounded-lg border px-3 py-3 text-left text-sm transition"
+                      :disabled="slot.soldOut"
+                      :class="
+                        slot.soldOut
+                          ? 'cursor-not-allowed border-[var(--line)] bg-[var(--paper)] opacity-60'
+                          : selectedSessionId === slot.sessionDocumentId
+                            ? 'border-[var(--teal)] bg-[var(--teal)] text-white'
+                            : 'border-[var(--line)] text-[var(--heading)] hover:border-[var(--teal)]'
+                      "
+                      @click="selectTime(slot)"
+                    >
+                      <span
+                        class="block font-semibold"
+                        :class="slot.soldOut ? 'text-[var(--muted-fg)] line-through' : ''"
+                      >
+                        {{ formatSessionTime(slot.startsAt) }}
+                        <template v-if="slot.label"> · {{ slot.label }}</template>
+                      </span>
+                      <span
+                        class="mt-1 block text-[11px] font-medium"
+                        :class="
+                          slot.soldOut
+                            ? 'text-[var(--alert)]'
+                            : selectedSessionId === slot.sessionDocumentId
+                              ? 'text-white/85'
+                              : 'text-[var(--teal)]'
+                        "
+                      >
+                        {{ slot.soldOut ? 'Reserved' : 'Available' }}
+                      </span>
+                    </button>
+                  </div>
+                  <p v-else class="text-sm text-[var(--muted-fg)]">Select an available date first</p>
+
+                  <p
+                    v-if="selectedSession && !selectedSession.soldOut"
+                    class="rounded-lg bg-[var(--paper)] px-3 py-2 text-sm text-[var(--heading)]"
+                  >
+                    Selected:
+                    {{ formatSessionDay(selectedSession.startsAt) }}
+                    ·
+                    {{ formatSessionTime(selectedSession.startsAt) }}–{{
+                      formatSessionTime(selectedSession.endsAt)
+                    }}
+                  </p>
+                </div>
+
+                <div class="space-y-4">
+                  <p
+                    v-if="needsSession"
+                    class="text-[11px] uppercase tracking-[0.2em] text-[var(--teal)]"
+                  >
+                    3. Your details
+                  </p>
+
+                  <label class="block">
+                    <span class="text-[11px] uppercase tracking-[0.2em] text-[var(--teal)]"
+                      >Name</span
+                    >
+                    <input
+                      v-model="form.customerName"
+                      type="text"
+                      autocomplete="name"
+                      class="mt-2 w-full border-b border-[var(--line)] bg-transparent py-3 text-[var(--heading)] outline-none focus:border-[var(--teal)]"
+                      placeholder="Jane Doe"
+                    />
+                  </label>
+                  <label class="block">
+                    <span class="text-[11px] uppercase tracking-[0.2em] text-[var(--teal)]"
+                      >Email *</span
+                    >
+                    <input
+                      v-model="form.customerEmail"
+                      type="email"
+                      required
+                      autocomplete="email"
+                      class="mt-2 w-full border-b border-[var(--line)] bg-transparent py-3 text-[var(--heading)] outline-none focus:border-[var(--teal)]"
+                      placeholder="you@example.com"
+                    />
+                  </label>
+                  <label class="block">
+                    <span class="text-[11px] uppercase tracking-[0.2em] text-[var(--teal)]"
+                      >Phone</span
+                    >
+                    <input
+                      v-model="form.customerPhone"
+                      type="tel"
+                      autocomplete="tel"
+                      class="mt-2 w-full border-b border-[var(--line)] bg-transparent py-3 text-[var(--heading)] outline-none focus:border-[var(--teal)]"
+                      placeholder="+33 ..."
+                    />
+                  </label>
+
+                  <p v-if="error" class="text-sm text-[var(--alert)]">{{ error }}</p>
+                </div>
+              </div>
             </div>
 
-            <label class="block">
-              <span class="text-[11px] uppercase tracking-[0.2em] text-[var(--teal)]">Name</span>
-              <input
-                v-model="form.customerName"
-                type="text"
-                autocomplete="name"
-                class="mt-2 w-full border-b border-[var(--line)] bg-transparent py-3 text-[var(--heading)] outline-none focus:border-[var(--teal)]"
-                placeholder="Jane Doe"
-              />
-            </label>
-            <label class="block">
-              <span class="text-[11px] uppercase tracking-[0.2em] text-[var(--teal)]">Email *</span>
-              <input
-                v-model="form.customerEmail"
-                type="email"
-                required
-                autocomplete="email"
-                class="mt-2 w-full border-b border-[var(--line)] bg-transparent py-3 text-[var(--heading)] outline-none focus:border-[var(--teal)]"
-                placeholder="you@example.com"
-              />
-            </label>
-            <label class="block">
-              <span class="text-[11px] uppercase tracking-[0.2em] text-[var(--teal)]">Phone</span>
-              <input
-                v-model="form.customerPhone"
-                type="tel"
-                autocomplete="tel"
-                class="mt-2 w-full border-b border-[var(--line)] bg-transparent py-3 text-[var(--heading)] outline-none focus:border-[var(--teal)]"
-                placeholder="+33 ..."
-              />
-            </label>
-
-            <p v-if="error" class="text-sm text-[var(--alert)]">{{ error }}</p>
-
-            <div class="flex gap-3 pt-2">
-              <button
-                type="button"
-                class="btn-ghost-dark flex-1 !py-3"
-                :disabled="loading"
-                @click="open = false"
-              >
-                Close
-              </button>
-              <button
-                type="submit"
-                class="btn-primary flex-1 !py-3"
-                :disabled="loading || (needsSession && !selectedSessionId)"
-              >
-                {{ loading ? 'Connecting…' : 'Pay with Stripe' }}
-              </button>
+            <div
+              class="shrink-0 border-t border-[var(--line)] bg-white px-5 py-4 sm:px-8"
+              style="padding-bottom: max(1rem, env(safe-area-inset-bottom))"
+            >
+              <div class="flex flex-col-reverse gap-3 sm:flex-row">
+                <button
+                  type="button"
+                  class="btn-ghost-dark w-full !py-3 sm:flex-1"
+                  :disabled="loading"
+                  @click="open = false"
+                >
+                  Close
+                </button>
+                <button
+                  type="submit"
+                  class="btn-primary w-full !py-3 sm:flex-[1.4]"
+                  :disabled="loading || (needsSession && !selectedSessionId)"
+                >
+                  {{ loading ? 'Connecting…' : 'Pay with Stripe' }}
+                </button>
+              </div>
             </div>
           </form>
         </div>
