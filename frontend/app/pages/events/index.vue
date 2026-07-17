@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const { t } = useI18n()
+const localePath = useLocalePath()
 const { fetchEvents, formatJaDate } = useMainEvents()
 const { data: events } = await useAsyncData(
   'events-index',
@@ -9,25 +11,24 @@ const { data: events } = await useAsyncData(
 useReveal()
 
 useSeoMeta({
-  title: '特別イベント — HMI Paris',
-  description:
-    '凱旋門賞観戦バスツアーなど、HMI Parisがご案内する季節限定・特別イベント一覧。日本語ガイド同行。',
+  title: () => `${t('nav.events')} — HMI Paris`,
+  description: () => t('events.intro'),
 })
 </script>
 
 <template>
   <div>
     <PageHero
-      title="特別イベント"
-      eyebrow="季節限定・特別催事"
+      :title="t('nav.events')"
+      :eyebrow="t('events.eyebrow')"
       image="/images/paris-placeholder.svg"
     >
       <p class="text-lg text-white/95">
-        パリならではの行事を、日本語サポート付きでお楽しみください。掲載内容はStrapiから追加・削除できます。
+        {{ t('events.intro') }}
       </p>
       <template #actions>
-        <NuxtLink to="/contact" class="btn-primary">お問い合わせ</NuxtLink>
-        <NuxtLink to="/packages" class="btn-ghost">ツアー一覧</NuxtLink>
+        <NuxtLink :to="localePath('/contact')" class="btn-primary">{{ t('nav.contact') }}</NuxtLink>
+        <NuxtLink :to="localePath('/packages')" class="btn-ghost">{{ t('packages.allTours') }}</NuxtLink>
       </template>
     </PageHero>
 
@@ -43,12 +44,9 @@ useSeoMeta({
           />
         </template>
         <div v-else class="glass-panel p-10 text-center">
-          <p class="font-display text-2xl text-[var(--heading)]">現在掲載中のイベントはありません</p>
-          <p class="mt-3 text-[var(--muted-fg)]">
-            新しい催事が決まり次第、こちらに掲載します。
-          </p>
+          <p class="font-display text-2xl text-[var(--heading)]">{{ t('events.empty') }}</p>
           <p class="mt-2 text-xs text-[var(--muted-fg)]">
-            （{{ formatJaDate(new Date().toISOString().slice(0, 10)) }} 時点）
+            ({{ formatJaDate(new Date().toISOString().slice(0, 10)) }})
           </p>
         </div>
       </div>

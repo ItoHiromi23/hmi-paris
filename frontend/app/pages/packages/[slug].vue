@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const { t } = useI18n()
+const localePath = useLocalePath()
 const route = useRoute()
 const slug = computed(() => String(route.params.slug))
 
@@ -16,7 +18,7 @@ onMounted(() => {
 })
 
 if (!pkg.value) {
-  throw createError({ statusCode: 404, statusMessage: 'パッケージが見つかりません' })
+  throw createError({ statusCode: 404, statusMessage: t('packages.notFound') })
 }
 
 const availabilityText = computed(() => (pkg.value ? slotsLabel(pkg.value) : ''))
@@ -37,7 +39,7 @@ function scrollToBuy() {
   <div v-if="pkg">
     <PageHero
       :title="pkg.title"
-      :eyebrow="`${pkg.region} · ${pkg.durationDays}日間`"
+      :eyebrow="`${pkg.region} · ${t('packages.days', { n: pkg.durationDays })}`"
       :image="
         pkg.heroImageUrl ||
         '/images/paris-placeholder.svg'
@@ -46,16 +48,16 @@ function scrollToBuy() {
       <p class="text-lg text-white/95">{{ pkg.summary }}</p>
       <template #actions>
         <button type="button" class="btn-primary" @click="scrollToBuy">
-          このパッケージを購入
+          {{ t('packages.buy') }}
         </button>
-        <NuxtLink to="/packages" class="btn-ghost">ツアー一覧</NuxtLink>
+        <NuxtLink :to="localePath('/packages')" class="btn-ghost">{{ t('packages.allTours') }}</NuxtLink>
       </template>
     </PageHero>
 
     <section class="py-20 sm:py-24">
       <div class="container-site grid gap-14 lg:grid-cols-[1.4fr_0.8fr] lg:gap-20">
         <div class="reveal">
-          <SectionHeading eyebrow="旅程" title="概要" />
+          <SectionHeading :eyebrow="t('packages.itinerary')" :title="t('packages.overview')" />
           <p class="mt-6 text-base leading-relaxed text-[var(--muted-fg)] whitespace-pre-line">
             {{ pkg.description }}
           </p>

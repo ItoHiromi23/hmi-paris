@@ -6,6 +6,8 @@ const props = defineProps<{
   index?: number
 }>()
 
+const { t } = useI18n()
+const localePath = useLocalePath()
 const { formatPrice } = useTourPackages()
 const { slotsLabel } = useAvailability()
 const src = computed(() => optimizeImageUrl(props.package.heroImageUrl, 900, 68))
@@ -23,7 +25,7 @@ watch(
 
 <template>
   <NuxtLink
-    :to="`/packages/${package.slug}`"
+    :to="localePath(`/packages/${package.slug}`)"
     class="group block h-full reveal"
     :style="index != null ? { transitionDelay: `${index * 70}ms` } : undefined"
   >
@@ -80,7 +82,7 @@ watch(
         <p
           class="mt-auto pt-5 text-[12px] font-semibold uppercase tracking-[0.16em] text-[var(--heading)] transition group-hover:text-[var(--teal)]"
         >
-          詳細を見る →
+          {{ t('packages.viewDetails') }}
         </p>
       </div>
     </article>

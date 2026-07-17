@@ -7,6 +7,8 @@ const props = defineProps<{
 
 const { formatJaDate, formatPrice } = useMainEvents()
 const { slotsLabel } = useAvailability()
+const { t } = useI18n()
+const localePath = useLocalePath()
 const availabilityText = computed(() => slotsLabel(props.event))
 
 const fallbackHero = '/images/paris-placeholder.svg'
@@ -86,18 +88,18 @@ const heroSrc = computed(() => props.event.heroImageUrl || fallbackHero)
           </li>
         </ul>
         <div class="mt-8 flex flex-wrap items-center gap-4">
-          <NuxtLink :to="`/events/${event.slug}`" class="btn-event">
-            {{ event.ctaLabel || '詳細を見る' }}
+          <NuxtLink :to="localePath(`/events/${event.slug}`)" class="btn-event">
+            {{ event.ctaLabel || t('events.detailCta') }}
           </NuxtLink>
           <p
             v-if="event.priceFrom != null"
             class="text-sm text-[var(--muted-fg)]"
           >
-            参考料金
+            {{ t('events.fromPrice') }}
             <span class="font-display text-lg text-[var(--event-navy)]">
               {{ formatPrice(event.priceFrom, event.currency) }}
             </span>
-            〜
+            ~
           </p>
         </div>
       </div>

@@ -1,7 +1,9 @@
 <script setup lang="ts">
+const { t } = useI18n()
+const localePath = useLocalePath()
 const { fetchPackages } = useTourPackages()
 const { data: packages } = await useAsyncData(
-  'home-packages-ja',
+  'home-packages',
   () => fetchPackages(),
   freshOnNavigate(),
 )
@@ -22,7 +24,7 @@ const destinations = computed(() => {
     rows.push({
       name,
       tagline: pkg.summary || pkg.region || '',
-      href: `/packages/${pkg.slug}`,
+      href: localePath(`/packages/${pkg.slug}`),
       image: pkg.heroImageUrl || '/images/paris-placeholder.svg',
     })
   }
@@ -36,16 +38,16 @@ const destinations = computed(() => {
     <div class="container-wide">
       <div class="reveal flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p class="section-label">人気のエリア</p>
+          <p class="section-label">{{ t('destinations.eyebrow') }}</p>
           <h2 class="font-display mt-3 text-3xl text-[var(--heading)] sm:text-5xl">
-            パリの名所を、エリアごとに
+            {{ t('destinations.title') }}
           </h2>
         </div>
         <NuxtLink
-          to="/packages"
-          class="text-[12px] font-semibold uppercase tracking-[0.18em] text-[var(--teal)] hover:text-[#0d9488]"
+          :to="localePath('/packages')"
+          class="text-[12px] font-semibold uppercase tracking-[0.18em] text-[var(--teal)] hover:text-[var(--heading)]"
         >
-          すべてのツアー →
+          {{ t('destinations.allTours') }}
         </NuxtLink>
       </div>
     </div>

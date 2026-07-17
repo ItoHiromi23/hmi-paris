@@ -16,6 +16,7 @@
     "@fontsource/noto-serif-jp": "^5.2.8",
     "@fontsource/outfit": "^5.2.8",
     "@nuxt/image": "^2.0.0",
+    "@nuxtjs/i18n": "^10.4.1",
     "@nuxtjs/tailwindcss": "^6.14.0",
     "nuxt": "^4.4.8",
     "stripe": "^18.5.0",

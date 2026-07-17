@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const { t } = useI18n()
+const localePath = useLocalePath()
 const route = useRoute()
 const slug = computed(() => String(route.params.slug))
 
@@ -15,7 +17,7 @@ onMounted(() => {
 })
 
 if (!event.value) {
-  throw createError({ statusCode: 404, statusMessage: 'イベントが見つかりません' })
+  throw createError({ statusCode: 404, statusMessage: t('events.empty') })
 }
 
 const availabilityText = computed(() => (event.value ? slotsLabel(event.value) : ''))
@@ -35,7 +37,7 @@ useSeoMeta({
   <div v-if="event">
     <PageHero
       :title="event.title"
-      :eyebrow="event.category || '特別イベント'"
+      :eyebrow="event.category || t('nav.events')"
       :image="
         event.heroImageUrl ||
         '/images/paris-placeholder.svg'
@@ -43,8 +45,8 @@ useSeoMeta({
     >
       <p class="text-lg text-white/95">{{ event.summary }}</p>
       <template #actions>
-        <a href="#buy-panel" class="btn-primary">{{ availabilityText }} — 予約へ</a>
-        <NuxtLink to="/events" class="btn-ghost">イベント一覧</NuxtLink>
+        <a href="#buy-panel" class="btn-primary">{{ availabilityText }}</a>
+        <NuxtLink :to="localePath('/events')" class="btn-ghost">{{ t('events.all') }}</NuxtLink>
       </template>
     </PageHero>
 
@@ -145,18 +147,18 @@ useSeoMeta({
               :available-label="availabilityText"
             />
             <NuxtLink
-              to="/contact"
+              :to="localePath('/contact')"
               class="mt-3 w-full"
               :class="canPurchase ? 'btn-ghost-dark' : 'btn-event'"
             >
-              お問い合わせ
+              {{ t('nav.contact') }}
             </NuxtLink>
           </div>
           <NuxtLink
-            to="/events"
+            :to="localePath('/events')"
             class="mt-4 block text-center text-sm text-[var(--teal)] hover:text-[var(--heading)]"
           >
-            ← イベント一覧へ
+            {{ t('events.back') }}
           </NuxtLink>
         </aside>
       </div>

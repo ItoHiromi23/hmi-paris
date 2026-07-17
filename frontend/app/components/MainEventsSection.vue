@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const { t } = useI18n()
+const localePath = useLocalePath()
 const { fetchEvents } = useMainEvents()
 const { data: events } = await useAsyncData(
   'main-events',
@@ -23,15 +25,17 @@ const hasEvents = computed(() => (events.value || []).length > 0)
     <div class="container-wide">
       <div class="reveal flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p class="section-label !text-[var(--event-maroon)]">特別なお知らせ</p>
+          <p class="section-label !text-[var(--event-maroon)]">{{ t('events.eyebrow') }}</p>
           <h2 class="font-display mt-3 text-3xl text-[var(--event-navy)] sm:text-5xl">
-            メインイベント
+            {{ t('events.title') }}
           </h2>
           <p class="mt-3 max-w-xl text-[var(--muted-fg)]">
-            季節限定の特別催事を、日本語サポート付きでご案内します。内容は随時更新されます。
+            {{ t('events.intro') }}
           </p>
         </div>
-        <NuxtLink to="/events" class="btn-ghost-dark !py-3">すべてのイベント</NuxtLink>
+        <NuxtLink :to="localePath('/events')" class="btn-ghost-dark !py-3">
+          {{ t('events.all') }}
+        </NuxtLink>
       </div>
 
       <div class="mt-10 space-y-10">

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { CmsBundle } from '~/types/cms'
 
+const { t } = useI18n()
+const localePath = useLocalePath()
 const cms = inject<Ref<CmsBundle | null>>('cms', ref(null))
 
 const reasons = computed(() => cms.value?.reasons || [])
@@ -18,7 +20,7 @@ const italic = computed(() => cms.value?.settings.whyItalic || '')
             {{ title }}
           </h2>
         </div>
-        <NuxtLink to="/about" class="btn-ghost-dark !py-3">詳しく見る</NuxtLink>
+        <NuxtLink :to="localePath('/about')" class="btn-ghost-dark !py-3">{{ t('why.cta') }}</NuxtLink>
       </div>
 
       <div class="reveal mt-12 grid gap-4 sm:grid-cols-2">

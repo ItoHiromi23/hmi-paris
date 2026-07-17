@@ -47,7 +47,23 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   // Devtools adds third-party cookies / console noise in Lighthouse — local only
   devtools: { enabled: !isProd },
-  modules: ['@nuxtjs/tailwindcss', '@nuxt/image'],
+  modules: ['@nuxtjs/tailwindcss', '@nuxt/image', '@nuxtjs/i18n'],
+  i18n: {
+    locales: [
+      { code: 'en', language: 'en', name: 'English', file: 'en.json' },
+      { code: 'ja', language: 'ja', name: '日本語', file: 'ja.json' },
+    ],
+    defaultLocale: 'en',
+    lazy: true,
+    langDir: 'locales',
+    strategy: 'prefix_except_default',
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'hmi_locale',
+      redirectOn: 'root',
+      fallbackLocale: 'en',
+    },
+  },
   css: [
     // Subsetted unicode-range files (not full japanese-*.css ~1MB each)
     '@fontsource/noto-sans-jp/400.css',
@@ -70,13 +86,13 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: 'HMI Paris — パリ観光・専用車・空港送迎（日本語サポート）',
-      htmlAttrs: { lang: 'ja' },
+      title: 'HMI Paris — Paris tours, private car & airport transfer',
+      htmlAttrs: { lang: 'en' },
       meta: [
         {
           name: 'description',
           content:
-            'パリ在住日本人スタッフによるプライベートツアー、専用車ガイド、空港送迎、通訳同行、オーダーメイド手配。',
+            'Private Paris tours, chauffeured guides, airport transfers, interpreting and custom arrangements with English & Japanese support.',
         },
         { name: 'theme-color', content: '#0f766e' },
         { property: 'og:site_name', content: 'HMI Paris' },

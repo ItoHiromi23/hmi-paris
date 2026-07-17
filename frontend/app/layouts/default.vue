@@ -1,6 +1,11 @@
 <script setup lang="ts">
 const { fetchCms } = useCmsContent()
-const { data: cms } = await useAsyncData('cms-bundle-ja', () => fetchCms())
+const { locale } = useI18n()
+const { data: cms } = await useAsyncData(
+  () => `cms-bundle-${locale.value}`,
+  () => fetchCms(),
+  { watch: [locale] },
+)
 provide('cms', cms)
 </script>
 

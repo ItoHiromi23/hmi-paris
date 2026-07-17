@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const { t } = useI18n()
 const { fetchPackages } = useTourPackages()
 const { data: packages, pending } = await useAsyncData(
   'all-packages',
@@ -9,8 +10,8 @@ const { data: packages, pending } = await useAsyncData(
 useReveal()
 
 useSeoMeta({
-  title: 'ツアーを探す — HMI Paris',
-  description: 'モンマルトル、マレ、ルーヴル、ヴェルサイユ、セーヌなど、パリのプライベートツアー一覧。',
+  title: () => `${t('nav.findTours')} — HMI Paris`,
+  description: () => t('packages.intro'),
 })
 </script>
 
@@ -19,18 +20,18 @@ useSeoMeta({
     <PageHero
       compact
       centered
-      title="あなたに合うパリの旅を"
-      eyebrow="ツアー一覧"
+      :title="t('packages.title')"
+      :eyebrow="t('packages.eyebrow')"
       image="/images/paris-placeholder.svg"
     >
       <p class="text-white/95">
-        人気エリアのプライベート体験からお選びください。ご予約・ご相談もお気軽に。
+        {{ t('packages.intro') }}
       </p>
     </PageHero>
 
     <section class="py-16 sm:py-20">
       <div class="container-wide">
-        <p v-if="pending" class="text-[var(--muted-fg)]">読み込み中…</p>
+        <p v-if="pending" class="text-[var(--muted-fg)]">{{ t('common.loading') }}</p>
         <div v-else class="grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <PackageCard
             v-for="(pkg, index) in packages"
@@ -41,7 +42,5 @@ useSeoMeta({
         </div>
       </div>
     </section>
-
-    <ContactBanner />
   </div>
 </template>

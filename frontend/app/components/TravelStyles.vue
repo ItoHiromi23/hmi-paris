@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { CmsBundle } from '~/types/cms'
 
+const { t } = useI18n()
+const localePath = useLocalePath()
 const cms = inject<Ref<CmsBundle | null>>('cms', ref(null))
 const services = computed(() => cms.value?.services || [])
 
@@ -44,7 +46,7 @@ function stackTop(index: number) {
             class="font-display text-[15px] leading-[1.9] tracking-[0.35em] text-[var(--event-navy)]"
             style="writing-mode: vertical-rl; text-orientation: mixed"
           >
-            旅のスタイル
+            {{ t('styles.vertical') }}
           </p>
           <span class="mt-6 h-16 w-px bg-[var(--event-gold)]" aria-hidden="true" />
         </div>
@@ -56,7 +58,7 @@ function stackTop(index: number) {
               {{ title }}
             </h2>
             <p class="mt-4 text-[var(--muted-fg)]">
-              日帰りツアー、専用車＆ガイド、空港送迎、通訳同行、オーダーメイドからお選びください。
+              {{ t('styles.intro') }}
             </p>
           </div>
 
@@ -67,7 +69,7 @@ function stackTop(index: number) {
             <NuxtLink
               v-for="(service, index) in services"
               :key="service.id"
-              to="/contact"
+              :to="localePath('/contact')"
               class="group flex flex-col overflow-hidden bg-[var(--event-cream)] shadow-[0_12px_28px_rgba(18,32,51,0.1)] transition duration-300 max-sm:sticky max-sm:mb-3 max-sm:min-h-[min(68vh,440px)] sm:hover:-translate-y-1"
               :class="index === 0 ? 'sm:col-span-2 xl:col-span-1' : ''"
               :style="{
@@ -106,7 +108,7 @@ function stackTop(index: number) {
                 <span
                   class="mt-4 inline-flex items-center gap-2 text-[12px] font-semibold tracking-[0.1em] text-[var(--event-maroon)] transition group-hover:gap-3 sm:mt-5"
                 >
-                  詳しく相談する
+                  {{ t('styles.cta') }}
                   <span aria-hidden="true">›</span>
                 </span>
               </div>

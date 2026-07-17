@@ -1,0 +1,115 @@
+{
+  "meta": {
+    "title": "HMI Paris — Paris tours, private car & airport transfer",
+    "description": "Private Paris tours, chauffeured guides, airport transfers, interpreting and custom arrangements with English & Japanese support."
+  },
+  "nav": {
+    "tours": "Tours",
+    "events": "Special events",
+    "styles": "Styles",
+    "why": "Why us",
+    "about": "About",
+    "contact": "Contact",
+    "findTours": "Find a tour",
+    "toggleMenu": "Toggle menu"
+  },
+  "lang": {
+    "en": "EN",
+    "ja": "JA",
+    "label": "Language"
+  },
+  "home": {
+    "findTours": "Find a tour",
+    "travelStyles": "Travel styles",
+    "allTours": "All tours"
+  },
+  "omotenashi": {
+    "aria": "Welcome message",
+    "welcome": "Welcome",
+    "message": "Paris-based staff welcome you with care and clear local support",
+    "tags": "English & Japanese · Reliable support · Warm hospitality"
+  },
+  "stats": {
+    "groupSize": "1–6 guests",
+    "private": "Fully private",
+    "langs": "JA / EN",
+    "staff": "Paris-based Japanese staff",
+    "airports": "CDG · ORY",
+    "transfer": "Airport transfer support"
+  },
+  "destinations": {
+    "eyebrow": "Popular areas",
+    "title": "Paris, area by area",
+    "allTours": "All tours →"
+  },
+  "events": {
+    "eyebrow": "Special notice",
+    "title": "Main events",
+    "intro": "Seasonal experiences with local support. Details are updated regularly.",
+    "all": "All events",
+    "empty": "No events are listed right now",
+    "detailCta": "View details",
+    "fromPrice": "From",
+    "back": "← Back to events"
+  },
+  "packages": {
+    "eyebrow": "Tour list",
+    "title": "Find your Paris experience",
+    "intro": "Choose a private experience by area. Bookings and questions are always welcome.",
+    "viewDetails": "View details →",
+    "days": "{n} days",
+    "from": "From",
+    "buy": "Buy this package",
+    "allTours": "All tours",
+    "overview": "Overview",
+    "itinerary": "Itinerary",
+    "notFound": "Package not found"
+  },
+  "styles": {
+    "vertical": "Travel styles",
+    "intro": "Choose day tours, private car & guide, airport transfer, interpreting, or a custom plan.",
+    "cta": "Ask about this"
+  },
+  "why": {
+    "cta": "Learn more"
+  },
+  "footer": {
+    "services": "Services",
+    "dayTours": "Day tours",
+    "carGuide": "Private car & guide",
+    "airport": "Airport transfer",
+    "tourList": "Tour list",
+    "specialEvents": "Special events",
+    "company": "Company",
+    "about": "About",
+    "contact": "Contact",
+    "privacy": "Privacy policy",
+    "cookies": "Cookie policy",
+    "legal": "Legal notice",
+    "email": "Email",
+    "rights": "© {year} HMI Paris. All rights reserved.",
+    "tagline": "Warm hospitality · Paris-based Japanese staff"
+  },
+  "about": {
+    "title": "About",
+    "eyebrow": "About HMI Paris",
+    "hero": "We help you enjoy Paris with clear, reassuring local support.",
+    "sectionEyebrow": "Who we are",
+    "sectionTitle": "A Paris studio for travellers who want peace of mind",
+    "p1": "HMI Paris is a support desk for guests who want to enjoy Paris with confidence. Paris-based Japanese staff arrange tours, private cars, airport transfers, interpreting and custom plans.",
+    "p2": "Almost all site copy — services, fees, news and policies — can be edited in Strapi without changing the frontend.",
+    "p3": "Get in touch at"
+  },
+  "contact": {
+    "title": "Contact us",
+    "eyebrow": "Contact",
+    "thanks": "Thank you",
+    "interest": "Interest",
+    "message": "Message"
+  },
+  "common": {
+    "soldOut": "Sold out",
+    "available": "Available",
+    "loading": "Loading…"
+  }
+}

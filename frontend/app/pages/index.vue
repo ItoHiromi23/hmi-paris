@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import type { CmsBundle } from '~/types/cms'
 
+const { t } = useI18n()
+const localePath = useLocalePath()
 const { fetchPackages } = useTourPackages()
 const { data: packages } = await useAsyncData(
-  'home-packages-ja',
+  'home-packages',
   () => fetchPackages(),
   freshOnNavigate(),
 )
@@ -15,10 +17,11 @@ const s = computed(() => cms.value?.settings)
 
 useReveal()
 
+const { locale } = useI18n()
 useSeoMeta({
-  title: 'HMI Paris — パリ観光・専用車・空港送迎（日本語サポート）',
-  description:
-    'パリ在住日本人スタッフによるプライベートツアー、専用車ガイド、空港送迎、通訳同行、オーダーメイド手配。',
+  title: () => t('meta.title'),
+  description: () => t('meta.description'),
+  ogLocale: () => (locale.value === 'ja' ? 'ja_JP' : 'en_US'),
 })
 </script>
 
@@ -34,8 +37,12 @@ useSeoMeta({
         <p>{{ s?.heroSubtitle }}</p>
       </div>
       <template #actions>
-        <NuxtLink to="/packages" class="btn-primary">ツアーを探す</NuxtLink>
-        <NuxtLink to="/#services" class="btn-ghost">旅行スタイル</NuxtLink>
+        <NuxtLink :to="localePath('/packages')" class="btn-primary">
+          {{ t('home.findTours') }}
+        </NuxtLink>
+        <NuxtLink :to="localePath('/#services')" class="btn-ghost">
+          {{ t('home.travelStyles') }}
+        </NuxtLink>
       </template>
     </PageHero>
 
@@ -56,7 +63,9 @@ useSeoMeta({
               {{ s?.packagesIntro }}
             </p>
           </div>
-          <NuxtLink to="/packages" class="btn-ghost-dark !py-3">すべてのツアー</NuxtLink>
+          <NuxtLink :to="localePath('/packages')" class="btn-ghost-dark !py-3">
+            {{ t('home.allTours') }}
+          </NuxtLink>
         </div>
 
         <div class="mt-12 grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">

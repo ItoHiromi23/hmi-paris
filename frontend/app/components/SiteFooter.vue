@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import type { CmsBundle } from '~/types/cms'
 
+const { t } = useI18n()
+const localePath = useLocalePath()
 const cms = inject<Ref<CmsBundle | null>>('cms', ref(null))
 const s = computed(() => cms.value?.settings)
+const year = new Date().getFullYear()
 </script>
 
 <template>
@@ -19,30 +22,70 @@ const s = computed(() => cms.value?.settings)
       </div>
 
       <div>
-        <p class="font-display text-xl">サービス</p>
+        <p class="font-display text-xl">{{ t('footer.services') }}</p>
         <ul class="mt-5 space-y-3 text-sm text-white/85">
-          <li><a href="/#services" class="hover:text-white">観光ツアー</a></li>
-          <li><a href="/#services" class="hover:text-white">専用車＆ガイド</a></li>
-          <li><a href="/#services" class="hover:text-white">空港送迎</a></li>
-          <li><NuxtLink to="/packages" class="hover:text-white">ツアー一覧</NuxtLink></li>
-          <li><NuxtLink to="/events" class="hover:text-white">特別イベント</NuxtLink></li>
+          <li>
+            <NuxtLink :to="localePath('/#services')" class="hover:text-white">
+              {{ t('footer.dayTours') }}
+            </NuxtLink>
+          </li>
+          <li>
+            <NuxtLink :to="localePath('/#services')" class="hover:text-white">
+              {{ t('footer.carGuide') }}
+            </NuxtLink>
+          </li>
+          <li>
+            <NuxtLink :to="localePath('/#services')" class="hover:text-white">
+              {{ t('footer.airport') }}
+            </NuxtLink>
+          </li>
+          <li>
+            <NuxtLink :to="localePath('/packages')" class="hover:text-white">
+              {{ t('footer.tourList') }}
+            </NuxtLink>
+          </li>
+          <li>
+            <NuxtLink :to="localePath('/events')" class="hover:text-white">
+              {{ t('footer.specialEvents') }}
+            </NuxtLink>
+          </li>
         </ul>
       </div>
 
       <div>
-        <p class="font-display text-xl">会社情報</p>
+        <p class="font-display text-xl">{{ t('footer.company') }}</p>
         <ul class="mt-5 space-y-3 text-sm text-white/85">
-          <li><NuxtLink to="/about" class="hover:text-white">会社概要</NuxtLink></li>
-          <li><NuxtLink to="/contact" class="hover:text-white">お問い合わせ</NuxtLink></li>
-          <li><NuxtLink to="/privacy" class="hover:text-white">プライバシーポリシー</NuxtLink></li>
-          <li><NuxtLink to="/cookies" class="hover:text-white">クッキーポリシー</NuxtLink></li>
-          <li><NuxtLink to="/legal" class="hover:text-white">Mentions légales</NuxtLink></li>
+          <li>
+            <NuxtLink :to="localePath('/about')" class="hover:text-white">
+              {{ t('footer.about') }}
+            </NuxtLink>
+          </li>
+          <li>
+            <NuxtLink :to="localePath('/contact')" class="hover:text-white">
+              {{ t('footer.contact') }}
+            </NuxtLink>
+          </li>
+          <li>
+            <NuxtLink :to="localePath('/privacy')" class="hover:text-white">
+              {{ t('footer.privacy') }}
+            </NuxtLink>
+          </li>
+          <li>
+            <NuxtLink :to="localePath('/cookies')" class="hover:text-white">
+              {{ t('footer.cookies') }}
+            </NuxtLink>
+          </li>
+          <li>
+            <NuxtLink :to="localePath('/legal')" class="hover:text-white">
+              {{ t('footer.legal') }}
+            </NuxtLink>
+          </li>
           <li>
             <a
               :href="`mailto:${s?.contactEmail || 'info@hmiparis.com'}`"
               class="hover:text-white"
             >
-              メール: {{ s?.contactEmail || 'info@hmiparis.com' }}
+              {{ t('footer.email') }}: {{ s?.contactEmail || 'info@hmiparis.com' }}
             </a>
           </li>
         </ul>
@@ -53,12 +96,18 @@ const s = computed(() => cms.value?.settings)
       <div
         class="container-site flex flex-col gap-3 py-6 text-xs tracking-wide text-white/75 sm:flex-row sm:items-center sm:justify-between"
       >
-        <span>© {{ new Date().getFullYear() }} HMI Paris. Tous droits réservés.</span>
+        <span>{{ t('footer.rights', { year }) }}</span>
         <div class="flex flex-wrap gap-x-4 gap-y-1">
-          <NuxtLink to="/privacy" class="hover:text-white">Confidentialité</NuxtLink>
-          <NuxtLink to="/cookies" class="hover:text-white">Cookies</NuxtLink>
-          <NuxtLink to="/legal" class="hover:text-white">Mentions légales</NuxtLink>
-          <span>心を込めたおもてなし ・ パリ在住日本人スタッフ</span>
+          <NuxtLink :to="localePath('/privacy')" class="hover:text-white">
+            {{ t('footer.privacy') }}
+          </NuxtLink>
+          <NuxtLink :to="localePath('/cookies')" class="hover:text-white">
+            {{ t('footer.cookies') }}
+          </NuxtLink>
+          <NuxtLink :to="localePath('/legal')" class="hover:text-white">
+            {{ t('footer.legal') }}
+          </NuxtLink>
+          <span>{{ t('footer.tagline') }}</span>
         </div>
       </div>
     </div>

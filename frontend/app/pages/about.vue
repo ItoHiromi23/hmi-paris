@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import type { CmsBundle } from '~/types/cms'
 
+const { t } = useI18n()
 useReveal()
 const cms = inject<Ref<CmsBundle | null>>('cms', ref(null))
 const email = computed(() => cms.value?.settings.contactEmail || 'info@hmiparis.com')
 
 useSeoMeta({
-  title: '会社概要 — HMI Paris',
-  description: 'パリ在住日本人スタッフによる観光・送迎・通訳・オーダーメイドサポート。',
+  title: () => `${t('about.title')} — HMI Paris`,
+  description: () => t('meta.description'),
 })
 </script>
 
@@ -15,12 +16,12 @@ useSeoMeta({
   <div>
     <PageHero
       compact
-      title="会社概要"
-      eyebrow="HMI Parisについて"
+      :title="t('about.title')"
+      :eyebrow="t('about.eyebrow')"
       image="/images/paris-placeholder.svg"
     >
       <p class="text-white/95">
-        パリでの滞在を、日本語で安心してお過ごしいただけるようサポートします。
+        {{ t('about.hero') }}
       </p>
     </PageHero>
 
@@ -28,25 +29,19 @@ useSeoMeta({
       <div class="container-site grid gap-12 lg:grid-cols-2 lg:gap-20">
         <div class="reveal">
           <SectionHeading
-            eyebrow="私たちについて"
-            title="日本人旅行者のためのパリ・スタジオ"
+            :eyebrow="t('about.sectionEyebrow')"
+            :title="t('about.sectionTitle')"
           />
         </div>
         <div class="reveal space-y-6 text-[var(--muted-fg)] leading-relaxed">
+          <p>{{ t('about.p1') }}</p>
+          <p>{{ t('about.p2') }}</p>
           <p>
-            HMI Parisは、安心してパリを楽しみたい方のためのサポートデスクです。
-            パリ在住の日本人スタッフが、観光ツアー、専用車、空港送迎、通訳同行、オーダーメイド手配を行います。
-          </p>
-          <p>
-            サービス内容、料金、お知らせ、ポリシーなど、ほぼすべての文言はStrapiから編集可能です。
-            フロントを触らずに運用できます。
-          </p>
-          <p>
-            ご連絡は
+            {{ t('about.p3') }}
             <a :href="`mailto:${email}`" class="text-[var(--teal)] hover:text-[var(--heading)]">
               {{ email }}
             </a>
-            まで。
+            .
           </p>
         </div>
       </div>
