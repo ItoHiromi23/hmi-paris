@@ -38,7 +38,7 @@ useSeoMeta({
       :eyebrow="event.category || '特別イベント'"
       :image="
         event.heroImageUrl ||
-        'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1600&q=80'
+        '/images/paris-placeholder.svg'
       "
     >
       <p class="text-lg text-white/95">{{ event.summary }}</p>
@@ -154,7 +154,7 @@ useSeoMeta({
           </div>
           <NuxtLink
             to="/events"
-            class="mt-4 block text-center text-sm text-[var(--teal)] hover:text-[var(--teal-bright)]"
+            class="mt-4 block text-center text-sm text-[var(--teal)] hover:text-[var(--heading)]"
           >
             ← イベント一覧へ
           </NuxtLink>

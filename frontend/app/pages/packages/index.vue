@@ -21,7 +21,7 @@ useSeoMeta({
       centered
       title="あなたに合うパリの旅を"
       eyebrow="ツアー一覧"
-      image="https://images.unsplash.com/photo-1431274172761-fca41d930114?auto=format&fit=crop&w=2000&q=80"
+      image="/images/paris-placeholder.svg"
     >
       <p class="text-white/95">
         人気エリアのプライベート体験からお選びください。ご予約・ご相談もお気軽に。

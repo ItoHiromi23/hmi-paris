@@ -8,11 +8,11 @@ const title = computed(() => cms.value?.settings.servicesTitle || '')
 const eyebrow = computed(() => cms.value?.settings.servicesEyebrow || '')
 
 const serviceImages: Record<string, string> = {
-  star: 'https://images.unsplash.com/photo-1431274172761-fca41d930114?auto=format&fit=crop&w=1000&q=70',
-  car: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&w=1000&q=70',
-  plane: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1000&q=70',
-  chat: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1000&q=70',
-  plus: 'https://images.unsplash.com/photo-1511735111819-9a3f7709049c?auto=format&fit=crop&w=1000&q=70',
+  star: '/images/paris-placeholder.svg',
+  car: '/images/paris-placeholder.svg',
+  plane: '/images/paris-placeholder.svg',
+  chat: '/images/paris-placeholder.svg',
+  plus: '/images/paris-placeholder.svg',
 }
 
 function padIndex(i: number) {

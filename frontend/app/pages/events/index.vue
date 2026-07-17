@@ -20,7 +20,7 @@ useSeoMeta({
     <PageHero
       title="特別イベント"
       eyebrow="季節限定・特別催事"
-      image="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=2000&q=80"
+      image="/images/paris-placeholder.svg"
     >
       <p class="text-lg text-white/95">
         パリならではの行事を、日本語サポート付きでお楽しみください。掲載内容はStrapiから追加・削除できます。

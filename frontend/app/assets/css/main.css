@@ -15,8 +15,8 @@
 
   --teal: #0f766e;
   --teal-bright: #14b8a6;
-  --sun: #f59e0b;
-  --sun-deep: #ea8c0a;
+  --sun: #9a5200;
+  --sun-deep: #7c3f00;
   --sky: #38bdf8;
 
   --heading: #122033;
@@ -24,7 +24,7 @@
   /* Dark enough for WCAG AA on white / paper backgrounds */
   --muted-fg: #4a5c70;
   --on-dark: #ffffff;
-  --alert: #dc6b5f;
+  --alert: #a9362d;
 
   /* Aliases used site-wide */
   --amber: var(--teal);
@@ -47,7 +47,7 @@
   /* Japanese event / 和風 accent (navy · cream · gold) */
   --event-navy: #1a2744;
   --event-maroon: #6b2d3c;
-  --event-gold: #b8956a;
+  --event-gold: #76552f;
   --event-cream: #f7f3eb;
 }
 
@@ -90,7 +90,7 @@
     @apply inline-flex items-center justify-center gap-2 rounded-full px-8 py-3.5 text-[13px] font-semibold uppercase tracking-[0.14em] transition duration-300;
     background: linear-gradient(135deg, var(--sun), var(--sun-deep));
     color: #fff;
-    box-shadow: 0 10px 28px rgba(245, 158, 11, 0.35);
+    box-shadow: 0 10px 28px rgba(124, 63, 0, 0.3);
   }
 
   .btn-primary:hover {
@@ -144,9 +144,9 @@
 
   .btn-event {
     @apply inline-flex items-center justify-center gap-2 rounded-sm px-8 py-3.5 text-[13px] font-semibold tracking-[0.08em] transition duration-300;
-    background: linear-gradient(135deg, #c4a574, var(--event-gold));
+    background: linear-gradient(135deg, #865f34, var(--event-gold));
     color: #fff;
-    box-shadow: 0 8px 22px rgba(184, 149, 106, 0.35);
+    box-shadow: 0 8px 22px rgba(74, 50, 26, 0.3);
   }
 
   .btn-event:hover {
@@ -182,23 +182,7 @@
   }
 }
 
-.page-enter-active,
-.page-leave-active {
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.page-enter-from {
-  opacity: 0;
-  transform: translateY(8px);
-}
-
-.page-leave-to {
-  opacity: 0;
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .page-enter-active,
-  .page-leave-active,
   .reveal,
   .ken-burns,
   .hero-animate {

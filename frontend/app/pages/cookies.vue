@@ -23,7 +23,7 @@ useSeoMeta({
     <PageHero
       title="クッキーポリシー"
       eyebrow="Politique cookies · CNIL"
-      image="https://images.unsplash.com/photo-1555881403-91f1736e09ac?auto=format&fit=crop&w=2000&q=80"
+      image="/images/paris-placeholder.svg"
     >
       <p class="text-lg text-white/95">
         クッキーの種類、目的、同意の管理方法について説明します。

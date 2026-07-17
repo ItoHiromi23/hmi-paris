@@ -19,7 +19,7 @@ useSeoMeta({
     <PageHero
       title="プライバシーポリシー"
       eyebrow="Politique de confidentialité · RGPD"
-      image="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=2000&q=80"
+      image="/images/paris-placeholder.svg"
     >
       <p class="text-lg text-white/95">
         個人データの取扱いについて（日仏バイリンガル）。最終更新：{{ updated }}

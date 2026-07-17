@@ -40,7 +40,7 @@ function scrollToBuy() {
       :eyebrow="`${pkg.region} · ${pkg.durationDays}日間`"
       :image="
         pkg.heroImageUrl ||
-        'https://images.unsplash.com/photo-1488646953015-85adab4f1f1d?auto=format&fit=crop&w=1600&q=70'
+        '/images/paris-placeholder.svg'
       "
     >
       <p class="text-lg text-white/95">{{ pkg.summary }}</p>

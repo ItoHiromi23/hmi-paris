@@ -16,9 +16,10 @@ const props = withDefaults(
   },
 )
 
-const src = computed(() => optimizeImageUrl(props.image, props.compact ? 1400 : 1800, 68))
+const image = computed(() => props.image || '/images/paris-placeholder.svg')
+const src = computed(() => optimizeImageUrl(image.value, props.compact ? 1400 : 1800, 68))
 const srcset = computed(() =>
-  imageSrcSet(props.image, props.compact ? [800, 1200, 1600] : [960, 1280, 1600, 2000]),
+  imageSrcSet(image.value, props.compact ? [800, 1200, 1600] : [960, 1280, 1600, 2000]),
 )
 
 if (props.priority) {

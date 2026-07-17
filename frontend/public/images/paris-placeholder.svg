@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Paris skyline placeholder</title>
+  <desc id="desc">A decorative local illustration of the Paris skyline.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#17324f"/>
+      <stop offset="0.58" stop-color="#35697a"/>
+      <stop offset="1" stop-color="#f1c58f"/>
+    </linearGradient>
+    <linearGradient id="river" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#0f766e"/>
+      <stop offset="1" stop-color="#164e63"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#sky)"/>
+  <circle cx="1260" cy="210" r="92" fill="#fff4cf" opacity=".82"/>
+  <path d="M0 690c250-65 410-30 620 8 245 44 480 42 980-62v364H0Z" fill="#122033"/>
+  <path d="M0 790c340-58 570 12 820 20 260 8 470-25 780-87v277H0Z" fill="url(#river)" opacity=".88"/>
+  <g fill="#1a2744">
+    <path d="M690 700h220l-35-80h-150Z"/>
+    <path d="M745 620h110l-26-155h-58Z"/>
+    <path d="M776 465h48l-14-190h-20Z"/>
+    <path d="M794 275h12l-3-110h-6Z"/>
+    <path d="M350 650h190v50H350zM390 570h110v80H390z"/>
+    <path d="M1040 610h250v90h-250zM1090 530h150v80h-150z"/>
+  </g>
+  <path d="M0 820c330-48 630 56 940 28 215-20 415-80 660-102" fill="none" stroke="#f7f3eb" stroke-width="8" opacity=".5"/>
+</svg>

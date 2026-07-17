@@ -9,8 +9,7 @@ const { formatJaDate, formatPrice } = useMainEvents()
 const { slotsLabel } = useAvailability()
 const availabilityText = computed(() => slotsLabel(props.event))
 
-const fallbackHero =
-  'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1600&q=80'
+const fallbackHero = '/images/paris-placeholder.svg'
 const heroSrc = computed(() => props.event.heroImageUrl || fallbackHero)
 </script>
 

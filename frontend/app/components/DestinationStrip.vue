@@ -23,9 +23,7 @@ const destinations = computed(() => {
       name,
       tagline: pkg.summary || pkg.region || '',
       href: `/packages/${pkg.slug}`,
-      image:
-        pkg.heroImageUrl ||
-        'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1200&q=70',
+      image: pkg.heroImageUrl || '/images/paris-placeholder.svg',
     })
   }
 

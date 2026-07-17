@@ -17,7 +17,7 @@ useSeoMeta({
       compact
       title="会社概要"
       eyebrow="HMI Parisについて"
-      image="https://images.unsplash.com/photo-1499856871958-5b9627545d1a?auto=format&fit=crop&w=2000&q=80"
+      image="/images/paris-placeholder.svg"
     >
       <p class="text-white/95">
         パリでの滞在を、日本語で安心してお過ごしいただけるようサポートします。
@@ -43,7 +43,7 @@ useSeoMeta({
           </p>
           <p>
             ご連絡は
-            <a :href="`mailto:${email}`" class="text-[var(--teal)] hover:text-[var(--teal-bright)]">
+            <a :href="`mailto:${email}`" class="text-[var(--teal)] hover:text-[var(--heading)]">
               {{ email }}
             </a>
             まで。

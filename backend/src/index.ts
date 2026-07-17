@@ -33,8 +33,7 @@ const SEED_EVENTS = [
       '競馬場マップ・投票方法の説明資料',
       '日本語ガイド同行',
     ],
-    heroImageUrl:
-      'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1600&q=80',
+    heroImageUrl: '',
     eventDate: '2026-10-04',
     venue: 'ロンシャン競馬場（パリ）',
     priceFrom: 180,
@@ -60,8 +59,7 @@ const SEED_EVENTS = [
       'ホットドリンクご休憩（店舗による）',
       '集合場所までのご案内資料',
     ],
-    heroImageUrl:
-      'https://images.unsplash.com/photo-1513519245088-0e12902e35a6?auto=format&fit=crop&w=1600&q=80',
+    heroImageUrl: '',
     eventDate: '2026-12-15',
     venue: 'パリ市内',
     priceFrom: 95,
@@ -230,8 +228,7 @@ const SEED_SETTINGS = {
   heroTitle: 'どんな場面でも、日本語で安心を。',
   heroSubtitle:
     '観光ツアー、専用車、通訳同行、空港送迎まで。パリ在住の日本人スタッフが、あなたの滞在を支えます。',
-  heroImageUrl:
-    'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=2000&q=80',
+  heroImageUrl: '',
   servicesEyebrow: 'サービス一覧',
   servicesTitle: 'パリ滞在を支える5つのサービス',
   whyEyebrow: 'HMI Parisを選ぶ理由',

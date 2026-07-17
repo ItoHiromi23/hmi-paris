@@ -12,7 +12,7 @@ function hostnameOf(url: string): string | null {
 }
 
 const strapiHost = hostnameOf(strapiUrl)
-const imageDomains = ['images.unsplash.com', 'localhost', '127.0.0.1']
+const imageDomains = ['localhost', '127.0.0.1']
 if (strapiHost && !imageDomains.includes(strapiHost)) {
   imageDomains.push(strapiHost)
 }
@@ -119,7 +119,6 @@ export default defineNuxtConfig({
     // Railway / Node long-running process (not serverless)
     preset: 'node-server',
     compressPublicAssets: true,
-    minify: true,
     routeRules: {
       '/**': { headers: securityHeaders },
       '/agents.txt': { headers: { 'Content-Type': 'text/plain; charset=utf-8' } },

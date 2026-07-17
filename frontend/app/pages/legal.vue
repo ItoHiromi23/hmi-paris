@@ -18,7 +18,7 @@ useSeoMeta({
     <PageHero
       title="Mentions légales"
       eyebrow="サイト表記 · LCEN"
-      image="https://images.unsplash.com/photo-1508050919630-b135583b29ab?auto=format&fit=crop&w=2000&q=80"
+      image="/images/paris-placeholder.svg"
     >
       <p class="text-lg text-white/95">
         フランス法（loi pour la confiance dans l’économie numérique — LCEN）に基づくサイト表記です。

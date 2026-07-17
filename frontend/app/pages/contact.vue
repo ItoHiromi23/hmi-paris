@@ -28,7 +28,7 @@ useSeoMeta({
       compact
       title="お気軽にお問い合わせください"
       eyebrow="お問い合わせ"
-      image="https://images.unsplash.com/photo-1511735111819-9a3f7709049c?auto=format&fit=crop&w=2000&q=80"
+      image="/images/paris-placeholder.svg"
     >
       <p class="text-white/95">
         {{ s?.contactCtaSubtitle }}
