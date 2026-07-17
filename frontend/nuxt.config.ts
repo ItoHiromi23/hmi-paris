@@ -31,7 +31,7 @@ if (isProd) {
     'max-age=63072000; includeSubDomains; preload'
   securityHeaders['Content-Security-Policy'] = [
     "default-src 'self'",
-    `img-src 'self' data: blob: https://images.unsplash.com ${strapiUrl} https:`,
+    "img-src 'self' data: blob:",
     "style-src 'self' 'unsafe-inline'",
     "font-src 'self' data:",
     "script-src 'self' 'unsafe-inline'",
@@ -39,6 +39,7 @@ if (isProd) {
     "frame-ancestors 'self'",
     "base-uri 'self'",
     "form-action 'self'",
+    "object-src 'none'",
   ].join('; ')
 }
 
@@ -93,7 +94,6 @@ export default defineNuxtConfig({
         { rel: 'alternate', type: 'text/plain', href: '/llms.txt', title: 'llms.txt' },
       ],
     },
-    pageTransition: { name: 'page', mode: 'out-in' },
   },
   runtimeConfig: {
     stripeSecretKey: process.env.STRIPE_SECRET_KEY || '',

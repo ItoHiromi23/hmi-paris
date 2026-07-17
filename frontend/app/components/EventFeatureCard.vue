@@ -8,6 +8,10 @@ const props = defineProps<{
 const { formatJaDate, formatPrice } = useMainEvents()
 const { slotsLabel } = useAvailability()
 const availabilityText = computed(() => slotsLabel(props.event))
+
+const fallbackHero =
+  'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1600&q=80'
+const heroSrc = computed(() => props.event.heroImageUrl || fallbackHero)
 </script>
 
 <template>
@@ -23,13 +27,13 @@ const availabilityText = computed(() => slotsLabel(props.event))
         </span>
         <div class="relative aspect-[4/3] overflow-hidden lg:aspect-auto lg:min-h-[420px] lg:h-full">
           <img
-            :src="
-              event.heroImageUrl ||
-              'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1600&q=80'
-            "
+            :src="optimizeImageUrl(heroSrc, 1200, 70)"
+            :srcset="imageSrcSet(heroSrc, [640, 960, 1200, 1600], 70)"
+            sizes="(max-width: 1024px) 100vw, 50vw"
             :alt="event.title"
             class="h-full w-full object-cover"
             loading="lazy"
+            decoding="async"
           />
           <div
             class="pointer-events-none absolute inset-0 bg-gradient-to-t from-[var(--event-navy)]/55 via-transparent to-transparent"
