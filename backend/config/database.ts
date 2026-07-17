@@ -1,8 +1,71 @@
 import path from 'path';
 import type { Core } from '@strapi/strapi';
 
+function stripQuotes(value: string): string {
+  const trimmed = value.trim();
+  if (
+    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+    (trimmed.startsWith("'") && trimmed.endsWith("'"))
+  ) {
+    return trimmed.slice(1, -1);
+  }
+  return trimmed;
+}
+
+function postgresFromUrl(
+  databaseUrl: string,
+  env: Core.Config.Shared.ConfigParams['env'],
+) {
+  let parsed: URL;
+  try {
+    parsed = new URL(databaseUrl);
+  } catch {
+    throw new Error(
+      `Invalid DATABASE_URL. Expected a postgresql:// connection string, got: ${databaseUrl.slice(0, 32)}…`,
+    );
+  }
+
+  if (!['postgres:', 'postgresql:'].includes(parsed.protocol)) {
+    throw new Error(
+      `DATABASE_URL must start with postgresql:// (got protocol ${parsed.protocol})`,
+    );
+  }
+
+  const isRailwayInternal = parsed.hostname.endsWith('.railway.internal');
+  // Internal Railway Postgres does not need SSL. Public proxy usually does.
+  const sslEnabled = env.bool('DATABASE_SSL', !isRailwayInternal);
+
+  return {
+    host: parsed.hostname,
+    port: Number(parsed.port || 5432),
+    database: decodeURIComponent(parsed.pathname.replace(/^\//, '')),
+    user: decodeURIComponent(parsed.username),
+    password: decodeURIComponent(parsed.password),
+    ssl: sslEnabled
+      ? {
+          rejectUnauthorized: env.bool('DATABASE_SSL_REJECT_UNAUTHORIZED', false),
+        }
+      : false,
+    schema: env('DATABASE_SCHEMA', 'public'),
+  };
+}
+
 const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Database => {
   const client = env('DATABASE_CLIENT', 'sqlite');
+  const rawDatabaseUrl = stripQuotes(env('DATABASE_URL', ''));
+
+  if (client === 'postgres') {
+    if (!rawDatabaseUrl) {
+      throw new Error(
+        'DATABASE_CLIENT=postgres but DATABASE_URL is empty. On Railway set DATABASE_URL=${{Postgres.DATABASE_URL}}',
+      );
+    }
+    if (rawDatabaseUrl.includes('${{')) {
+      throw new Error(
+        'DATABASE_URL still contains ${{...}} — Railway did not resolve the variable reference. Use Add Variable Reference to Postgres.DATABASE_URL (or DATABASE_PUBLIC_URL).',
+      );
+    }
+  }
 
   const connections = {
     mysql: {
@@ -24,21 +87,10 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Database 
       pool: { min: env.int('DATABASE_POOL_MIN', 2), max: env.int('DATABASE_POOL_MAX', 10) },
     },
     postgres: {
-      // Prefer DATABASE_URL alone on Railway. Mixing it with host defaults
-      // (localhost) causes AggregateError when the container has no local Postgres.
-      connection: env('DATABASE_URL')
-        ? {
-            connectionString: env('DATABASE_URL'),
-            ssl: env.bool('DATABASE_SSL', false)
-              ? {
-                  rejectUnauthorized: env.bool(
-                    'DATABASE_SSL_REJECT_UNAUTHORIZED',
-                    false,
-                  ),
-                }
-              : false,
-            schema: env('DATABASE_SCHEMA', 'public'),
-          }
+      // Parse DATABASE_URL into discrete fields — more reliable with Knex/pg on Railway
+      // than connectionString + leftover host defaults (which caused AggregateError).
+      connection: rawDatabaseUrl
+        ? postgresFromUrl(rawDatabaseUrl, env)
         : {
             host: env('DATABASE_HOST', 'localhost'),
             port: env.int('DATABASE_PORT', 5432),
@@ -67,7 +119,7 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Database 
 
   if (!(client in connections)) {
     throw new Error(
-      `Unsupported DATABASE_CLIENT: ${client}. Use "postgres", "mysql", or "sqlite".`
+      `Unsupported DATABASE_CLIENT: ${client}. Use "postgres", "mysql", or "sqlite".`,
     );
   }
 
