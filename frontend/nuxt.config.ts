@@ -1,5 +1,21 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 const isProd = process.env.NODE_ENV === 'production'
+const strapiUrl = process.env.NUXT_PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337'
+const siteUrl = process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+
+function hostnameOf(url: string): string | null {
+  try {
+    return new URL(url).hostname
+  } catch {
+    return null
+  }
+}
+
+const strapiHost = hostnameOf(strapiUrl)
+const imageDomains = ['images.unsplash.com', 'localhost', '127.0.0.1']
+if (strapiHost && !imageDomains.includes(strapiHost)) {
+  imageDomains.push(strapiHost)
+}
 
 const securityHeaders: Record<string, string> = {
   'X-Frame-Options': 'SAMEORIGIN',
@@ -7,7 +23,7 @@ const securityHeaders: Record<string, string> = {
   'Referrer-Policy': 'strict-origin-when-cross-origin',
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
   'Cross-Origin-Opener-Policy': 'same-origin',
-  'Cross-Origin-Resource-Policy': 'same-site',
+  'Cross-Origin-Resource-Policy': 'cross-origin',
 }
 
 if (isProd) {
@@ -15,11 +31,11 @@ if (isProd) {
     'max-age=63072000; includeSubDomains; preload'
   securityHeaders['Content-Security-Policy'] = [
     "default-src 'self'",
-    "img-src 'self' data: blob: https://images.unsplash.com http://localhost:1337",
+    `img-src 'self' data: blob: https://images.unsplash.com ${strapiUrl} https:`,
     "style-src 'self' 'unsafe-inline'",
     "font-src 'self' data:",
     "script-src 'self' 'unsafe-inline'",
-    "connect-src 'self' http://localhost:1337 https:",
+    `connect-src 'self' ${strapiUrl} https:`,
     "frame-ancestors 'self'",
     "base-uri 'self'",
     "form-action 'self'",
@@ -44,7 +60,7 @@ export default defineNuxtConfig({
     '~/assets/css/main.css',
   ],
   image: {
-    domains: ['images.unsplash.com', 'localhost'],
+    domains: imageDomains,
     format: ['webp', 'avif'],
     quality: 70,
     screens: {
@@ -87,8 +103,8 @@ export default defineNuxtConfig({
     resendApiKey: process.env.RESEND_API_KEY || '',
     emailFrom: process.env.EMAIL_FROM || 'HMI Paris <onboarding@resend.dev>',
     public: {
-      strapiUrl: process.env.NUXT_PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337',
-      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+      strapiUrl,
+      siteUrl,
       stripePublishableKey: process.env.NUXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '',
       stripeEnabled: Boolean(process.env.STRIPE_SECRET_KEY),
     },
@@ -100,6 +116,8 @@ export default defineNuxtConfig({
     },
   },
   nitro: {
+    // Railway / Node long-running process (not serverless)
+    preset: 'node-server',
     compressPublicAssets: true,
     minify: true,
     routeRules: {

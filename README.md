@@ -38,6 +38,64 @@ NUXT_PUBLIC_STRAPI_URL=http://localhost:1337
 
 If Strapi is offline, the site falls back to local Paris sample packages.
 
+## Deploy on Railway (frontend + backend)
+
+Use **two services** in one Railway project, both from the same GitHub repo `ardithoti/meridia`.
+
+### A. Backend (Strapi)
+
+1. New service → Deploy from GitHub → this repo  
+2. **Root Directory:** `backend`  
+3. Add **PostgreSQL** and link it to the service  
+4. Variables:
+
+```bash
+HOST=0.0.0.0
+NODE_ENV=production
+DATABASE_CLIENT=postgres
+DATABASE_URL=${{Postgres.DATABASE_URL}}
+DATABASE_SSL=true
+DATABASE_SSL_REJECT_UNAUTHORIZED=false
+APP_KEYS=key1,key2,key3,key4
+API_TOKEN_SALT=...
+ADMIN_JWT_SECRET=...
+TRANSFER_TOKEN_SALT=...
+JWT_SECRET=...
+ENCRYPTION_KEY=...
+ORDERS_SHARED_SECRET=shared-secret-same-as-frontend
+PUBLIC_URL=https://YOUR-BACKEND.up.railway.app
+CORS_ORIGINS=https://YOUR-FRONTEND.up.railway.app
+```
+
+5. Generate a public domain for the service. Open `/admin` and create the first admin user.
+
+### B. Frontend (Nuxt)
+
+1. New service → same GitHub repo  
+2. **Root Directory:** `frontend`  
+3. Variables:
+
+```bash
+HOST=0.0.0.0
+NITRO_HOST=0.0.0.0
+NODE_ENV=production
+NUXT_PUBLIC_SITE_URL=https://YOUR-FRONTEND.up.railway.app
+NUXT_PUBLIC_STRAPI_URL=https://YOUR-BACKEND.up.railway.app
+STRIPE_SECRET_KEY=sk_...
+NUXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+ORDERS_SHARED_SECRET=shared-secret-same-as-backend
+RESEND_API_KEY=re_...   # optional
+EMAIL_FROM=HMI Paris <bookings@yourdomain.com>
+```
+
+4. Generate a public domain. In Stripe, set the webhook to  
+   `https://YOUR-FRONTEND.up.railway.app/api/webhooks/stripe`
+
+5. After both domains exist, update backend `CORS_ORIGINS` + `PUBLIC_URL` and frontend `NUXT_PUBLIC_*` URLs, then redeploy.
+
+Build/start commands come from `frontend/railway.toml` and `backend/railway.toml`.
+
 ## Agentic browsing files
 
 Served from `frontend/public/`:
