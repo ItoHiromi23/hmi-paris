@@ -31,6 +31,14 @@ const destinations = computed(() => {
 
   return rows
 })
+
+const count = computed(() => destinations.value.length)
+
+const gridClass = computed(() => {
+  if (count.value <= 1) return 'mx-auto grid max-w-md grid-cols-1'
+  if (count.value === 2) return 'mx-auto grid max-w-4xl grid-cols-1 gap-5 sm:grid-cols-2'
+  return 'grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3'
+})
 </script>
 
 <template>
@@ -50,15 +58,13 @@ const destinations = computed(() => {
           {{ t('destinations.allTours') }}
         </NuxtLink>
       </div>
-    </div>
 
-    <div class="container-wide mt-10">
-      <div class="snap-x-row reveal -mx-1 flex gap-4 overflow-x-auto pb-4 sm:gap-5">
+      <div class="reveal mt-10" :class="gridClass">
         <NuxtLink
           v-for="dest in destinations"
           :key="dest.name"
           :to="dest.href"
-          class="group relative min-w-[78%] overflow-hidden rounded-[1.25rem] shadow-md sm:min-w-[42%] lg:min-w-[30%]"
+          class="group relative overflow-hidden rounded-[1.25rem] shadow-md"
         >
           <div class="relative aspect-[4/5]">
             <img
@@ -67,7 +73,9 @@ const destinations = computed(() => {
               class="h-full w-full object-cover transition duration-700 group-hover:scale-105"
               loading="lazy"
             />
-            <div class="absolute inset-0 bg-gradient-to-t from-[var(--void)]/80 via-[var(--void)]/20 to-transparent" />
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-[var(--void)]/80 via-[var(--void)]/20 to-transparent"
+            />
             <div class="absolute inset-x-0 bottom-0 p-6">
               <h3 class="font-display text-3xl text-white">{{ dest.name }}</h3>
               <p class="mt-2 line-clamp-2 text-sm text-white/85">{{ dest.tagline }}</p>

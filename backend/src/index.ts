@@ -14,6 +14,7 @@ import {
   SEED_SETTINGS_SHARED,
   SEED_TOUR_DETAILS,
 } from './bootstrap/cms-seed'
+import { registerAutoTranslateMiddleware } from './services/sync-locale'
 
 const UID = {
   package: 'api::tour-package.tour-package',
@@ -384,11 +385,16 @@ async function clearCollection(strapi: Core.Strapi, uid: string) {
 }
 
 export default {
-  register() {},
+  register({ strapi }: { strapi: Core.Strapi }) {
+    registerAutoTranslateMiddleware(strapi)
+  },
 
   async bootstrap({ strapi }: { strapi: Core.Strapi }) {
     await setPublicPermissions(strapi)
     await ensureLocales(strapi)
+
+    // Seeds already ship both locales — don't call external translate APIs on boot
+    ;(strapi as Core.Strapi & { autoTranslateDisabled?: boolean }).autoTranslateDisabled = true
 
     const wipe = ['1', 'true', 'yes'].includes(String(process.env.CMS_RESEED || '').toLowerCase())
     const force = wipe || (await needsI18nReseed(strapi))
@@ -429,5 +435,10 @@ export default {
 
     await ensureCapacityDefaults(strapi)
     await ensureTourSessions(strapi, 6)
+
+    ;(strapi as Core.Strapi & { autoTranslateDisabled?: boolean }).autoTranslateDisabled = false
+    strapi.log.info(
+      'Auto-translate EN ↔ JA enabled (edit once in either locale; twin locale updates automatically)',
+    )
   },
 }
