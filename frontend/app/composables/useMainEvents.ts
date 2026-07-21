@@ -1,5 +1,6 @@
 import type { MainEvent, StrapiMainEvent } from '~/types/event'
 import type { StrapiMedia } from '~/types/package'
+import { normalizeCurrency } from '~/composables/useTourPackages'
 
 function cmsLocale(code: string) {
   return code === 'ja' ? 'ja' : 'en'
@@ -27,7 +28,7 @@ function mapEvent(strapiUrl: string, item: StrapiMainEvent): MainEvent {
     eventDate: item.eventDate || null,
     venue: item.venue || '',
     priceFrom: item.priceFrom != null ? Number(item.priceFrom) : null,
-    currency: item.currency || 'EUR',
+    currency: normalizeCurrency(item.currency),
     ctaLabel: item.ctaLabel || '',
     featured: Boolean(item.featured),
     sortOrder: item.sortOrder ?? 0,
