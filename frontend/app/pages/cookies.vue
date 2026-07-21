@@ -105,24 +105,6 @@ useSeoMeta({
               </tr>
               <tr class="border-b border-[var(--line)] align-top">
                 <td class="py-3 pr-3">
-                  <span class="font-medium">Stripe</span>
-                  <br />
-                  <span class="text-xs text-[var(--muted-fg)]">決済時</span>
-                </td>
-                <td class="py-3 pr-3">
-                  オンライン決済の処理・不正防止（Checkout遷移時）。詳細は
-                  <a
-                    href="https://stripe.com/fr/privacy"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="text-[var(--teal)] underline underline-offset-2"
-                  >Stripe Privacy</a>
-                </td>
-                <td class="py-3 pr-3">決済フローに応じて</td>
-                <td class="py-3">決済実行時</td>
-              </tr>
-              <tr class="border-b border-[var(--line)] align-top">
-                <td class="py-3 pr-3">
                   <span class="font-medium">統計・マーケティング</span>
                   <br />
                   <span class="text-xs text-[var(--muted-fg)]">任意</span>

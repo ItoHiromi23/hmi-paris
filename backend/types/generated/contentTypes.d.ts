@@ -578,13 +578,6 @@ export interface ApiMainEventMainEvent extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
-    bookingUnlimited: Schema.Attribute.Boolean &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: false;
-        };
-      }> &
-      Schema.Attribute.DefaultTo<false>;
     category: Schema.Attribute.String &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -669,32 +662,6 @@ export interface ApiMainEventMainEvent extends Struct.CollectionTypeSchema {
         };
       }>;
     publishedAt: Schema.Attribute.DateTime;
-    slotsSold: Schema.Attribute.Integer &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: false;
-        };
-      }> &
-      Schema.Attribute.SetMinMax<
-        {
-          min: 0;
-        },
-        number
-      > &
-      Schema.Attribute.DefaultTo<0>;
-    slotsTotal: Schema.Attribute.Integer &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: false;
-        };
-      }> &
-      Schema.Attribute.SetMinMax<
-        {
-          min: 0;
-        },
-        number
-      > &
-      Schema.Attribute.DefaultTo<20>;
     slug: Schema.Attribute.UID<'title'> &
       Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{
@@ -781,66 +748,6 @@ export interface ApiNewsItemNewsItem extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
-  collectionName: 'orders';
-  info: {
-    description: 'Package purchase / payment records (Stripe)';
-    displayName: 'Order';
-    pluralName: 'orders';
-    singularName: 'order';
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  attributes: {
-    amount: Schema.Attribute.Decimal & Schema.Attribute.Required;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    currency: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<'EUR'>;
-    customerEmail: Schema.Attribute.Email;
-    customerName: Schema.Attribute.String;
-    customerPhone: Schema.Attribute.String;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<'oneToMany', 'api::order.order'> &
-      Schema.Attribute.Private;
-    notes: Schema.Attribute.Text;
-    orderNumber: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.Unique;
-    packageSlug: Schema.Attribute.String & Schema.Attribute.Required;
-    packageTitle: Schema.Attribute.String & Schema.Attribute.Required;
-    paidAt: Schema.Attribute.DateTime;
-    productType: Schema.Attribute.Enumeration<['package', 'event']> &
-      Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<'package'>;
-    publishedAt: Schema.Attribute.DateTime;
-    sessionDocumentId: Schema.Attribute.String;
-    sessionEndsAt: Schema.Attribute.DateTime;
-    sessionStartsAt: Schema.Attribute.DateTime;
-    slotsReserved: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          min: 1;
-        },
-        number
-      > &
-      Schema.Attribute.DefaultTo<1>;
-    status: Schema.Attribute.Enumeration<
-      ['pending', 'paid', 'failed', 'refunded', 'cancelled']
-    > &
-      Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<'pending'>;
-    stripePaymentIntentId: Schema.Attribute.String;
-    stripeSessionId: Schema.Attribute.String & Schema.Attribute.Unique;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1269,7 +1176,7 @@ export interface ApiTourDetailTourDetail extends Struct.CollectionTypeSchema {
 export interface ApiTourPackageTourPackage extends Struct.CollectionTypeSchema {
   collectionName: 'tour_packages';
   info: {
-    description: 'Tourist packages available for sale';
+    description: 'Tour packages and experiences';
     displayName: 'Tour Package';
     pluralName: 'tour-packages';
     singularName: 'tour-package';
@@ -1283,13 +1190,6 @@ export interface ApiTourPackageTourPackage extends Struct.CollectionTypeSchema {
     };
   };
   attributes: {
-    bookingUnlimited: Schema.Attribute.Boolean &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: false;
-        };
-      }> &
-      Schema.Attribute.DefaultTo<false>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1379,41 +1279,6 @@ export interface ApiTourPackageTourPackage extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
-    sessions: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::tour-session.tour-session'
-    > &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: false;
-        };
-      }>;
-    slotsSold: Schema.Attribute.Integer &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: false;
-        };
-      }> &
-      Schema.Attribute.SetMinMax<
-        {
-          min: 0;
-        },
-        number
-      > &
-      Schema.Attribute.DefaultTo<0>;
-    slotsTotal: Schema.Attribute.Integer &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: false;
-        };
-      }> &
-      Schema.Attribute.SetMinMax<
-        {
-          min: 0;
-        },
-        number
-      > &
-      Schema.Attribute.DefaultTo<10>;
     slug: Schema.Attribute.UID<'title'> &
       Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{
@@ -1434,64 +1299,6 @@ export interface ApiTourPackageTourPackage extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiTourSessionTourSession extends Struct.CollectionTypeSchema {
-  collectionName: 'tour_sessions';
-  info: {
-    description: 'Bookable date/time slots for a tour package';
-    displayName: 'Tour Session';
-    pluralName: 'tour-sessions';
-    singularName: 'tour-session';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    capacity: Schema.Attribute.Integer &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMax<
-        {
-          min: 1;
-        },
-        number
-      > &
-      Schema.Attribute.DefaultTo<1>;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    endsAt: Schema.Attribute.DateTime & Schema.Attribute.Required;
-    label: Schema.Attribute.String;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::tour-session.tour-session'
-    > &
-      Schema.Attribute.Private;
-    packageSlug: Schema.Attribute.String & Schema.Attribute.Required;
-    publishedAt: Schema.Attribute.DateTime;
-    sessionStatus: Schema.Attribute.Enumeration<
-      ['open', 'closed', 'cancelled']
-    > &
-      Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<'open'>;
-    sold: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          min: 0;
-        },
-        number
-      > &
-      Schema.Attribute.DefaultTo<0>;
-    startsAt: Schema.Attribute.DateTime & Schema.Attribute.Required;
-    tourPackage: Schema.Attribute.Relation<
-      'manyToOne',
-      'api::tour-package.tour-package'
-    >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -2073,13 +1880,11 @@ declare module '@strapi/strapi' {
       'api::fee-tier.fee-tier': ApiFeeTierFeeTier;
       'api::main-event.main-event': ApiMainEventMainEvent;
       'api::news-item.news-item': ApiNewsItemNewsItem;
-      'api::order.order': ApiOrderOrder;
       'api::service.service': ApiServiceService;
       'api::site-note.site-note': ApiSiteNoteSiteNote;
       'api::site-setting.site-setting': ApiSiteSettingSiteSetting;
       'api::tour-detail.tour-detail': ApiTourDetailTourDetail;
       'api::tour-package.tour-package': ApiTourPackageTourPackage;
-      'api::tour-session.tour-session': ApiTourSessionTourSession;
       'api::why-reason.why-reason': ApiWhyReasonWhyReason;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;

@@ -58,9 +58,6 @@
     "notes": "ご注意：",
     "refPrice": "参考料金",
     "askContact": "お問い合わせください",
-    "onlineHold": "オンライン決済で1枠を確保できます",
-    "slots": "予約枠",
-    "slotsTotal": "（全{n}枠）",
     "format": "形態",
     "categoryFallback": "季節限定・特別イベント"
   },
@@ -71,20 +68,17 @@
     "viewDetails": "ツアー詳細を見る →",
     "days": "{n}日間",
     "from": "から",
-    "buy": "このパッケージを購入",
+    "buy": "お問い合わせ",
     "allTours": "ツアー一覧",
     "overview": "概要",
     "itinerary": "旅程",
     "notFound": "パッケージが見つかりません",
     "priceLabel": "料金（目安）",
-    "priceHint": "日付と時間を選んでオンラインでお支払いください（プライベートツアー・1予約でその枠を確保）。",
+    "priceHint": "ご予約はお問い合わせください。",
     "reservation": "予約",
     "destination": "目的地",
     "region": "エリア",
-    "duration": "期間",
-    "upcomingSeats": "今後の座席",
-    "totalSlots": "全{n}枠",
-    "booked": "{n}予約済"
+    "duration": "期間"
   },
   "styles": {
     "vertical": "旅のスタイル",
@@ -127,13 +121,23 @@
     "studio": "パリ・スタジオ",
     "intro": "ご希望のサービス（観光・専用車・空港送迎・通訳・オーダーメイド）、希望日、人数（1〜6名）をあわせてお知らせください。",
     "thanks": "ありがとうございます",
-    "demoNote": "このデモフォームはまだ送信されません。Strapiまたはメール連携後に利用できます。",
+    "successNote": "メッセージを受け付けました。メールにてご連絡いたします。",
     "name": "お名前",
     "email": "メール",
     "interest": "ご興味のサービス",
     "interestPh": "例：空港送迎 / モンマルトル観光",
     "message": "メッセージ",
-    "submit": "送信する"
+    "submit": "送信する",
+    "sending": "送信中…",
+    "error": "送信に失敗しました。もう一度お試しいただくか、直接メールでご連絡ください。",
+    "errors": {
+      "nameRequired": "お名前を入力してください。",
+      "nameShort": "お名前は2文字以上で入力してください。",
+      "emailRequired": "メールアドレスを入力してください。",
+      "emailInvalid": "有効なメールアドレスを入力してください。",
+      "messageRequired": "メッセージを入力してください。",
+      "messageShort": "メッセージは10文字以上で入力してください。"
+    }
   },
   "cookies": {
     "label": "クッキー",
@@ -147,46 +151,7 @@
     "accept": "すべて同意",
     "more": "設定の詳細を見る"
   },
-  "checkout": {
-    "buyEvent": "このイベントを購入",
-    "bookDate": "日時を選んで予約",
-    "hint": "プライベートツアー・同じ日時は1予約のみ・満席の日は選択不可",
-    "online": "オンライン決済",
-    "amountDue": "お支払い金額：",
-    "close": "閉じる",
-    "sameDayHint": "同じ日でも時間が異なれば予約可能です。同じ時間帯は重複予約できません。",
-    "stepDate": "1. 日付を選ぶ",
-    "busyLegend": "Busy＝予約済み",
-    "loadingCalendar": "カレンダーを読み込み中…",
-    "busy": "満席",
-    "openSlots": "空き{n}",
-    "stepTime": "2. 時間を選ぶ",
-    "dayReserved": "この日は満席です。別の日付をお選びください。",
-    "reserved": "予約済み",
-    "selectDateFirst": "先に空きのある日付を選んでください",
-    "selected": "選択中：",
-    "stepDetails": "3. お客様情報",
-    "name": "お名前",
-    "email": "メール *",
-    "phone": "電話",
-    "namePh": "山田 太郎",
-    "emailPh": "you{'@'}example.com",
-    "phonePh": "+33 …",
-    "connecting": "接続中…",
-    "pay": "Stripeで支払う",
-    "errNoDates": "このパッケージの今後の日時がありません",
-    "errAllBusy": "今後の日時はすべて満席です",
-    "errSoldOut": "満席のため受付を終了しています",
-    "errPickSlot": "空きのある日付と時間を選んでください",
-    "errEmail": "メールアドレスを入力してください",
-    "errCheckout": "決済を開始できませんでした。Stripe設定または空き状況をご確認ください。"
-  },
   "common": {
-    "soldOut": "満席",
-    "available": "空きあり",
-    "loading": "読み込み中…",
-    "open": "受付中",
-    "seatsOpen": "残り{n}席",
-    "slotsLeft": "残り{n}枠"
+    "loading": "読み込み中…"
   }
 }

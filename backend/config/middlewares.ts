@@ -39,7 +39,6 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Middlewar
         'Authorization',
         'Origin',
         'Accept',
-        'X-Orders-Secret',
       ],
     },
   },

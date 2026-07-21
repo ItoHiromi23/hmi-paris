@@ -97,23 +97,6 @@
     "notes": {
       "type": "text",
       "pluginOptions": { "i18n": { "localized": true } }
-    },
-    "bookingUnlimited": {
-      "type": "boolean",
-      "default": false,
-      "pluginOptions": { "i18n": { "localized": false } }
-    },
-    "slotsTotal": {
-      "type": "integer",
-      "default": 20,
-      "min": 0,
-      "pluginOptions": { "i18n": { "localized": false } }
-    },
-    "slotsSold": {
-      "type": "integer",
-      "default": 0,
-      "min": 0,
-      "pluginOptions": { "i18n": { "localized": false } }
     }
   }
 }

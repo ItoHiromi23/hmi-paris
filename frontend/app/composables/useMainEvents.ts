@@ -1,7 +1,9 @@
 import type { MainEvent, StrapiMainEvent } from '~/types/event'
 import type { StrapiMedia } from '~/types/package'
-import { computeAvailability } from '~/types/package'
-import { fetchAvailability } from '~/composables/useAvailability'
+
+function cmsLocale(code: string) {
+  return code === 'ja' ? 'ja' : 'en'
+}
 
 function mediaUrl(strapiUrl: string, media?: StrapiMedia | null): string | null {
   if (!media?.url) return null
@@ -10,12 +12,6 @@ function mediaUrl(strapiUrl: string, media?: StrapiMedia | null): string | null 
 }
 
 function mapEvent(strapiUrl: string, item: StrapiMainEvent): MainEvent {
-  const capacity = computeAvailability({
-    bookingUnlimited: item.bookingUnlimited,
-    slotsTotal: item.slotsTotal ?? 20,
-    slotsSold: item.slotsSold ?? 0,
-  })
-
   return {
     id: item.documentId || item.id,
     documentId: item.documentId,
@@ -36,11 +32,6 @@ function mapEvent(strapiUrl: string, item: StrapiMainEvent): MainEvent {
     featured: Boolean(item.featured),
     sortOrder: item.sortOrder ?? 0,
     notes: item.notes || '',
-    bookingUnlimited: capacity.bookingUnlimited,
-    slotsTotal: capacity.slotsTotal,
-    slotsSold: capacity.slotsSold,
-    available: capacity.available,
-    soldOut: capacity.soldOut,
   }
 }
 
@@ -70,10 +61,6 @@ export function formatJaDate(iso: string | null | undefined) {
   })
 }
 
-function cmsLocale(code: string) {
-  return code === 'ja' ? 'ja' : 'en'
-}
-
 export function useMainEvents() {
   const config = useRuntimeConfig()
   const { t, locale } = useI18n()
@@ -90,7 +77,7 @@ export function useMainEvents() {
     }
   }
 
-  async function fetchEvents(options: { liveAvailability?: boolean } = {}): Promise<MainEvent[]> {
+  async function fetchEvents(): Promise<MainEvent[]> {
     try {
       const data = await $fetch<{ data: StrapiMainEvent[] }>(`${strapiUrl}/api/main-events`, {
         query: {
@@ -102,23 +89,7 @@ export function useMainEvents() {
       })
 
       if (!data?.data?.length) return []
-      const mapped = data.data.map((item) => withFallbacks(mapEvent(strapiUrl, item)))
-      if (!options.liveAvailability) return mapped
-
-      return Promise.all(
-        mapped.map(async (base) => {
-          const live = await fetchAvailability('event', base.slug, strapiUrl)
-          if (!live) return base
-          return {
-            ...base,
-            bookingUnlimited: live.bookingUnlimited,
-            slotsTotal: live.slotsTotal,
-            slotsSold: live.slotsSold,
-            available: live.available,
-            soldOut: live.soldOut,
-          }
-        }),
-      )
+      return data.data.map((item) => withFallbacks(mapEvent(strapiUrl, item)))
     } catch (err) {
       console.error('[events] Failed to load from Strapi', err)
       return []
@@ -137,18 +108,7 @@ export function useMainEvents() {
 
       const item = data?.data?.[0]
       if (!item) return null
-
-      const mapped = withFallbacks(mapEvent(strapiUrl, item))
-      const live = await fetchAvailability('event', slug, strapiUrl)
-      if (!live) return mapped
-      return {
-        ...mapped,
-        bookingUnlimited: live.bookingUnlimited,
-        slotsTotal: live.slotsTotal,
-        slotsSold: live.slotsSold,
-        available: live.available,
-        soldOut: live.soldOut,
-      }
+      return withFallbacks(mapEvent(strapiUrl, item))
     } catch (err) {
       console.error('[events] Failed to load event from Strapi', slug, err)
       return null

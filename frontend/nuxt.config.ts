@@ -1,4 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import process from 'node:process'
+
 const isProd = process.env.NODE_ENV === 'production'
 const strapiUrl = process.env.NUXT_PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337'
 const siteUrl = process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000'
@@ -54,7 +56,6 @@ export default defineNuxtConfig({
       { code: 'ja', language: 'ja', name: '日本語', file: 'ja.json' },
     ],
     defaultLocale: 'en',
-    lazy: true,
     langDir: 'locales',
     strategy: 'prefix_except_default',
     detectBrowserLanguage: {
@@ -108,17 +109,13 @@ export default defineNuxtConfig({
     },
   },
   runtimeConfig: {
-    stripeSecretKey: process.env.STRIPE_SECRET_KEY || '',
-    stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET || '',
-    ordersSharedSecret: process.env.ORDERS_SHARED_SECRET || '',
-    // Booking confirmation emails via Resend (https://resend.com)
+    // Contact form emails via Resend (https://resend.com)
     resendApiKey: process.env.RESEND_API_KEY || '',
-    emailFrom: process.env.EMAIL_FROM || 'HMI Paris <onboarding@resend.dev>',
+    emailFrom: process.env.EMAIL_FROM || 'onboarding@resend.dev',
+    contactTo: process.env.CONTACT_TO || 'arditbhoti@gmail.com',
     public: {
       strapiUrl,
       siteUrl,
-      stripePublishableKey: process.env.NUXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '',
-      stripeEnabled: Boolean(process.env.STRIPE_SECRET_KEY),
     },
   },
   vite: {
@@ -132,9 +129,14 @@ export default defineNuxtConfig({
     preset: 'node-server',
     compressPublicAssets: true,
     routeRules: {
-      '/': { swr: 60 },
-      '/packages': { swr: 60 },
-      '/events': { swr: 60 },
+      // SWR only in production — in dev it blocks Strapi edits from showing for ~60s
+      ...(isProd
+        ? {
+            '/': { swr: 60 },
+            '/packages': { swr: 60 },
+            '/events': { swr: 60 },
+          }
+        : {}),
       '/**': { headers: securityHeaders },
       '/agents.txt': { headers: { 'Content-Type': 'text/plain; charset=utf-8' } },
       '/llms.txt': { headers: { 'Content-Type': 'text/plain; charset=utf-8' } },

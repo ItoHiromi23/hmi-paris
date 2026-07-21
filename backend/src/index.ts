@@ -1,5 +1,4 @@
 import type { Core } from '@strapi/strapi'
-import { ensureCapacityDefaults, ensureTourSessions } from './api/order/services/inventory'
 import {
   SEED_CANCEL,
   SEED_EVENTS,
@@ -27,7 +26,6 @@ const UID = {
   note: 'api::site-note.site-note',
   settings: 'api::site-setting.site-setting',
   event: 'api::main-event.main-event',
-  session: 'api::tour-session.tour-session',
 } as const
 
 const EDITORIAL_UIDS = [
@@ -65,8 +63,6 @@ const PUBLIC_ACTIONS = [
   `${UID.settings}.find`,
   `${UID.event}.find`,
   `${UID.event}.findOne`,
-  `${UID.session}.find`,
-  `${UID.session}.findOne`,
 ]
 
 async function setPublicPermissions(strapi: Core.Strapi) {
@@ -269,9 +265,6 @@ async function seedPackages(strapi: Core.Strapi, force: boolean) {
         ...shared,
         slug,
         highlights: [...en.highlights],
-        slotsTotal: 10,
-        slotsSold: 0,
-        bookingUnlimited: false,
       },
       { ...en, highlights: [...en.highlights] },
       { ...ja, highlights: [...ja.highlights] },
@@ -300,9 +293,6 @@ async function seedEvents(strapi: Core.Strapi, force: boolean) {
         ...shared,
         slug,
         inclusions: [...en.inclusions],
-        slotsTotal: 20,
-        slotsSold: 0,
-        bookingUnlimited: false,
       },
       { ...en, inclusions: [...en.inclusions] },
       { ...ja, inclusions: [...ja.inclusions] },
@@ -432,9 +422,6 @@ export default {
     }
 
     await seedSettings(strapi, force)
-
-    await ensureCapacityDefaults(strapi)
-    await ensureTourSessions(strapi, 6)
 
     ;(strapi as Core.Strapi & { autoTranslateDisabled?: boolean }).autoTranslateDisabled = false
     strapi.log.info(

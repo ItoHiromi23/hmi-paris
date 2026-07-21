@@ -4,7 +4,7 @@ const { locale } = useI18n()
 const { data: cms } = await useAsyncData(
   () => `cms-bundle-${locale.value}`,
   () => fetchCms(),
-  { watch: [locale] },
+  { ...freshOnNavigate(), watch: [locale] },
 )
 provide('cms', cms)
 </script>

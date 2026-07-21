@@ -5,23 +5,15 @@ const route = useRoute()
 const slug = computed(() => String(route.params.slug))
 
 const { fetchPackageBySlug, formatPrice } = useTourPackages()
-const { slotsLabel } = useAvailability()
-const { data: pkg, refresh: refreshPackage } = await useAsyncData(
+const { data: pkg } = await useAsyncData(
   () => `package-${slug.value}-${locale.value}`,
   () => fetchPackageBySlug(slug.value),
-  { watch: [slug, locale] },
+  { ...freshOnNavigate(), watch: [slug, locale] },
 )
-
-// Only re-fetch after Stripe checkout — not on every new-tab open
-onMounted(() => {
-  refreshSlotsIfDirty(refreshPackage)
-})
 
 if (!pkg.value) {
   throw createError({ statusCode: 404, statusMessage: t('packages.notFound') })
 }
-
-const availabilityText = computed(() => (pkg.value ? slotsLabel(pkg.value) : ''))
 
 useReveal()
 
@@ -29,10 +21,6 @@ useSeoMeta({
   title: `${pkg.value.title} — HMI Paris`,
   description: pkg.value.summary,
 })
-
-function scrollToBuy() {
-  document.getElementById('buy-panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-}
 </script>
 
 <template>
@@ -40,16 +28,13 @@ function scrollToBuy() {
     <PageHero
       :title="pkg.title"
       :eyebrow="`${pkg.region} · ${t('packages.days', { n: pkg.durationDays })}`"
-      :image="
-        pkg.heroImageUrl ||
-        '/images/paris-placeholder.svg'
-      "
+      :image="pkg.heroImageUrl || '/images/paris-placeholder.svg'"
     >
       <p class="text-lg text-white/95">{{ pkg.summary }}</p>
       <template #actions>
-        <button type="button" class="btn-primary" @click="scrollToBuy">
-          {{ t('packages.buy') }}
-        </button>
+        <NuxtLink :to="localePath('/contact')" class="btn-primary">
+          {{ t('nav.contact') }}
+        </NuxtLink>
         <NuxtLink :to="localePath('/packages')" class="btn-ghost">{{ t('packages.allTours') }}</NuxtLink>
       </template>
     </PageHero>
@@ -74,7 +59,7 @@ function scrollToBuy() {
           </ul>
         </div>
 
-        <aside id="buy-panel" class="reveal glass-panel h-fit p-8 sm:p-10">
+        <aside class="reveal glass-panel h-fit p-8 sm:p-10">
           <p class="section-label">{{ t('packages.priceLabel') }}</p>
           <p class="font-display mt-2 text-5xl text-[var(--teal)]">
             {{ formatPrice(pkg.priceFrom, pkg.currency) }}
@@ -83,24 +68,6 @@ function scrollToBuy() {
             {{ t('packages.priceHint') }}
           </p>
           <dl class="mt-10 space-y-5 text-sm text-[var(--heading)]">
-            <div class="flex justify-between border-t border-[var(--line)] pt-4">
-              <dt class="text-[var(--muted-fg)]">{{ t('packages.reservation') }}</dt>
-              <dd :class="pkg.soldOut ? 'text-[var(--alert)]' : 'text-[var(--teal)]'">
-                {{ availabilityText }}
-                <span
-                  v-if="!pkg.bookingUnlimited && pkg.slotsTotal != null"
-                  class="text-[var(--muted-fg)]"
-                >
-                  ({{
-                    pkg.usesSessions
-                      ? t('packages.upcomingSeats')
-                      : t('packages.totalSlots', { n: pkg.slotsTotal })
-                  }}
-                  /
-                  {{ t('packages.booked', { n: pkg.slotsSold }) }})
-                </span>
-              </dd>
-            </div>
             <div class="flex justify-between border-t border-[var(--line)] pt-4">
               <dt class="text-[var(--muted-fg)]">{{ t('packages.destination') }}</dt>
               <dd>{{ pkg.destination }}</dd>
@@ -115,15 +82,7 @@ function scrollToBuy() {
             </div>
           </dl>
           <div class="mt-10">
-            <PackageBuyButton
-              product-type="package"
-              :package-slug="pkg.slug"
-              :package-title="pkg.title"
-              :price-label="formatPrice(pkg.priceFrom, pkg.currency)"
-              :sold-out="pkg.soldOut"
-              :available-label="availabilityText"
-            />
-            <NuxtLink :to="localePath('/contact')" class="btn-ghost-dark mt-3 w-full">
+            <NuxtLink :to="localePath('/contact')" class="btn-primary w-full">
               {{ t('nav.contact') }}
             </NuxtLink>
           </div>

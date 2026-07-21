@@ -1,6 +1,6 @@
 import type { StrapiMedia } from '~/types/package'
 
-export interface MainEvent {
+export type MainEvent = {
   id: string | number
   documentId?: string
   title: string
@@ -20,16 +20,11 @@ export interface MainEvent {
   featured: boolean
   sortOrder: number
   notes: string
-  bookingUnlimited: boolean
-  slotsTotal: number | null
-  slotsSold: number
-  available: number | null
-  soldOut: boolean
 }
 
-export interface StrapiMainEvent {
-  id: number
-  documentId: string
+export type StrapiMainEvent = {
+  id: string | number
+  documentId?: string
   title: string
   slug: string
   label?: string | null
@@ -48,7 +43,4 @@ export interface StrapiMainEvent {
   featured?: boolean | null
   sortOrder?: number | null
   notes?: string | null
-  bookingUnlimited?: boolean | null
-  slotsTotal?: number | null
-  slotsSold?: number | null
 }

@@ -58,9 +58,6 @@
     "notes": "Please note:",
     "refPrice": "Indicative price",
     "askContact": "Please contact us",
-    "onlineHold": "Secure one spot with online payment",
-    "slots": "Availability",
-    "slotsTotal": "({n} total)",
     "format": "Format",
     "categoryFallback": "Seasonal special event"
   },
@@ -71,20 +68,17 @@
     "viewDetails": "View tour details →",
     "days": "{n} days",
     "from": "From",
-    "buy": "Buy this package",
+    "buy": "Enquire",
     "allTours": "All tours",
     "overview": "Overview",
     "itinerary": "Itinerary",
     "notFound": "Package not found",
     "priceLabel": "Price (from)",
-    "priceHint": "Choose a date and time, then pay online (private tour — 1 booking reserves that slot).",
+    "priceHint": "Contact us to reserve this experience.",
     "reservation": "Reservation",
     "destination": "Destination",
     "region": "Area",
-    "duration": "Duration",
-    "upcomingSeats": "upcoming seats",
-    "totalSlots": "total {n}",
-    "booked": "{n} booked"
+    "duration": "Duration"
   },
   "styles": {
     "vertical": "Travel styles",
@@ -127,13 +121,23 @@
     "studio": "Paris studio",
     "intro": "Tell us which service you need (tour, private car, airport transfer, interpreting, or custom), your preferred dates, and group size (1–6).",
     "thanks": "Thank you",
-    "demoNote": "This demo form does not send yet. It will work after Strapi or email integration.",
+    "successNote": "We received your message and will reply by email soon.",
     "name": "Name",
     "email": "Email",
     "interest": "Service of interest",
     "interestPh": "e.g. Airport transfer / Montmartre tour",
     "message": "Message",
-    "submit": "Send message"
+    "submit": "Send message",
+    "sending": "Sending…",
+    "error": "Something went wrong. Please try again or email us directly.",
+    "errors": {
+      "nameRequired": "Please enter your name.",
+      "nameShort": "Name must be at least 2 characters.",
+      "emailRequired": "Please enter your email.",
+      "emailInvalid": "Please enter a valid email address.",
+      "messageRequired": "Please enter a message.",
+      "messageShort": "Message must be at least 10 characters."
+    }
   },
   "cookies": {
     "label": "Cookies",
@@ -147,47 +151,7 @@
     "accept": "Accept all",
     "more": "Manage cookie settings"
   },
-  "checkout": {
-    "buyEvent": "Buy this event",
-    "bookDate": "Book a date & time",
-    "hint": "Private tour · each date/time can only be booked once · busy days are disabled",
-    "online": "Online checkout",
-    "amountDue": "Amount due:",
-    "close": "Close",
-    "sameDayHint": "Same day is fine with different hours. The same hour cannot be booked twice.",
-    "stepDate": "1. Choose a date",
-    "busyLegend": "Busy = reserved",
-    "loadingCalendar": "Loading calendar…",
-    "busy": "Busy",
-    "openSlots": "{n} open",
-    "stepTime": "2. Choose a time",
-    "dayReserved": "This day is fully reserved. Pick another date.",
-    "reserved": "Reserved",
-    "selectDateFirst": "Select an available date first",
-    "selected": "Selected:",
-    "stepDetails": "3. Your details",
-    "name": "Name",
-    "email": "Email *",
-    "phone": "Phone",
-    "namePh": "Jane Doe",
-    "emailPh": "you{'@'}example.com",
-    "phonePh": "+33 …",
-    "connecting": "Connecting…",
-    "pay": "Pay with Stripe",
-    "errNoDates": "No upcoming dates available for this package",
-    "errAllBusy": "All upcoming dates are fully reserved",
-    "errSoldOut": "Sold out — bookings are closed",
-    "errPickSlot": "Please select an available date and time",
-    "errEmail": "Please enter your email address",
-    "errCheckout": "Could not start checkout. Check Stripe settings or availability."
-  },
   "common": {
-    "soldOut": "Sold out",
-    "available": "Available",
-    "loading": "Loading…",
-    "open": "Open",
-    "seatsOpen": "{n} seats open",
-    "slotsLeft": "{n} slots left"
+    "loading": "Loading…"
   }
 }
-

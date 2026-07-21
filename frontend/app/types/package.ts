@@ -1,20 +1,10 @@
-export type PackageDifficulty = 'easy' | 'moderate' | 'challenging'
-export type ProductType = 'package' | 'event'
-
-export interface AvailabilityInfo {
-  bookingUnlimited: boolean
-  slotsTotal: number | null
-  slotsSold: number
-  pending?: number
-  available: number | null
-  soldOut: boolean
-  usesSessions?: boolean
-  nextSessionAt?: string | null
-  sessionCount?: number
+export type StrapiMedia = {
+  url?: string | null
+  alternativeText?: string | null
 }
 
-export interface TourPackage {
-  id: number | string
+export type TourPackage = {
+  id: string | number
   documentId?: string
   title: string
   slug: string
@@ -26,73 +16,25 @@ export interface TourPackage {
   priceFrom: number
   currency: string
   featured: boolean
-  difficulty: PackageDifficulty
+  difficulty: string
   highlights: string[]
-  heroImageUrl?: string | null
-  bookingUnlimited: boolean
-  slotsTotal: number | null
-  slotsSold: number
-  available: number | null
-  soldOut: boolean
-  usesSessions?: boolean
-  nextSessionAt?: string | null
+  heroImageUrl: string | null
 }
 
-export interface StrapiMedia {
-  url?: string
-  formats?: Record<string, { url?: string }>
-}
-
-export interface StrapiTourPackage {
-  id: number
-  documentId: string
+export type StrapiTourPackage = {
+  id: string | number
+  documentId?: string
   title: string
   slug: string
-  summary?: string
-  description?: string
+  summary?: string | null
+  description?: string | null
   destination: string
-  region?: string
+  region?: string | null
   durationDays: number
-  priceFrom: number
-  currency?: string
-  featured?: boolean
-  difficulty?: PackageDifficulty
+  priceFrom: number | string
+  currency?: string | null
+  featured?: boolean | null
+  difficulty?: string | null
   highlights?: string[] | null
   heroImage?: StrapiMedia | null
-  bookingUnlimited?: boolean | null
-  slotsTotal?: number | null
-  slotsSold?: number | null
-}
-
-export function computeAvailability(input: {
-  bookingUnlimited?: boolean | null
-  slotsTotal?: number | null
-  slotsSold?: number | null
-  pending?: number
-}): AvailabilityInfo {
-  const bookingUnlimited = Boolean(input.bookingUnlimited)
-  const slotsSold = Number(input.slotsSold ?? 0)
-  const pending = Number(input.pending ?? 0)
-
-  if (bookingUnlimited || input.slotsTotal == null) {
-    return {
-      bookingUnlimited: bookingUnlimited || input.slotsTotal == null,
-      slotsTotal: bookingUnlimited ? null : Number(input.slotsTotal ?? 0),
-      slotsSold,
-      pending,
-      available: null,
-      soldOut: false,
-    }
-  }
-
-  const slotsTotal = Number(input.slotsTotal)
-  const available = Math.max(0, slotsTotal - slotsSold - pending)
-  return {
-    bookingUnlimited: false,
-    slotsTotal,
-    slotsSold,
-    pending,
-    available,
-    soldOut: available <= 0,
-  }
 }

@@ -9,10 +9,8 @@ const props = defineProps<{
 const { t } = useI18n()
 const localePath = useLocalePath()
 const { formatPrice } = useTourPackages()
-const { slotsLabel } = useAvailability()
 const src = computed(() => optimizeImageUrl(props.package.heroImageUrl, 900, 68))
 const srcset = computed(() => imageSrcSet(props.package.heroImageUrl, [400, 640, 900, 1200]))
-const availabilityText = computed(() => slotsLabel(props.package))
 const imageError = ref(false)
 
 watch(
@@ -56,12 +54,6 @@ watch(
         <div class="absolute left-4 top-4 flex flex-wrap gap-2">
           <span class="trip-chip">{{ package.durationDays }} days</span>
           <span class="trip-chip">{{ package.region }}</span>
-          <span
-            class="trip-chip"
-            :class="package.soldOut ? '!bg-[var(--alert)] !text-white' : ''"
-          >
-            {{ availabilityText }}
-          </span>
         </div>
         <p
           class="absolute bottom-4 right-4 rounded-full bg-[var(--sun)] px-4 py-1.5 text-sm font-semibold text-white shadow"

@@ -5,6 +5,12 @@
  */
 export function freshOnNavigate() {
   const nuxtApp = useNuxtApp()
+  // Always refetch in dev so Strapi edits show up immediately
+  if (import.meta.dev) {
+    return {
+      getCachedData: () => undefined,
+    }
+  }
   return {
     getCachedData(key: string) {
       if (nuxtApp.isHydrating) {

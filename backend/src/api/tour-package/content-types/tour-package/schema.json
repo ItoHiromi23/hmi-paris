@@ -5,7 +5,7 @@
     "singularName": "tour-package",
     "pluralName": "tour-packages",
     "displayName": "Tour Package",
-    "description": "Tourist packages available for sale"
+    "description": "Tour packages and experiences"
   },
   "options": {
     "draftAndPublish": true
@@ -87,30 +87,6 @@
       "multiple": true,
       "required": false,
       "allowedTypes": ["images"],
-      "pluginOptions": { "i18n": { "localized": false } }
-    },
-    "bookingUnlimited": {
-      "type": "boolean",
-      "default": false,
-      "pluginOptions": { "i18n": { "localized": false } }
-    },
-    "slotsTotal": {
-      "type": "integer",
-      "default": 10,
-      "min": 0,
-      "pluginOptions": { "i18n": { "localized": false } }
-    },
-    "slotsSold": {
-      "type": "integer",
-      "default": 0,
-      "min": 0,
-      "pluginOptions": { "i18n": { "localized": false } }
-    },
-    "sessions": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::tour-session.tour-session",
-      "mappedBy": "tourPackage",
       "pluginOptions": { "i18n": { "localized": false } }
     }
   }

@@ -5,25 +5,15 @@ const route = useRoute()
 const slug = computed(() => String(route.params.slug))
 
 const { fetchEventBySlug, formatJaDate, formatPrice } = useMainEvents()
-const { slotsLabel } = useAvailability()
-const { data: event, refresh: refreshEvent } = await useAsyncData(
+const { data: event } = await useAsyncData(
   () => `event-${slug.value}-${locale.value}`,
   () => fetchEventBySlug(slug.value),
-  { watch: [slug, locale] },
+  { ...freshOnNavigate(), watch: [slug, locale] },
 )
-
-onMounted(() => {
-  refreshSlotsIfDirty(refreshEvent)
-})
 
 if (!event.value) {
   throw createError({ statusCode: 404, statusMessage: t('events.empty') })
 }
-
-const availabilityText = computed(() => (event.value ? slotsLabel(event.value) : ''))
-const canPurchase = computed(
-  () => event.value?.priceFrom != null && Number(event.value.priceFrom) > 0,
-)
 
 useReveal()
 
@@ -38,14 +28,11 @@ useSeoMeta({
     <PageHero
       :title="event.title"
       :eyebrow="event.category || t('nav.events')"
-      :image="
-        event.heroImageUrl ||
-        '/images/paris-placeholder.svg'
-      "
+      :image="event.heroImageUrl || '/images/paris-placeholder.svg'"
     >
       <p class="text-lg text-white/95">{{ event.summary }}</p>
       <template #actions>
-        <a href="#buy-panel" class="btn-primary">{{ availabilityText }}</a>
+        <NuxtLink :to="localePath('/contact')" class="btn-primary">{{ t('nav.contact') }}</NuxtLink>
         <NuxtLink :to="localePath('/events')" class="btn-ghost">{{ t('events.all') }}</NuxtLink>
       </template>
     </PageHero>
@@ -55,7 +42,10 @@ useSeoMeta({
     <section class="pattern-asanoha py-16 sm:py-24">
       <div class="container-site grid gap-14 lg:grid-cols-[1.4fr_0.8fr] lg:gap-16">
         <div class="reveal">
-          <p v-if="event.label" class="inline-block bg-[#e8dfd0] px-3 py-1 text-xs text-[var(--event-navy)]">
+          <p
+            v-if="event.label"
+            class="inline-block bg-[#e8dfd0] px-3 py-1 text-xs text-[var(--event-navy)]"
+          >
             {{ event.label }}
           </p>
           <SectionHeading
@@ -63,10 +53,7 @@ useSeoMeta({
             :eyebrow="t('events.detailEyebrow')"
             :title="event.title"
           />
-          <p
-            v-if="event.eventDate"
-            class="mt-4 text-sm text-[var(--muted-fg)]"
-          >
+          <p v-if="event.eventDate" class="mt-4 text-sm text-[var(--muted-fg)]">
             {{ t('events.date') }}: {{ formatJaDate(event.eventDate) }}
             <span v-if="event.venue"> · {{ t('events.venue') }}: {{ event.venue }}</span>
           </p>
@@ -98,7 +85,6 @@ useSeoMeta({
         </div>
 
         <aside
-          id="buy-panel"
           class="reveal glass-panel h-fit border-[var(--event-gold)]/20 p-8 sm:p-10"
         >
           <p class="section-label !text-[var(--event-maroon)]">{{ t('events.refPrice') }}</p>
@@ -109,50 +95,31 @@ useSeoMeta({
             {{ formatPrice(event.priceFrom, event.currency) }}
           </p>
           <p v-else class="mt-2 text-[var(--muted-fg)]">{{ t('events.askContact') }}</p>
-          <p class="mt-2 text-sm text-[var(--muted-fg)]">
-            {{ t('events.onlineHold') }}
-          </p>
           <dl class="mt-10 space-y-5 text-sm text-[var(--heading)]">
-            <div class="flex justify-between border-t border-[var(--line)] pt-4">
-              <dt class="text-[var(--muted-fg)]">{{ t('events.slots') }}</dt>
-              <dd :class="event.soldOut ? 'text-[var(--alert)]' : 'text-[var(--teal)]'">
-                {{ availabilityText }}
-                <span
-                  v-if="!event.bookingUnlimited && event.slotsTotal != null"
-                  class="text-[var(--muted-fg)]"
-                >
-                  {{ t('events.slotsTotal', { n: event.slotsTotal }) }}
-                </span>
-              </dd>
-            </div>
-            <div v-if="event.eventDate" class="flex justify-between border-t border-[var(--line)] pt-4">
+            <div
+              v-if="event.eventDate"
+              class="flex justify-between border-t border-[var(--line)] pt-4"
+            >
               <dt class="text-[var(--muted-fg)]">{{ t('events.date') }}</dt>
               <dd>{{ formatJaDate(event.eventDate) }}</dd>
             </div>
-            <div v-if="event.venue" class="flex justify-between border-t border-[var(--line)] pt-4">
+            <div
+              v-if="event.venue"
+              class="flex justify-between border-t border-[var(--line)] pt-4"
+            >
               <dt class="text-[var(--muted-fg)]">{{ t('events.venue') }}</dt>
               <dd class="text-right">{{ event.venue }}</dd>
             </div>
-            <div v-if="event.label" class="flex justify-between border-t border-[var(--line)] pt-4">
+            <div
+              v-if="event.label"
+              class="flex justify-between border-t border-[var(--line)] pt-4"
+            >
               <dt class="text-[var(--muted-fg)]">{{ t('events.format') }}</dt>
               <dd>{{ event.label }}</dd>
             </div>
           </dl>
           <div class="mt-10">
-            <PackageBuyButton
-              v-if="canPurchase"
-              product-type="event"
-              :package-slug="event.slug"
-              :package-title="event.title"
-              :price-label="formatPrice(event.priceFrom!, event.currency)"
-              :sold-out="event.soldOut"
-              :available-label="availabilityText"
-            />
-            <NuxtLink
-              :to="localePath('/contact')"
-              class="mt-3 w-full"
-              :class="canPurchase ? 'btn-ghost-dark' : 'btn-event'"
-            >
+            <NuxtLink :to="localePath('/contact')" class="btn-event w-full">
               {{ t('nav.contact') }}
             </NuxtLink>
           </div>

@@ -6,10 +6,8 @@ const props = defineProps<{
 }>()
 
 const { formatJaDate, formatPrice } = useMainEvents()
-const { slotsLabel } = useAvailability()
 const { t } = useI18n()
 const localePath = useLocalePath()
-const availabilityText = computed(() => slotsLabel(props.event))
 
 const fallbackHero = '/images/paris-placeholder.svg'
 const heroSrc = computed(() => props.event.heroImageUrl || fallbackHero)
@@ -67,12 +65,6 @@ const heroSrc = computed(() => props.event.heroImageUrl || fallbackHero)
         >
           {{ formatJaDate(event.eventDate) }}
           <span v-if="event.venue"> ／ {{ event.venue }}</span>
-        </p>
-        <p
-          class="mt-2 text-sm font-semibold"
-          :class="event.soldOut ? 'text-[var(--alert)]' : 'text-[var(--teal)]'"
-        >
-          {{ availabilityText }}
         </p>
         <p class="mt-4 text-sm leading-relaxed text-[var(--body)] sm:text-[15px]">
           {{ event.summary }}
