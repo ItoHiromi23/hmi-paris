@@ -29,14 +29,6 @@
     "message": "パリ在住の日本人スタッフが、心を込めてお迎えします",
     "tags": "日本語対応 ・ 安心サポート ・ おもてなし"
   },
-  "stats": {
-    "groupSize": "1〜6名",
-    "private": "完全プライベート",
-    "langs": "JA / EN",
-    "staff": "パリ在住の日本人スタッフ",
-    "airports": "CDG · ORY",
-    "transfer": "空港送迎サポートあり"
-  },
   "destinations": {
     "eyebrow": "人気のエリア",
     "title": "パリの名所を、エリアごとに",
@@ -59,7 +51,8 @@
     "refPrice": "参考料金",
     "askContact": "お問い合わせください",
     "format": "形態",
-    "categoryFallback": "季節限定・特別イベント"
+    "categoryFallback": "季節限定・特別イベント",
+    "raceBannerLive": "開催告知"
   },
   "packages": {
     "eyebrow": "ツアー一覧",

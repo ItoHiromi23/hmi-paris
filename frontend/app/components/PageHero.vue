@@ -7,12 +7,15 @@ const props = withDefaults(
     compact?: boolean
     priority?: boolean
     centered?: boolean
+    /** Extra top padding when the race banner sits above the header. */
+    bannerOffset?: boolean
   }>(),
   {
     eyebrow: '',
     compact: false,
     priority: true,
     centered: false,
+    bannerOffset: false,
   },
 )
 
@@ -65,15 +68,22 @@ if (props.priority && !isLocalAsset.value) {
     />
 
     <div
-      class="relative container-wide flex h-full min-h-[inherit] flex-col pb-16 pt-28 sm:pb-20 sm:pt-32"
-      :class="centered ? 'items-center justify-center text-center' : 'justify-end'"
+      class="relative container-wide flex h-full min-h-[inherit] flex-col pb-16 sm:pb-20"
+      :class="[
+        bannerOffset
+          ? 'justify-end pt-[9.5rem] sm:pt-[10.5rem]'
+          : centered
+            ? 'items-center justify-center text-center pt-28 sm:pt-32'
+            : 'justify-end pt-28 sm:pt-32',
+        centered && 'items-center text-center',
+      ]"
     >
       <p v-if="eyebrow" class="section-label !text-[#5eead4] drop-shadow">
         {{ eyebrow }}
       </p>
       <!-- LCP element: no fade/delay so paint is not deferred -->
       <h1
-        class="font-display mt-4 max-w-4xl text-[clamp(2.8rem,7.5vw,5.25rem)] leading-[0.95] tracking-tight text-white drop-shadow-[0_6px_24px_rgba(0,0,0,0.45)]"
+        class="font-display mt-4 max-w-4xl text-[clamp(2.4rem,6.5vw,4.75rem)] leading-[1.2] tracking-tight text-white drop-shadow-[0_6px_24px_rgba(0,0,0,0.45)] sm:leading-[1.15]"
       >
         {{ title }}
       </h1>

@@ -29,14 +29,6 @@
     "message": "Paris-based staff welcome you with care and clear local support",
     "tags": "English & Japanese · Reliable support · Warm hospitality"
   },
-  "stats": {
-    "groupSize": "1–6 guests",
-    "private": "Fully private",
-    "langs": "JA / EN",
-    "staff": "Paris-based Japanese staff",
-    "airports": "CDG · ORY",
-    "transfer": "Airport transfer support"
-  },
   "destinations": {
     "eyebrow": "Popular areas",
     "title": "Paris, area by area",
@@ -59,7 +51,8 @@
     "refPrice": "Indicative price",
     "askContact": "Please contact us",
     "format": "Format",
-    "categoryFallback": "Seasonal special event"
+    "categoryFallback": "Seasonal special event",
+    "raceBannerLive": "Race day"
   },
   "packages": {
     "eyebrow": "Tour list",

@@ -2,11 +2,7 @@
 const { t } = useI18n()
 const { locale } = useI18n()
 const { fetchPackages } = useTourPackages()
-const { data: packages, pending } = await useAsyncData(
-  () => `all-packages-${locale.value}`,
-  () => fetchPackages(),
-  { ...freshOnNavigate(), watch: [locale] },
-)
+const { data: packages, pending } = await useLocaleAsyncData('all-packages', () => fetchPackages())
 
 useReveal()
 

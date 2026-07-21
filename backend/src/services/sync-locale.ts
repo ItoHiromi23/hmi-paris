@@ -12,7 +12,7 @@ export const AUTO_TRANSLATE_UIDS = [
   'api::tour-detail.tour-detail',
   'api::cancellation-rule.cancellation-rule',
   'api::site-note.site-note',
-  'api::site-setting.site-setting',
+  // Site Setting EN/JA stay curated (seed + manual locale edits) — not machine-synced
 ] as const
 
 /** Localized copy fields per content type (non-localized fields are shared automatically). */

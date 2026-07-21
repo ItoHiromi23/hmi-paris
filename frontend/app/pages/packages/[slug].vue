@@ -5,10 +5,10 @@ const route = useRoute()
 const slug = computed(() => String(route.params.slug))
 
 const { fetchPackageBySlug, formatPrice } = useTourPackages()
-const { data: pkg } = await useAsyncData(
-  () => `package-${slug.value}-${locale.value}`,
+const { data: pkg } = await useLocaleAsyncData(
+  () => `package-${slug.value}`,
   () => fetchPackageBySlug(slug.value),
-  { ...freshOnNavigate(), watch: [slug, locale] },
+  { watch: [slug] },
 )
 
 if (!pkg.value) {

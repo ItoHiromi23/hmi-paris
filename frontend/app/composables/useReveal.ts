@@ -15,17 +15,24 @@ export function useReveal() {
           }
         }
       },
-      { threshold: 0.12, rootMargin: '0px 0px -32px 0px' },
+      { threshold: 0.08, rootMargin: '0px 0px -8px 0px' },
     )
 
     elements.forEach((el) => observer?.observe(el))
   }
+
+  const { locale } = useI18n()
 
   onMounted(() => {
     nextTick(observe)
   })
 
   onUpdated(() => {
+    nextTick(observe)
+  })
+
+  // Locale toggles swap CMS copy without always remounting — re-bind reveals
+  watch(locale, () => {
     nextTick(observe)
   })
 

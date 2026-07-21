@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import type { CmsBundle } from '~/types/cms'
 
+const props = defineProps<{
+  /** When true, header sits in a fixed chrome stack (e.g. under the race banner). */
+  embedded?: boolean
+}>()
+
 const { locale, locales, t } = useI18n()
 const switchLocalePath = useSwitchLocalePath()
 const localePath = useLocalePath()
@@ -52,12 +57,13 @@ onBeforeUnmount(() => {
 
 <template>
   <header
-    class="fixed inset-x-0 top-0 z-50 transition-all duration-400"
-    :class="
+    class="transition-all duration-400"
+    :class="[
+      props.embedded ? 'relative w-full' : 'fixed inset-x-0 top-0 z-50',
       solid
         ? 'border-b border-[var(--line)] bg-white/95 shadow-lg shadow-[var(--void)]/5 backdrop-blur-xl'
-        : 'bg-transparent'
-    "
+        : 'bg-transparent',
+    ]"
   >
     <div class="container-wide flex h-[4.5rem] items-center justify-between lg:h-20">
       <NuxtLink :to="localePath('/')" class="relative z-10 flex items-baseline gap-2">

@@ -2,11 +2,7 @@
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const { fetchEvents, formatJaDate } = useMainEvents()
-const { data: events } = await useAsyncData(
-  () => `events-index-${locale.value}`,
-  () => fetchEvents(),
-  { ...freshOnNavigate(), watch: [locale] },
-)
+const { data: events } = await useLocaleAsyncData('events-index', () => fetchEvents())
 
 useReveal()
 

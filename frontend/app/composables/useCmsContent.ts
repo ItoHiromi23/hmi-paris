@@ -89,7 +89,10 @@ export function useCmsContent() {
     const [settingsRes, services, reasons, fees, news, tourDetails, cancellation, notes] =
       await Promise.all([
         $fetch<{ data: CmsSiteSettings | null }>(`${strapiUrl}/api/site-setting`, {
-          query: { locale: localeParam },
+          query: {
+            locale: localeParam,
+            status: 'published',
+          },
         }).catch(() => null),
         fetchCollection<CmsService & { documentId?: string }>('services', localeParam),
         fetchCollection<CmsWhyReason & { documentId?: string }>('why-reasons', localeParam),
@@ -103,9 +106,10 @@ export function useCmsContent() {
         fetchCollection<CmsSiteNote & { documentId?: string }>('site-notes', localeParam),
       ])
 
+    const rawSettings = settingsRes?.data || null
     const settings: CmsSiteSettings = {
       ...EMPTY_SETTINGS,
-      ...(settingsRes?.data || {}),
+      ...(rawSettings || {}),
     }
 
     const mappedServices: CmsService[] = sortByOrder(

@@ -4,12 +4,8 @@ import type { CmsBundle } from '~/types/cms'
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const { fetchPackages } = useTourPackages()
-const { data: packages } = await useAsyncData(
-  () => `home-packages-${locale.value}`,
-  () => fetchPackages(),
-  { ...freshOnNavigate(), watch: [locale] },
-)
-const cms = inject<Ref<CmsBundle | null>>('cms', ref(null))
+const { data: packages } = await useLocaleAsyncData('home-packages', () => fetchPackages())
+const cms = inject<Ref<CmsBundle | null> | ComputedRef<CmsBundle | null>>('cms', ref(null))
 
 const featured = computed(() => (packages.value || []).slice(0, 3))
 const moreTrips = computed(() => (packages.value || []).slice(3, 6))
@@ -34,7 +30,9 @@ useSeoMeta({
 <template>
   <div>
     <PageHero
+      :key="locale"
       centered
+      banner-offset
       :title="heroTitle"
       :eyebrow="heroEyebrow"
       :image="s?.heroImageUrl || ''"
@@ -52,10 +50,9 @@ useSeoMeta({
       </template>
     </PageHero>
 
-    <OmotenashiStrip />
-    <StatsBar />
-    <DestinationStrip />
     <MainEventsSection />
+    <OmotenashiStrip />
+    <DestinationStrip />
 
     <section v-if="featured.length" id="trips" class="py-8 sm:py-12">
       <div class="container-wide">

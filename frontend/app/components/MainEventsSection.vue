@@ -2,11 +2,7 @@
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const { fetchEvents } = useMainEvents()
-const { data: events } = await useAsyncData(
-  () => `main-events-${locale.value}`,
-  () => fetchEvents(),
-  { ...freshOnNavigate(), watch: [locale] },
-)
+const { data: events } = await useLocaleAsyncData('main-events-home', () => fetchEvents())
 
 const featured = computed(() =>
   (events.value || []).filter((e) => e.featured).slice(0, 2),

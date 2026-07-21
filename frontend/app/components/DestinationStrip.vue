@@ -2,11 +2,7 @@
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const { fetchPackages } = useTourPackages()
-const { data: packages } = await useAsyncData(
-  () => `dest-packages-${locale.value}`,
-  () => fetchPackages(),
-  { ...freshOnNavigate(), watch: [locale] },
-)
+const { data: packages } = await useLocaleAsyncData('dest-packages', () => fetchPackages())
 
 const destinations = computed(() => {
   const seen = new Set<string>()

@@ -342,21 +342,50 @@ async function seedOrderedCollection(
 }
 
 async function seedSettings(strapi: Core.Strapi, force: boolean) {
-  const existing = await strapi.documents(UID.settings).findFirst({ locale: 'en' })
-  if (existing?.documentId && !force) {
-    strapi.log.info('Skip seed (settings exist) → site settings')
+  const existingEn = await strapi.documents(UID.settings).findFirst({ locale: 'en' })
+  const existingJa = await strapi.documents(UID.settings).findFirst({ locale: 'ja' })
+
+  if (!existingEn?.documentId) {
+    await upsertLocalized(
+      strapi,
+      UID.settings,
+      null,
+      { ...SEED_SETTINGS_SHARED },
+      { ...SEED_SETTINGS_EN },
+      { ...SEED_SETTINGS_JA },
+    )
+    strapi.log.info('Seeded site settings (EN + JA)')
     return
   }
 
-  await upsertLocalized(
-    strapi,
-    UID.settings,
-    existing?.documentId || null,
-    { ...SEED_SETTINGS_SHARED },
-    { ...SEED_SETTINGS_EN },
-    { ...SEED_SETTINGS_JA },
-  )
-  strapi.log.info('Seeded site settings (EN + JA)')
+  if (force) {
+    await upsertLocalized(
+      strapi,
+      UID.settings,
+      existingEn.documentId,
+      { ...SEED_SETTINGS_SHARED },
+      { ...SEED_SETTINGS_EN },
+      { ...SEED_SETTINGS_JA },
+    )
+    strapi.log.info('Reseeded site settings (EN + JA)')
+    return
+  }
+
+  // Single type: keep editor EN; repair JA when missing or polluted by bad auto-translate
+  const jaTitle = String((existingJa as { heroTitle?: string } | null)?.heroTitle || '')
+  const needsCuratedJa = !existingJa || !HAS_JP.test(jaTitle) || jaTitle.includes('123')
+
+  if (needsCuratedJa) {
+    await strapi.documents(UID.settings).update({
+      documentId: existingEn.documentId,
+      locale: 'ja',
+      data: { ...SEED_SETTINGS_SHARED, ...SEED_SETTINGS_JA },
+      status: 'published',
+    })
+    strapi.log.info('Applied curated Japanese translations → site settings (single type)')
+  } else {
+    strapi.log.info('Skip seed (settings EN + JA ok) → site settings')
+  }
 }
 
 async function clearCollection(strapi: Core.Strapi, uid: string) {

@@ -3,6 +3,7 @@ import type { CmsBundle } from '~/types/cms'
 
 const { t } = useI18n()
 const localePath = useLocalePath()
+const route = useRoute()
 const cms = inject<Ref<CmsBundle | null>>('cms', ref(null))
 const services = computed(() => cms.value?.services || [])
 
@@ -21,9 +22,15 @@ function padIndex(i: number) {
   return String(i + 1).padStart(2, '0')
 }
 
-/** Sticky offset below fixed header + slight peek of prior cards */
+const isHome = computed(() => {
+  const home = localePath('/')
+  return route.path === home || route.path === `${home}/`
+})
+
+/** Sticky offset below fixed chrome (+ race banner on home) */
 function stackTop(index: number) {
-  return `calc(4.75rem + ${index * 0.55}rem)`
+  const chrome = isHome.value ? 7.25 : 4.75
+  return `calc(${chrome}rem + ${index * 0.55}rem)`
 }
 </script>
 
