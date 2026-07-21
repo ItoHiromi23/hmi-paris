@@ -15,7 +15,7 @@ const hasEvents = computed(() => (events.value || []).length > 0)
   <section
     v-if="hasEvents"
     id="events"
-    class="pattern-seigaiha relative overflow-hidden py-14 sm:py-20"
+    class="pattern-seigaiha relative overflow-x-clip py-14 sm:py-20"
   >
     <div class="pointer-events-none absolute inset-x-0 top-0 h-px bg-[var(--event-gold)]/40" />
     <div class="container-wide">
@@ -34,7 +34,7 @@ const hasEvents = computed(() => (events.value || []).length > 0)
         </NuxtLink>
       </div>
 
-      <div class="mt-10 space-y-10">
+      <div class="mt-10 space-y-16 sm:space-y-24">
         <EventFeatureCard
           v-for="event in featured.length ? featured : (events || []).slice(0, 2)"
           :key="event.slug"

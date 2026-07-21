@@ -70,11 +70,17 @@ export function useMainEvents() {
     .replace('://localhost', '://127.0.0.1')
   const { formatPrice } = useTourPackages()
 
+  /** Local test heroes when CMS media is empty (dev / preview). */
+  const localHeroBySlug: Record<string, string> = {
+    'arc-de-triomphe-2026': '/images/horse-race-test.png',
+  }
+
   function withFallbacks(event: MainEvent): MainEvent {
     return {
       ...event,
       category: event.category || t('events.categoryFallback'),
       ctaLabel: event.ctaLabel || t('events.detailCta'),
+      heroImageUrl: event.heroImageUrl || localHeroBySlug[event.slug] || null,
     }
   }
 
