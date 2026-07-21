@@ -2,7 +2,9 @@
 const { t } = useI18n()
 const { locale } = useI18n()
 const { fetchPackages } = useTourPackages()
-const { data: packages, pending } = await useLocaleAsyncData('all-packages', () => fetchPackages())
+const { data: packages, pending } = await useLocaleAsyncData('all-packages', (code) =>
+  fetchPackages(code),
+)
 
 useReveal()
 

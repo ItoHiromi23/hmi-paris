@@ -6,7 +6,7 @@
   "nav": {
     "tours": "ツアー",
     "events": "特別イベント",
-    "styles": "スタイル",
+    "styles": "サービス",
     "why": "選ばれる理由",
     "about": "会社概要",
     "contact": "お問い合わせ",
@@ -21,7 +21,10 @@
   "home": {
     "findTours": "ツアーを探す",
     "travelStyles": "旅行スタイル",
-    "allTours": "すべてのツアー"
+    "allTours": "すべてのツアー",
+    "heroEyebrow": "HMI Paris ・ 日本語サポート",
+    "heroTitle": "どんな場面でも、日本語で安心を。",
+    "heroSubtitle": "観光ツアー、専用車、通訳同行、空港送迎まで。パリ在住の日本人スタッフが、あなたの滞在を支えます。"
   },
   "omotenashi": {
     "aria": "おもてなしのご案内",
@@ -74,7 +77,7 @@
     "duration": "期間"
   },
   "styles": {
-    "vertical": "旅のスタイル",
+    "vertical": "サービス",
     "intro": "日帰りツアー、専用車＆ガイド、空港送迎、通訳同行、オーダーメイドからお選びください。",
     "cta": "詳しく相談する"
   },
@@ -93,10 +96,11 @@
     "contact": "お問い合わせ",
     "privacy": "プライバシーポリシー",
     "cookies": "クッキーポリシー",
-    "legal": "Mentions légales",
+    "legal": "特定商取引・サイト表記",
     "email": "メール",
-    "rights": "© {year} HMI Paris. Tous droits réservés.",
-    "tagline": "心を込めたおもてなし ・ パリ在住日本人スタッフ"
+    "rights": "© {year} HMI Paris. 無断転載を禁じます。",
+    "tagline": "心を込めたおもてなし ・ パリ在住日本人スタッフ",
+    "blurb": "観光ツアー、専用車サービスから通訳同行・空港送迎まで。パリ在住の日本人スタッフが、滞在全体を丁寧にサポートします。"
   },
   "about": {
     "title": "会社概要",
@@ -112,22 +116,33 @@
     "title": "お気軽にお問い合わせください",
     "eyebrow": "お問い合わせ",
     "studio": "パリ・スタジオ",
-    "intro": "ご希望のサービス（観光・専用車・空港送迎・通訳・オーダーメイド）、希望日、人数（1〜6名）をあわせてお知らせください。",
+    "intro": "ご希望の日付・人数・詳細をご記入ください。メールにてご返信いたします。",
     "thanks": "ありがとうございます",
     "successNote": "メッセージを受け付けました。メールにてご連絡いたします。",
-    "name": "お名前",
+    "name": "お名前（フルネーム）",
     "email": "メール",
-    "interest": "ご興味のサービス",
-    "interestPh": "例：空港送迎 / モンマルトル観光",
-    "message": "メッセージ",
+    "people": "人数",
+    "date": "日付",
+    "message": "メッセージ（詳細）",
+    "messagePh": "ツアー、送迎、その他ご要望など…",
     "submit": "送信する",
     "sending": "送信中…",
     "error": "送信に失敗しました。もう一度お試しいただくか、直接メールでご連絡ください。",
+    "ctaTitle": "パリ滞在のご相談、お気軽にどうぞ。",
+    "ctaSubtitle": "お見積り・ご相談は無料です。日本語または英語でご連絡ください。",
+    "ctaButton": "お問い合わせ",
+    "reservationEyebrow": "ご予約",
+    "reservationTitle": "特別な一日を、パリで。",
+    "reservationSubtitle": "日程やテーマが未定でも、お気軽にご相談ください。",
     "errors": {
       "nameRequired": "お名前を入力してください。",
       "nameShort": "お名前は2文字以上で入力してください。",
       "emailRequired": "メールアドレスを入力してください。",
       "emailInvalid": "有効なメールアドレスを入力してください。",
+      "peopleRequired": "人数を入力してください。",
+      "peopleInvalid": "1〜50の整数で入力してください。",
+      "dateRequired": "日付を選択してください。",
+      "dateInvalid": "有効な日付を入力してください。",
       "messageRequired": "メッセージを入力してください。",
       "messageShort": "メッセージは10文字以上で入力してください。"
     }

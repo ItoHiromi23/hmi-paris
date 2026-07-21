@@ -2,7 +2,7 @@
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const { fetchPackages } = useTourPackages()
-const { data: packages } = await useLocaleAsyncData('dest-packages', () => fetchPackages())
+const { data: packages } = await useLocaleAsyncData('dest-packages', (code) => fetchPackages(code))
 
 const destinations = computed(() => {
   const seen = new Set<string>()
@@ -30,10 +30,11 @@ const destinations = computed(() => {
 
 const count = computed(() => destinations.value.length)
 
-const gridClass = computed(() => {
-  if (count.value <= 1) return 'mx-auto grid max-w-md grid-cols-1'
-  if (count.value === 2) return 'mx-auto grid max-w-4xl grid-cols-1 gap-5 sm:grid-cols-2'
-  return 'grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3'
+/** Desktop grid only — mobile/tablet use a horizontal snap scroll. */
+const desktopGridClass = computed(() => {
+  if (count.value <= 1) return 'lg:mx-auto lg:max-w-md lg:grid-cols-1'
+  if (count.value === 2) return 'lg:mx-auto lg:max-w-4xl lg:grid-cols-2'
+  return 'lg:grid-cols-3'
 })
 </script>
 
@@ -55,12 +56,15 @@ const gridClass = computed(() => {
         </NuxtLink>
       </div>
 
-      <div class="reveal mt-10" :class="gridClass">
+      <div
+        class="reveal snap-x-row mt-10 flex gap-4 overflow-x-auto pb-3 [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-5 [&::-webkit-scrollbar]:hidden lg:grid lg:gap-5 lg:overflow-visible lg:pb-0"
+        :class="desktopGridClass"
+      >
         <NuxtLink
           v-for="dest in destinations"
           :key="dest.name"
           :to="dest.href"
-          class="group relative overflow-hidden rounded-[1.25rem] shadow-md"
+          class="group relative w-[min(78vw,20rem)] shrink-0 overflow-hidden rounded-[1.25rem] shadow-md sm:w-[min(52vw,22rem)] lg:w-auto lg:max-w-none lg:shrink"
         >
           <div class="relative aspect-[4/5]">
             <img

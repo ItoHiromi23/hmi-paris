@@ -1,7 +1,7 @@
 /**
  * Locale-aware async data for EN↔JA toggles.
- * Caches each locale separately and always switches `data` to the active locale
- * (fixes Site Setting / single-type copy sticking on EN while the layout stays mounted).
+ * Keeps the last successful payload visible while the next locale loads
+ * (prevents blank titles/sections during the switch).
  */
 export async function useLocaleAsyncData<T>(
   key: string | (() => string),
@@ -10,56 +10,29 @@ export async function useLocaleAsyncData<T>(
 ) {
   const { locale } = useI18n()
   const resolveKey = () => (typeof key === 'function' ? key() : key)
+  const held = shallowRef<T | null>(null)
 
-  const cache = ref<Record<string, T>>({})
-  const data = shallowRef<T | null>(null)
-  const pending = ref(false)
-
-  async function load(code: string) {
-    pending.value = true
-    try {
-      const result = await handler(code)
-      cache.value = { ...cache.value, [code]: result }
-      if (code === locale.value) {
-        data.value = result
-      }
-      return result
-    } finally {
-      pending.value = false
-    }
-  }
-
-  // SSR + first client paint (keyed per locale for payload hydration)
-  const { data: initial } = await useAsyncData(
+  const { data, pending, refresh } = await useAsyncData(
     () => `${resolveKey()}:${locale.value}`,
-    () => load(locale.value),
+    () => handler(locale.value),
     {
-      watch: [resolveKey, ...(options.watch || [])],
-      ...freshOnNavigate(),
+      watch: [locale, ...(options.watch || [])],
     },
   )
 
-  if (initial.value != null && data.value == null) {
-    data.value = initial.value as T
-    cache.value[locale.value] = initial.value as T
+  if (data.value != null) {
+    held.value = data.value as T
   }
 
-  watch(locale, async (code, prev) => {
-    if (code === prev) return
-    // Instant swap when this locale was loaded before
-    if (cache.value[code] != null) {
-      data.value = cache.value[code]
+  watch(data, (value) => {
+    if (value != null) {
+      held.value = value as T
     }
-    await load(code)
-  })
-
-  watch(resolveKey, async () => {
-    await load(locale.value)
   })
 
   return {
-    data,
+    data: held,
     pending,
-    refresh: () => load(locale.value),
+    refresh,
   }
 }

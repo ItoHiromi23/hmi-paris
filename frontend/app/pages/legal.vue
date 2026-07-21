@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import type { CmsBundle } from '~/types/cms'
 
+const { t } = useI18n()
 const cms = inject<Ref<CmsBundle | null>>('cms', ref(null))
 const email = computed(() => cms.value?.settings?.contactEmail || 'info@hmiparis.com')
 const phone = computed(() => cms.value?.settings?.contactPhone || '+33 1 84 00 00 00')
 const location = computed(() => cms.value?.settings?.studioLocation || 'Paris, France')
 
 useSeoMeta({
-  title: '特定商取引・サイト表記｜Mentions légales — HMI Paris',
+  title: () => `${t('footer.legal')} — HMI Paris`,
   description:
     'HMI Parisのサイト表記（LCEN）。Mentions légales conformes à la législation française.',
 })
@@ -16,7 +17,7 @@ useSeoMeta({
 <template>
   <div>
     <PageHero
-      title="Mentions légales"
+      :title="t('footer.legal')"
       eyebrow="サイト表記 · LCEN"
       image="/images/paris-placeholder.svg"
     >

@@ -77,11 +77,11 @@ export function useTourPackages() {
     .replace(/\/$/, '')
     .replace('://localhost', '://127.0.0.1')
 
-  async function fetchPackages(): Promise<TourPackage[]> {
+  async function fetchPackages(localeCode?: string): Promise<TourPackage[]> {
     try {
       const data = await $fetch<{ data: StrapiTourPackage[] }>(`${strapiUrl}/api/tour-packages`, {
         query: {
-          locale: cmsLocale(locale.value),
+          locale: cmsLocale(localeCode || locale.value),
           populate: 'heroImage',
           'filters[publishedAt][$notNull]': 'true',
           sort: 'featured:desc,title:asc',
@@ -96,11 +96,11 @@ export function useTourPackages() {
     }
   }
 
-  async function fetchPackageBySlug(slug: string): Promise<TourPackage | null> {
+  async function fetchPackageBySlug(slug: string, localeCode?: string): Promise<TourPackage | null> {
     try {
       const data = await $fetch<{ data: StrapiTourPackage[] }>(`${strapiUrl}/api/tour-packages`, {
         query: {
-          locale: cmsLocale(locale.value),
+          locale: cmsLocale(localeCode || locale.value),
           'filters[slug][$eq]': slug,
           populate: '*',
         },

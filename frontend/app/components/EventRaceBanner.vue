@@ -3,7 +3,7 @@ const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const { fetchEvents, formatJaDate } = useMainEvents()
 
-const { data: events } = await useLocaleAsyncData('home-race-banner', () => fetchEvents())
+const { data: events } = await useLocaleAsyncData('home-race-banner', (code) => fetchEvents(code))
 
 /** Lead with featured main event; fall back to first listed event. */
 const event = computed(() => {
@@ -49,7 +49,7 @@ const marqueeCopies = computed(() => {
 
       <!-- Horse silhouette -->
       <span
-        class="event-race-banner__horse relative z-10 hidden w-10 shrink-0 items-center justify-center border-r border-[var(--event-gold)]/20 text-[var(--event-gold)] sm:flex"
+        class="event-race-banner__horse relative z-10 hidden w-10 shrink-0 items-center justify-center border-r border-[var(--event-gold)]/20 text-[var(--event-cream)] sm:flex"
         aria-hidden="true"
       >
         <svg viewBox="0 0 32 24" class="h-4 w-5" fill="currentColor">
@@ -76,7 +76,7 @@ const marqueeCopies = computed(() => {
               class="mx-8 inline-flex items-center gap-3"
             >
               <span>{{ copy }}</span>
-              <span class="text-[var(--event-gold)]/70" aria-hidden="true">◆</span>
+              <span class="text-[var(--event-cream)]/55" aria-hidden="true">◆</span>
             </span>
           </span>
         </span>
@@ -92,7 +92,7 @@ const marqueeCopies = computed(() => {
       </span>
 
       <span
-        class="relative z-10 hidden shrink-0 items-center border-l border-[var(--event-gold)]/30 px-4 text-[10px] uppercase tracking-[0.16em] text-[var(--event-gold)] transition group-hover:text-[var(--event-cream)] sm:flex"
+        class="relative z-10 hidden shrink-0 items-center border-l border-[var(--event-gold)]/30 px-4 text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--event-cream)] transition group-hover:text-white sm:flex"
       >
         {{ t('events.detailCta') }} →
       </span>

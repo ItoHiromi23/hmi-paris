@@ -6,13 +6,22 @@ const props = defineProps<{
   embedded?: boolean
 }>()
 
-const { locale, locales, t } = useI18n()
+const { locale, locales, t, setLocale } = useI18n()
 const switchLocalePath = useSwitchLocalePath()
 const localePath = useLocalePath()
 const route = useRoute()
 const menuOpen = ref(false)
 const scrolled = ref(false)
 const cms = inject<Ref<CmsBundle | null>>('cms', ref(null))
+const { load: loadCms } = useCmsBundle()
+
+async function onLocaleClick(code: string, event: Event) {
+  event.preventDefault()
+  if (code === locale.value) return
+  // Fetch CMS for the target locale first, then switch UI language
+  await loadCms(code)
+  await setLocale(code)
+}
 
 const brand = computed(() => cms.value?.settings.brandName || 'HMI')
 const tagline = computed(() => cms.value?.settings.brandTagline || 'paris')
@@ -121,6 +130,7 @@ onBeforeUnmount(() => {
                   : 'hover:bg-white/10'
             "
             :aria-current="locale === item.code ? 'true' : undefined"
+            @click="onLocaleClick(item.code, $event)"
           >
             {{ item.name }}
           </NuxtLink>
@@ -154,6 +164,7 @@ onBeforeUnmount(() => {
                   : 'bg-white text-[var(--heading)]'
                 : ''
             "
+            @click="onLocaleClick(item.code, $event)"
           >
             {{ item.name }}
           </NuxtLink>

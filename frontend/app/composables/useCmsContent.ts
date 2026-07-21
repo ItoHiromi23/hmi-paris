@@ -83,7 +83,8 @@ async function fetchCollection<T>(path: string, locale: string): Promise<T[]> {
 export function useCmsContent() {
   async function fetchCms(localeCode?: string): Promise<CmsBundle> {
     const { locale } = useI18n()
-    const localeParam = cmsLocale(localeCode || locale.value)
+    // Prefer the explicit argument so in-flight toggles cannot pick the wrong locale
+    const localeParam = cmsLocale(String(localeCode || locale.value || 'en'))
     const strapiUrl = strapiBaseUrl()
 
     const [settingsRes, services, reasons, fees, news, tourDetails, cancellation, notes] =
@@ -93,6 +94,8 @@ export function useCmsContent() {
             locale: localeParam,
             status: 'published',
           },
+          // Avoid any intermediary caching the previous locale's payload
+          headers: { 'Cache-Control': 'no-cache' },
         }).catch(() => null),
         fetchCollection<CmsService & { documentId?: string }>('services', localeParam),
         fetchCollection<CmsWhyReason & { documentId?: string }>('why-reasons', localeParam),

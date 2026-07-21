@@ -11,7 +11,8 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const form = reactive({
   name: '',
   email: '',
-  interest: '',
+  people: '',
+  date: '',
   message: '',
   website: '', // honeypot
 })
@@ -19,6 +20,8 @@ const form = reactive({
 const fieldErrors = reactive<Record<string, string>>({
   name: '',
   email: '',
+  people: '',
+  date: '',
   message: '',
 })
 
@@ -33,12 +36,17 @@ function clearFieldError(key: keyof typeof fieldErrors) {
 function validateClient(): boolean {
   fieldErrors.name = ''
   fieldErrors.email = ''
+  fieldErrors.people = ''
+  fieldErrors.date = ''
   fieldErrors.message = ''
   formError.value = ''
 
   const name = form.name.trim()
   const email = form.email.trim()
+  const people = form.people.trim()
+  const date = form.date.trim()
   const message = form.message.trim()
+  const peopleN = Number(people)
 
   if (!name) fieldErrors.name = t('contact.errors.nameRequired')
   else if (name.length < 2) fieldErrors.name = t('contact.errors.nameShort')
@@ -46,10 +54,23 @@ function validateClient(): boolean {
   if (!email) fieldErrors.email = t('contact.errors.emailRequired')
   else if (!EMAIL_RE.test(email)) fieldErrors.email = t('contact.errors.emailInvalid')
 
+  if (!people) fieldErrors.people = t('contact.errors.peopleRequired')
+  else if (!Number.isInteger(peopleN) || peopleN < 1 || peopleN > 50) {
+    fieldErrors.people = t('contact.errors.peopleInvalid')
+  }
+
+  if (!date) fieldErrors.date = t('contact.errors.dateRequired')
+
   if (!message) fieldErrors.message = t('contact.errors.messageRequired')
   else if (message.length < 10) fieldErrors.message = t('contact.errors.messageShort')
 
-  return !fieldErrors.name && !fieldErrors.email && !fieldErrors.message
+  return (
+    !fieldErrors.name &&
+    !fieldErrors.email &&
+    !fieldErrors.people &&
+    !fieldErrors.date &&
+    !fieldErrors.message
+  )
 }
 
 const SERVER_ERROR_KEYS: Record<string, Record<string, string>> = {
@@ -60,6 +81,14 @@ const SERVER_ERROR_KEYS: Record<string, Record<string, string>> = {
   email: {
     required: 'contact.errors.emailRequired',
     invalid: 'contact.errors.emailInvalid',
+  },
+  people: {
+    required: 'contact.errors.peopleRequired',
+    invalid: 'contact.errors.peopleInvalid',
+  },
+  date: {
+    required: 'contact.errors.dateRequired',
+    invalid: 'contact.errors.dateInvalid',
   },
   message: {
     required: 'contact.errors.messageRequired',
@@ -88,7 +117,8 @@ async function onSubmit() {
       body: {
         name: form.name.trim(),
         email: form.email.trim(),
-        interest: form.interest.trim(),
+        people: Number(form.people.trim()),
+        date: form.date.trim(),
         message: form.message.trim(),
         website: form.website,
       },
@@ -200,17 +230,38 @@ useSeoMeta({
             </label>
 
             <label class="block">
-              <span class="text-[11px] uppercase tracking-[0.2em] text-[var(--teal)]">
-                {{ t('contact.interest') }}
-              </span>
+              <span class="text-[11px] uppercase tracking-[0.2em] text-[var(--teal)]">{{
+                t('contact.people')
+              }}</span>
               <input
-                v-model="form.interest"
-                type="text"
-                name="interest"
-                maxlength="200"
-                :placeholder="t('contact.interestPh')"
-                class="mt-2 w-full border-b border-[var(--line)] bg-transparent py-3 text-[var(--heading)] outline-none transition focus:border-[var(--teal)] placeholder:text-[var(--muted-fg)]"
+                v-model="form.people"
+                type="number"
+                name="people"
+                min="1"
+                max="50"
+                inputmode="numeric"
+                :aria-invalid="Boolean(fieldErrors.people)"
+                class="mt-2 w-full border-b border-[var(--line)] bg-transparent py-3 text-[var(--heading)] outline-none transition focus:border-[var(--teal)]"
+                @input="clearFieldError('people')"
               />
+              <p v-if="fieldErrors.people" class="mt-2 text-sm text-red-700">
+                {{ fieldErrors.people }}
+              </p>
+            </label>
+
+            <label class="block">
+              <span class="text-[11px] uppercase tracking-[0.2em] text-[var(--teal)]">{{
+                t('contact.date')
+              }}</span>
+              <input
+                v-model="form.date"
+                type="date"
+                name="date"
+                :aria-invalid="Boolean(fieldErrors.date)"
+                class="mt-2 w-full border-b border-[var(--line)] bg-transparent py-3 text-[var(--heading)] outline-none transition focus:border-[var(--teal)]"
+                @input="clearFieldError('date')"
+              />
+              <p v-if="fieldErrors.date" class="mt-2 text-sm text-red-700">{{ fieldErrors.date }}</p>
             </label>
 
             <label class="block">
@@ -222,8 +273,9 @@ useSeoMeta({
                 name="message"
                 rows="4"
                 maxlength="5000"
+                :placeholder="t('contact.messagePh')"
                 :aria-invalid="Boolean(fieldErrors.message)"
-                class="mt-2 w-full border-b border-[var(--line)] bg-transparent py-3 text-[var(--heading)] outline-none transition focus:border-[var(--teal)]"
+                class="mt-2 w-full border-b border-[var(--line)] bg-transparent py-3 text-[var(--heading)] outline-none transition focus:border-[var(--teal)] placeholder:text-[var(--muted-fg)]"
                 @input="clearFieldError('message')"
               />
               <p v-if="fieldErrors.message" class="mt-2 text-sm text-red-700">

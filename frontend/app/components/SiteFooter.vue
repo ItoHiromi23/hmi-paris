@@ -1,10 +1,20 @@
 <script setup lang="ts">
-import type { CmsBundle } from '~/types/cms'
-
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const localePath = useLocalePath()
-const cms = inject<Ref<CmsBundle | null>>('cms', ref(null))
-const s = computed(() => cms.value?.settings)
+const { cms, cmsLocale, sync } = useCmsBundle()
+
+await sync()
+
+const s = computed(() =>
+  cmsLocale.value === locale.value ? cms.value?.settings : null,
+)
+
+const brandName = computed(() => (s.value?.brandName || '').trim() || 'HMI')
+const brandTagline = computed(() => (s.value?.brandTagline || '').trim() || 'paris')
+const footerBlurb = computed(
+  () => (s.value?.footerBlurb || '').trim() || t('footer.blurb'),
+)
+const email = computed(() => s.value?.contactEmail || 'info@hmiparis.com')
 const year = new Date().getFullYear()
 </script>
 
@@ -12,12 +22,12 @@ const year = new Date().getFullYear()
   <footer class="bg-[var(--void)] text-white">
     <div class="container-site grid gap-12 py-16 md:grid-cols-3 md:gap-10">
       <div>
-        <p class="text-2xl font-semibold tracking-[0.12em]">{{ s?.brandName }}</p>
+        <p class="text-2xl font-semibold tracking-[0.12em]">{{ brandName }}</p>
         <p class="font-display mt-1 text-lg italic text-[#5eead4]">
-          {{ s?.brandTagline }}
+          {{ brandTagline }}
         </p>
         <p class="mt-5 max-w-sm text-sm leading-relaxed text-white/85">
-          {{ s?.footerBlurb }}
+          {{ footerBlurb }}
         </p>
       </div>
 
@@ -81,11 +91,8 @@ const year = new Date().getFullYear()
             </NuxtLink>
           </li>
           <li>
-            <a
-              :href="`mailto:${s?.contactEmail || 'info@hmiparis.com'}`"
-              class="hover:text-white"
-            >
-              {{ t('footer.email') }}: {{ s?.contactEmail || 'info@hmiparis.com' }}
+            <a :href="`mailto:${email}`" class="hover:text-white">
+              {{ t('footer.email') }}: {{ email }}
             </a>
           </li>
         </ul>

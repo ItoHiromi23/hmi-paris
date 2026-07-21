@@ -6,7 +6,7 @@
   "nav": {
     "tours": "Tours",
     "events": "Special events",
-    "styles": "Styles",
+    "styles": "Services",
     "why": "Why us",
     "about": "About",
     "contact": "Contact",
@@ -21,7 +21,10 @@
   "home": {
     "findTours": "Find a tour",
     "travelStyles": "Travel styles",
-    "allTours": "All tours"
+    "allTours": "All tours",
+    "heroEyebrow": "HMI Paris · English & Japanese support",
+    "heroTitle": "Feel at ease in Paris — in your language.",
+    "heroSubtitle": "Tours, private cars, interpreting and airport transfers. Paris-based Japanese staff support your stay."
   },
   "omotenashi": {
     "aria": "Welcome message",
@@ -74,7 +77,7 @@
     "duration": "Duration"
   },
   "styles": {
-    "vertical": "Travel styles",
+    "vertical": "Services",
     "intro": "Choose day tours, private car & guide, airport transfer, interpreting, or a custom plan.",
     "cta": "Ask about this"
   },
@@ -96,7 +99,8 @@
     "legal": "Legal notice",
     "email": "Email",
     "rights": "© {year} HMI Paris. All rights reserved.",
-    "tagline": "Warm hospitality · Paris-based Japanese staff"
+    "tagline": "Warm hospitality · Paris-based Japanese staff",
+    "blurb": "From sightseeing tours and private cars to interpreting and airport transfers — Paris-based Japanese staff support your whole stay."
   },
   "about": {
     "title": "About",
@@ -112,23 +116,34 @@
     "title": "Get in touch",
     "eyebrow": "Contact",
     "studio": "Paris studio",
-    "intro": "Tell us which service you need (tour, private car, airport transfer, interpreting, or custom), your preferred dates, and group size (1–6).",
+    "intro": "Share your preferred date, group size, and any details we should know. We will reply by email.",
     "thanks": "Thank you",
     "successNote": "We received your message and will reply by email soon.",
-    "name": "Name",
+    "name": "Full name",
     "email": "Email",
-    "interest": "Service of interest",
-    "interestPh": "e.g. Airport transfer / Montmartre tour",
-    "message": "Message",
+    "people": "Number of people",
+    "date": "Date",
+    "message": "Messages (Details)",
+    "messagePh": "Tour, transfer, or other requests…",
     "submit": "Send message",
     "sending": "Sending…",
     "error": "Something went wrong. Please try again or email us directly.",
+    "ctaTitle": "Questions about your Paris stay? We’re happy to help.",
+    "ctaSubtitle": "Quotes and consultations are free. Contact us in English or Japanese.",
+    "ctaButton": "Contact us",
+    "reservationEyebrow": "Booking",
+    "reservationTitle": "Make your day in Paris special.",
+    "reservationSubtitle": "Even if dates or themes are still open, feel free to ask.",
     "errors": {
-      "nameRequired": "Please enter your name.",
+      "nameRequired": "Please enter your full name.",
       "nameShort": "Name must be at least 2 characters.",
       "emailRequired": "Please enter your email.",
       "emailInvalid": "Please enter a valid email address.",
-      "messageRequired": "Please enter a message.",
+      "peopleRequired": "Please enter the number of people.",
+      "peopleInvalid": "Enter a whole number between 1 and 50.",
+      "dateRequired": "Please choose a date.",
+      "dateInvalid": "Please enter a valid date.",
+      "messageRequired": "Please enter your message.",
       "messageShort": "Message must be at least 10 characters."
     }
   },

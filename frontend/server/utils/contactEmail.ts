@@ -3,7 +3,8 @@ import { Resend } from 'resend'
 export interface ContactEmailPayload {
   name: string
   email: string
-  interest?: string
+  people: number
+  date: string
   message: string
   to: string
 }
@@ -23,14 +24,17 @@ function escapeHtml(value: string) {
     .replace(/"/g, '&quot;')
 }
 
-function buildHtml(payload: ContactEmailPayload) {
-  const interestRow = payload.interest
-    ? `<tr>
-      <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; color: #64748b;">Interest</td>
-      <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right;">${escapeHtml(payload.interest)}</td>
-    </tr>`
-    : ''
+function formatDateLabel(isoDate: string) {
+  const d = new Date(`${isoDate}T12:00:00`)
+  if (Number.isNaN(d.getTime())) return isoDate
+  return d.toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  })
+}
 
+function buildHtml(payload: ContactEmailPayload) {
   return `<!DOCTYPE html>
 <html>
 <body style="font-family: Georgia, serif; color: #1a2332; line-height: 1.6; max-width: 560px; margin: 0 auto; padding: 24px;">
@@ -38,7 +42,7 @@ function buildHtml(payload: ContactEmailPayload) {
   <h1 style="font-size: 28px; font-weight: 400; margin: 8px 0 16px;">New contact message</h1>
   <table style="width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 14px;">
     <tr>
-      <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; color: #64748b;">Name</td>
+      <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; color: #64748b;">Full name</td>
       <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right;">${escapeHtml(payload.name)}</td>
     </tr>
     <tr>
@@ -47,9 +51,16 @@ function buildHtml(payload: ContactEmailPayload) {
         <a href="mailto:${escapeHtml(payload.email)}" style="color: #0f766e;">${escapeHtml(payload.email)}</a>
       </td>
     </tr>
-    ${interestRow}
+    <tr>
+      <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; color: #64748b;">Number of people</td>
+      <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right;">${payload.people}</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; color: #64748b;">Date</td>
+      <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right;">${escapeHtml(formatDateLabel(payload.date))}</td>
+    </tr>
   </table>
-  <p style="font-size: 14px; color: #64748b; margin-bottom: 8px;">Message</p>
+  <p style="font-size: 14px; color: #64748b; margin-bottom: 8px;">Messages (Details)</p>
   <p style="white-space: pre-wrap; font-size: 15px; margin: 0;">${escapeHtml(payload.message)}</p>
   <p style="margin-top: 32px; font-size: 13px; color: #64748b;">
     Reply directly to this email to respond to ${escapeHtml(payload.name)}.
@@ -62,11 +73,12 @@ function buildText(payload: ContactEmailPayload) {
   return [
     'New contact message from the HMI Paris website',
     '',
-    `Name: ${payload.name}`,
+    `Full name: ${payload.name}`,
     `Email: ${payload.email}`,
-    ...(payload.interest ? [`Interest: ${payload.interest}`] : []),
+    `Number of people: ${payload.people}`,
+    `Date: ${formatDateLabel(payload.date)}`,
     '',
-    'Message:',
+    'Messages (Details):',
     payload.message,
     '',
     '— Reply to this email to respond to the sender.',
@@ -96,16 +108,12 @@ export async function sendContactEmail(
   }
 
   try {
-    const subjectInterest = payload.interest?.trim()
-      ? ` — ${payload.interest.trim().slice(0, 60)}`
-      : ''
-
     const resend = new Resend(apiKey)
     const { data, error } = await resend.emails.send({
       from,
       to: payload.to,
       replyTo: payload.email,
-      subject: `Contact: ${payload.name}${subjectInterest}`,
+      subject: `Contact: ${payload.name} — ${formatDateLabel(payload.date)} (${payload.people})`,
       html: buildHtml(payload),
       text: buildText(payload),
     })

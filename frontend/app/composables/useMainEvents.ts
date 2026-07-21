@@ -78,11 +78,11 @@ export function useMainEvents() {
     }
   }
 
-  async function fetchEvents(): Promise<MainEvent[]> {
+  async function fetchEvents(localeCode?: string): Promise<MainEvent[]> {
     try {
       const data = await $fetch<{ data: StrapiMainEvent[] }>(`${strapiUrl}/api/main-events`, {
         query: {
-          locale: cmsLocale(locale.value),
+          locale: cmsLocale(localeCode || locale.value),
           populate: 'heroImage',
           'filters[publishedAt][$notNull]': 'true',
           sort: 'sortOrder:asc,eventDate:asc',
@@ -97,11 +97,11 @@ export function useMainEvents() {
     }
   }
 
-  async function fetchEventBySlug(slug: string): Promise<MainEvent | null> {
+  async function fetchEventBySlug(slug: string, localeCode?: string): Promise<MainEvent | null> {
     try {
       const data = await $fetch<{ data: StrapiMainEvent[] }>(`${strapiUrl}/api/main-events`, {
         query: {
-          locale: cmsLocale(locale.value),
+          locale: cmsLocale(localeCode || locale.value),
           'filters[slug][$eq]': slug,
           populate: '*',
         },

@@ -7,7 +7,7 @@ const slug = computed(() => String(route.params.slug))
 const { fetchEventBySlug, formatJaDate, formatPrice } = useMainEvents()
 const { data: event } = await useLocaleAsyncData(
   () => `event-${slug.value}`,
-  () => fetchEventBySlug(slug.value),
+  (code) => fetchEventBySlug(slug.value, code),
   { watch: [slug] },
 )
 

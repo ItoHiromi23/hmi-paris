@@ -371,6 +371,18 @@ async function seedSettings(strapi: Core.Strapi, force: boolean) {
     return
   }
 
+  // Repair polluted EN titles (e.g. accidental "123" edits) without wiping editor copy otherwise
+  const enTitle = String((existingEn as { heroTitle?: string }).heroTitle || '')
+  if (enTitle.includes('123')) {
+    await strapi.documents(UID.settings).update({
+      documentId: existingEn.documentId,
+      locale: 'en',
+      data: { ...SEED_SETTINGS_SHARED, ...SEED_SETTINGS_EN },
+      status: 'published',
+    })
+    strapi.log.info('Repaired polluted English site settings (single type)')
+  }
+
   // Single type: keep editor EN; repair JA when missing or polluted by bad auto-translate
   const jaTitle = String((existingJa as { heroTitle?: string } | null)?.heroTitle || '')
   const needsCuratedJa = !existingJa || !HAS_JP.test(jaTitle) || jaTitle.includes('123')

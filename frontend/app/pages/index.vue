@@ -1,22 +1,35 @@
 <script setup lang="ts">
-import type { CmsBundle } from '~/types/cms'
-
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const { fetchPackages } = useTourPackages()
-const { data: packages } = await useLocaleAsyncData('home-packages', () => fetchPackages())
-const cms = inject<Ref<CmsBundle | null> | ComputedRef<CmsBundle | null>>('cms', ref(null))
+const { data: packages } = await useLocaleAsyncData('home-packages', (code) => fetchPackages(code))
+
+// Same shared CMS state as the language toggle (do not inject a stale copy)
+const { cms, cmsLocale, sync } = useCmsBundle()
+await sync()
 
 const featured = computed(() => (packages.value || []).slice(0, 3))
 const moreTrips = computed(() => (packages.value || []).slice(3, 6))
-const s = computed(() => cms.value?.settings)
 
-const heroTitle = computed(() => s.value?.heroTitle || '')
-const heroEyebrow = computed(() => s.value?.heroEyebrow || '')
-const heroSubtitle = computed(() => s.value?.heroSubtitle || '')
-const packagesEyebrow = computed(() => s.value?.packagesEyebrow || '')
-const packagesTitle = computed(() => s.value?.packagesTitle || '')
-const packagesIntro = computed(() => s.value?.packagesIntro || '')
+/** CMS settings only when they match the active UI locale; otherwise i18n. */
+const settingsReady = computed(() => cmsLocale.value === locale.value && cms.value?.settings)
+
+const heroTitle = computed(
+  () => settingsReady.value?.heroTitle?.trim() || t('home.heroTitle'),
+)
+const heroEyebrow = computed(
+  () => settingsReady.value?.heroEyebrow?.trim() || t('home.heroEyebrow'),
+)
+const heroSubtitle = computed(
+  () => settingsReady.value?.heroSubtitle?.trim() || t('home.heroSubtitle'),
+)
+const heroImage = computed(() => settingsReady.value?.heroImageUrl || '')
+
+const packagesEyebrow = computed(
+  () => settingsReady.value?.packagesEyebrow?.trim() || '',
+)
+const packagesTitle = computed(() => settingsReady.value?.packagesTitle?.trim() || '')
+const packagesIntro = computed(() => settingsReady.value?.packagesIntro?.trim() || '')
 
 useReveal()
 
@@ -35,7 +48,7 @@ useSeoMeta({
       banner-offset
       :title="heroTitle"
       :eyebrow="heroEyebrow"
-      :image="s?.heroImageUrl || ''"
+      :image="heroImage"
     >
       <div class="space-y-3 text-base text-white sm:text-lg">
         <p>{{ heroSubtitle }}</p>
