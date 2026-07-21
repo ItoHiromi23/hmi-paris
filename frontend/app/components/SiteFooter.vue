@@ -33,29 +33,29 @@ const year = new Date().getFullYear()
 
       <div>
         <p class="font-display text-xl">{{ t('footer.services') }}</p>
-        <ul class="mt-5 space-y-3 text-sm text-white/85">
+        <ul class="mt-4 space-y-1 text-sm text-white/85">
           <li>
-            <NuxtLink :to="localePath('/#services')" class="hover:text-white">
+            <NuxtLink :to="localePath('/#services')" class="footer-link">
               {{ t('footer.dayTours') }}
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink :to="localePath('/#services')" class="hover:text-white">
+            <NuxtLink :to="localePath('/#services')" class="footer-link">
               {{ t('footer.carGuide') }}
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink :to="localePath('/#services')" class="hover:text-white">
+            <NuxtLink :to="localePath('/#services')" class="footer-link">
               {{ t('footer.airport') }}
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink :to="localePath('/packages')" class="hover:text-white">
+            <NuxtLink :to="localePath('/packages')" class="footer-link">
               {{ t('footer.tourList') }}
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink :to="localePath('/events')" class="hover:text-white">
+            <NuxtLink :to="localePath('/events')" class="footer-link">
               {{ t('footer.specialEvents') }}
             </NuxtLink>
           </li>
@@ -64,34 +64,34 @@ const year = new Date().getFullYear()
 
       <div>
         <p class="font-display text-xl">{{ t('footer.company') }}</p>
-        <ul class="mt-5 space-y-3 text-sm text-white/85">
+        <ul class="mt-4 space-y-1 text-sm text-white/85">
           <li>
-            <NuxtLink :to="localePath('/about')" class="hover:text-white">
+            <NuxtLink :to="localePath('/about')" class="footer-link">
               {{ t('footer.about') }}
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink :to="localePath('/contact')" class="hover:text-white">
+            <NuxtLink :to="localePath('/contact')" class="footer-link">
               {{ t('footer.contact') }}
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink :to="localePath('/privacy')" class="hover:text-white">
+            <NuxtLink :to="localePath('/privacy')" class="footer-link">
               {{ t('footer.privacy') }}
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink :to="localePath('/cookies')" class="hover:text-white">
+            <NuxtLink :to="localePath('/cookies')" class="footer-link">
               {{ t('footer.cookies') }}
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink :to="localePath('/legal')" class="hover:text-white">
+            <NuxtLink :to="localePath('/legal')" class="footer-link">
               {{ t('footer.legal') }}
             </NuxtLink>
           </li>
           <li>
-            <a :href="`mailto:${email}`" class="hover:text-white">
+            <a :href="`mailto:${email}`" class="footer-link">
               {{ t('footer.email') }}: {{ email }}
             </a>
           </li>
@@ -101,22 +101,32 @@ const year = new Date().getFullYear()
 
     <div class="border-t border-white/10">
       <div
-        class="container-site flex flex-col gap-3 py-6 text-xs tracking-wide text-white/75 sm:flex-row sm:items-center sm:justify-between"
+        class="container-site flex flex-col gap-3 py-4 text-xs tracking-wide text-white/75 sm:flex-row sm:items-center sm:justify-between"
       >
-        <span>{{ t('footer.rights', { year }) }}</span>
-        <div class="flex flex-wrap gap-x-4 gap-y-1">
-          <NuxtLink :to="localePath('/privacy')" class="hover:text-white">
+        <span class="py-2">{{ t('footer.rights', { year }) }}</span>
+        <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
+          <NuxtLink :to="localePath('/privacy')" class="footer-link-bar">
             {{ t('footer.privacy') }}
           </NuxtLink>
-          <NuxtLink :to="localePath('/cookies')" class="hover:text-white">
+          <NuxtLink :to="localePath('/cookies')" class="footer-link-bar">
             {{ t('footer.cookies') }}
           </NuxtLink>
-          <NuxtLink :to="localePath('/legal')" class="hover:text-white">
+          <NuxtLink :to="localePath('/legal')" class="footer-link-bar">
             {{ t('footer.legal') }}
           </NuxtLink>
-          <span>{{ t('footer.tagline') }}</span>
+          <span class="px-2 py-3">{{ t('footer.tagline') }}</span>
         </div>
       </div>
     </div>
   </footer>
 </template>
+
+<style scoped>
+.footer-link {
+  @apply inline-flex min-h-12 items-center py-3 transition hover:text-white;
+}
+
+.footer-link-bar {
+  @apply inline-flex min-h-12 items-center px-3 py-3 transition hover:text-white;
+}
+</style>
