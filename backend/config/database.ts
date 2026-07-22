@@ -51,8 +51,10 @@ function postgresFromUrl(
 }
 
 const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Database => {
-  const client = env('DATABASE_CLIENT', 'sqlite');
   const rawDatabaseUrl = stripQuotes(env('DATABASE_URL', ''));
+  // Prefer Postgres whenever a connection string is present (Railway). Explicit
+  // DATABASE_CLIENT still wins when set (e.g. local sqlite with an unused URL).
+  const client = env('DATABASE_CLIENT', rawDatabaseUrl ? 'postgres' : 'sqlite');
 
   if (client === 'postgres') {
     if (!rawDatabaseUrl) {

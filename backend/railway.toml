@@ -6,3 +6,8 @@ nixpacksConfigPath = "nixpacks.toml"
 startCommand = "npm run start"
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 5
+
+# Persist Media Library across redeploys (local upload provider):
+# In the Railway dashboard, add a Volume on this service with mount path:
+#   /app/public/uploads
+# Or set R2_/AWS_ credentials (see .env.example) for object storage.

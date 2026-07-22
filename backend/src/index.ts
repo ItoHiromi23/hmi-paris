@@ -465,6 +465,26 @@ export default {
     await seedSettings(strapi, force)
 
     ;(strapi as Core.Strapi & { autoTranslateDisabled?: boolean }).autoTranslateDisabled = false
+
+    const usingObjectStorage = Boolean(
+      process.env.AWS_BUCKET || process.env.R2_BUCKET,
+    )
+    const hasRailwayVolume = Boolean(process.env.RAILWAY_VOLUME_MOUNT_PATH)
+    const usingSqlite =
+      (process.env.DATABASE_CLIENT || (process.env.DATABASE_URL ? 'postgres' : 'sqlite')) ===
+      'sqlite'
+
+    if (usingSqlite && process.env.NODE_ENV === 'production') {
+      strapi.log.warn(
+        'DATABASE is sqlite on an ephemeral disk — CMS content will reset on Railway redeploy. Set DATABASE_URL to Postgres.',
+      )
+    }
+    if (process.env.NODE_ENV === 'production' && !usingObjectStorage && !hasRailwayVolume) {
+      strapi.log.warn(
+        'Media uploads are on ephemeral disk — files disappear on redeploy. Mount a Railway volume at /app/public/uploads, or set R2_/AWS_ S3 credentials (see .env.example).',
+      )
+    }
+
     strapi.log.info(
       'Auto-translate EN ↔ JA enabled (edit once in either locale; twin locale updates automatically)',
     )
