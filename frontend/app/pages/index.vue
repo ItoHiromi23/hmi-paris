@@ -5,7 +5,7 @@ const { fetchPackages } = useTourPackages()
 const { data: packages } = await useLocaleAsyncData('home-packages', (code) => fetchPackages(code))
 
 // Same shared CMS state as the language toggle (do not inject a stale copy)
-const { cms, cmsLocale, sync } = useCmsBundle()
+const { cms, cmsLocale, sync, heroImageUrl } = useCmsBundle()
 await sync()
 
 const featured = computed(() => (packages.value || []).slice(0, 3))
@@ -23,7 +23,13 @@ const heroEyebrow = computed(
 const heroSubtitle = computed(
   () => settingsReady.value?.heroSubtitle?.trim() || t('home.heroSubtitle'),
 )
-const heroImage = computed(() => settingsReady.value?.heroImageUrl || '')
+/** Shared (non-localized) field — never blank out during EN↔JA toggle. */
+const heroImage = computed(
+  () =>
+    heroImageUrl.value ||
+    cms.value?.settings?.heroImageUrl?.trim() ||
+    '',
+)
 
 const packagesEyebrow = computed(
   () => settingsReady.value?.packagesEyebrow?.trim() || '',
@@ -43,7 +49,6 @@ useSeoMeta({
 <template>
   <div>
     <PageHero
-      :key="locale"
       centered
       banner-offset
       :title="heroTitle"

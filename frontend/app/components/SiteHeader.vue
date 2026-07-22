@@ -18,7 +18,7 @@ const { load: loadCms } = useCmsBundle()
 async function onLocaleClick(code: string, event: Event) {
   event.preventDefault()
   if (code === locale.value) return
-  // Fetch CMS for the target locale first, then switch UI language
+  // Prefetch CMS for the target locale first so shared fields (hero image) stay put
   await loadCms(code)
   await setLocale(code)
 }

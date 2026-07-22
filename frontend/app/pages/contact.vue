@@ -7,11 +7,12 @@ const cms = inject<Ref<CmsBundle | null>>('cms', ref(null))
 const s = computed(() => cms.value?.settings)
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
 
 const form = reactive({
   name: '',
   email: '',
-  people: '',
+  people: '' as string | number,
   date: '',
   message: '',
   website: '', // honeypot
@@ -29,6 +30,22 @@ const sent = ref(false)
 const sending = ref(false)
 const formError = ref('')
 
+/** Tomorrow (UTC date string) — earliest selectable travel date. */
+const minDate = computed(() => {
+  const d = new Date()
+  d.setHours(0, 0, 0, 0)
+  d.setDate(d.getDate() + 1)
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${y}-${m}-${day}`
+})
+
+function asTrimmed(value: unknown): string {
+  if (value == null) return ''
+  return String(value).trim()
+}
+
 function clearFieldError(key: keyof typeof fieldErrors) {
   fieldErrors[key] = ''
 }
@@ -41,11 +58,11 @@ function validateClient(): boolean {
   fieldErrors.message = ''
   formError.value = ''
 
-  const name = form.name.trim()
-  const email = form.email.trim()
-  const people = form.people.trim()
-  const date = form.date.trim()
-  const message = form.message.trim()
+  const name = asTrimmed(form.name)
+  const email = asTrimmed(form.email)
+  const people = asTrimmed(form.people)
+  const date = asTrimmed(form.date)
+  const message = asTrimmed(form.message)
   const peopleN = Number(people)
 
   if (!name) fieldErrors.name = t('contact.errors.nameRequired')
@@ -60,6 +77,11 @@ function validateClient(): boolean {
   }
 
   if (!date) fieldErrors.date = t('contact.errors.dateRequired')
+  else if (!DATE_RE.test(date) || Number.isNaN(Date.parse(`${date}T12:00:00`))) {
+    fieldErrors.date = t('contact.errors.dateInvalid')
+  } else if (date < minDate.value) {
+    fieldErrors.date = t('contact.errors.dateFuture')
+  }
 
   if (!message) fieldErrors.message = t('contact.errors.messageRequired')
   else if (message.length < 10) fieldErrors.message = t('contact.errors.messageShort')
@@ -89,6 +111,7 @@ const SERVER_ERROR_KEYS: Record<string, Record<string, string>> = {
   date: {
     required: 'contact.errors.dateRequired',
     invalid: 'contact.errors.dateInvalid',
+    past: 'contact.errors.dateFuture',
   },
   message: {
     required: 'contact.errors.messageRequired',
@@ -115,11 +138,11 @@ async function onSubmit() {
     await $fetch('/api/contact', {
       method: 'POST',
       body: {
-        name: form.name.trim(),
-        email: form.email.trim(),
-        people: Number(form.people.trim()),
-        date: form.date.trim(),
-        message: form.message.trim(),
+        name: asTrimmed(form.name),
+        email: asTrimmed(form.email),
+        people: Number(asTrimmed(form.people)),
+        date: asTrimmed(form.date),
+        message: asTrimmed(form.message),
         website: form.website,
       },
     })
@@ -257,6 +280,7 @@ useSeoMeta({
                 v-model="form.date"
                 type="date"
                 name="date"
+                :min="minDate"
                 :aria-invalid="Boolean(fieldErrors.date)"
                 class="mt-2 w-full border-b border-[var(--line)] bg-transparent py-3 text-[var(--heading)] outline-none transition focus:border-[var(--teal)]"
                 @input="clearFieldError('date')"

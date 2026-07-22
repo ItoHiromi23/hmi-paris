@@ -24,9 +24,25 @@ function trimStr(value: unknown, max: number): string {
 }
 
 function parsePeople(value: unknown): number | null {
-  const n = typeof value === 'number' ? value : typeof value === 'string' ? Number(value.trim()) : NaN
+  const n =
+    typeof value === 'number'
+      ? value
+      : typeof value === 'string'
+        ? Number(value.trim())
+        : Number(String(value ?? '').trim())
   if (!Number.isInteger(n) || n < 1 || n > 50) return null
   return n
+}
+
+/** Earliest allowed trip date: tomorrow (local calendar day). */
+function minAllowedDate(): string {
+  const d = new Date()
+  d.setHours(0, 0, 0, 0)
+  d.setDate(d.getDate() + 1)
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${y}-${m}-${day}`
 }
 
 export default defineEventHandler(async (event) => {
@@ -63,7 +79,11 @@ export default defineEventHandler(async (event) => {
   }
 
   if (!date) fieldErrors.date = 'required'
-  else if (!DATE_RE.test(date) || Number.isNaN(Date.parse(date))) fieldErrors.date = 'invalid'
+  else if (!DATE_RE.test(date) || Number.isNaN(Date.parse(`${date}T12:00:00`))) {
+    fieldErrors.date = 'invalid'
+  } else if (date < minAllowedDate()) {
+    fieldErrors.date = 'past'
+  }
 
   if (!message) fieldErrors.message = 'required'
   else if (message.length < 10) fieldErrors.message = 'too_short'

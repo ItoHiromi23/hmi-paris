@@ -143,6 +143,7 @@
       "peopleInvalid": "Enter a whole number between 1 and 50.",
       "dateRequired": "Please choose a date.",
       "dateInvalid": "Please enter a valid date.",
+      "dateFuture": "Please choose a date after today.",
       "messageRequired": "Please enter your message.",
       "messageShort": "Message must be at least 10 characters."
     }

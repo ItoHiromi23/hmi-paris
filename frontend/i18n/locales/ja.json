@@ -143,6 +143,7 @@
       "peopleInvalid": "1〜50の整数で入力してください。",
       "dateRequired": "日付を選択してください。",
       "dateInvalid": "有効な日付を入力してください。",
+      "dateFuture": "本日より後の日付を選択してください。",
       "messageRequired": "メッセージを入力してください。",
       "messageShort": "メッセージは10文字以上で入力してください。"
     }
