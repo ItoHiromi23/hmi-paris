@@ -70,7 +70,6 @@ useSeoMeta({
 
     <MainEventsSection />
     <OmotenashiStrip />
-    <DestinationStrip />
 
     <section v-if="featured.length" id="trips" class="py-8 sm:py-12">
       <div class="container-wide">

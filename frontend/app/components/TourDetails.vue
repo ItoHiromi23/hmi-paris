@@ -1,11 +1,25 @@
 <script setup lang="ts">
-import type { CmsBundle } from '~/types/cms'
+export type TourDetailRow = {
+  id: string
+  label: string
+  value: string
+}
 
-const cms = inject<Ref<CmsBundle | null>>('cms', ref(null))
+const props = defineProps<{
+  rows: TourDetailRow[]
+  eyebrow?: string
+  title?: string
+}>()
 
-const rows = computed(() => cms.value?.tourDetails || [])
-const eyebrow = computed(() => cms.value?.settings.tourDetailsEyebrow || '')
-const title = computed(() => cms.value?.settings.tourDetailsTitle || '')
+const cms = inject<Ref<{ settings?: { tourDetailsEyebrow?: string; tourDetailsTitle?: string } } | null>>(
+  'cms',
+  ref(null),
+)
+
+const eyebrow = computed(
+  () => props.eyebrow || cms.value?.settings?.tourDetailsEyebrow || '',
+)
+const title = computed(() => props.title || cms.value?.settings?.tourDetailsTitle || '')
 </script>
 
 <template>

@@ -246,17 +246,100 @@ async function upsertLocalized(
 }
 
 async function seedPackages(strapi: Core.Strapi, force: boolean) {
-  if (!force) {
-    const count = await strapi.documents(UID.package).count({ locale: 'en' })
-    if (count > 0) {
-      strapi.log.info(`Skip seed (${count} existing) → ${UID.package}`)
-      return
+  const DETAIL_KEYS = [
+    'groupSize',
+    'durationLabel',
+    'departureTime',
+    'meetingPlace',
+    'feeNote',
+    'included',
+    'notIncluded',
+    'paymentDeadline',
+    'paymentMethods',
+    'reservationConfirmation',
+    'cancellationConditions',
+  ] as const
+
+  function pickDetails(localeCopy: Record<string, unknown>) {
+    const out: Record<string, unknown> = {}
+    for (const key of DETAIL_KEYS) {
+      if (localeCopy[key] !== undefined) out[key] = localeCopy[key]
     }
+    if (Array.isArray(out.included)) out.included = [...(out.included as string[])]
+    if (Array.isArray(out.notIncluded)) out.notIncluded = [...(out.notIncluded as string[])]
+    return out
+  }
+
+  const count = await strapi.documents(UID.package).count({ locale: 'en' })
+
+  if (!force && count > 0) {
+    let patched = 0
+    for (const pkg of SEED_PACKAGES) {
+      const { en, ja, slug, enquiryEmail } = pkg as typeof pkg & {
+        enquiryEmail?: string
+      }
+      const existingId = await findBySlug(strapi, UID.package, slug)
+      if (!existingId) continue
+
+      const enDoc = (await strapi.documents(UID.package).findFirst({
+        documentId: existingId,
+        locale: 'en',
+      })) as { groupSize?: string; enquiryEmail?: string } | null
+
+      const needsDetails = !String(enDoc?.groupSize || '').trim()
+      const needsEmail = !String(enDoc?.enquiryEmail || '').trim() && Boolean(enquiryEmail)
+
+      if (!needsDetails && !needsEmail) continue
+
+      if (needsDetails) {
+        await strapi.documents(UID.package).update({
+          documentId: existingId,
+          locale: 'en',
+          data: pickDetails(en as Record<string, unknown>),
+          status: 'published',
+        })
+        await strapi.documents(UID.package).update({
+          documentId: existingId,
+          locale: 'ja',
+          data: pickDetails(ja as Record<string, unknown>),
+          status: 'published',
+        })
+      }
+
+      if (needsEmail) {
+        await strapi.documents(UID.package).update({
+          documentId: existingId,
+          locale: 'en',
+          data: { enquiryEmail },
+          status: 'published',
+        })
+      }
+
+      patched += 1
+    }
+    if (patched) {
+      strapi.log.info(`Backfilled practical details / enquiry email on ${patched} tour packages`)
+    } else {
+      strapi.log.info(`Skip seed (${count} existing) → ${UID.package}`)
+    }
+    return
   }
 
   for (const pkg of SEED_PACKAGES) {
     const { en, ja, slug, ...shared } = pkg
     const existingId = force ? await findBySlug(strapi, UID.package, slug) : null
+    const enData = {
+      ...(en as Record<string, unknown>),
+      highlights: [...en.highlights],
+      included: [...en.included],
+      notIncluded: [...en.notIncluded],
+    }
+    const jaData = {
+      ...(ja as Record<string, unknown>),
+      highlights: [...ja.highlights],
+      included: [...ja.included],
+      notIncluded: [...ja.notIncluded],
+    }
     await upsertLocalized(
       strapi,
       UID.package,
@@ -266,8 +349,8 @@ async function seedPackages(strapi: Core.Strapi, force: boolean) {
         slug,
         highlights: [...en.highlights],
       },
-      { ...en, highlights: [...en.highlights] },
-      { ...ja, highlights: [...ja.highlights] },
+      enData,
+      jaData,
     )
   }
   strapi.log.info(`Seeded ${SEED_PACKAGES.length} tour packages (EN + JA)`)

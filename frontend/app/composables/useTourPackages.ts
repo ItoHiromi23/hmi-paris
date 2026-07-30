@@ -10,6 +10,37 @@ function mediaUrl(strapiUrl: string, media?: StrapiMedia | null): string | null 
   return `${strapiUrl}${media.url}`
 }
 
+function asStringList(value: unknown): string[] {
+  if (!Array.isArray(value)) return []
+  return value.map((item) => String(item)).filter(Boolean)
+}
+
+function galleryMediaList(
+  gallery?: StrapiTourPackage['gallery'],
+): StrapiMedia[] {
+  if (!gallery) return []
+  if (Array.isArray(gallery)) return gallery
+  if (Array.isArray(gallery.data)) return gallery.data
+  return []
+}
+
+function mapGallery(
+  strapiUrl: string,
+  gallery: StrapiTourPackage['gallery'],
+  fallbackAlt: string,
+): Array<{ url: string; alt: string }> {
+  return galleryMediaList(gallery)
+    .map((item) => {
+      const url = mediaUrl(strapiUrl, item)
+      if (!url) return null
+      return {
+        url,
+        alt: item.alternativeText?.trim() || fallbackAlt,
+      }
+    })
+    .filter((item): item is { url: string; alt: string } => Boolean(item))
+}
+
 function mapPackage(strapiUrl: string, item: StrapiTourPackage): TourPackage {
   return {
     id: item.documentId || item.id,
@@ -25,8 +56,21 @@ function mapPackage(strapiUrl: string, item: StrapiTourPackage): TourPackage {
     currency: normalizeCurrency(item.currency),
     featured: Boolean(item.featured),
     difficulty: item.difficulty || 'moderate',
-    highlights: Array.isArray(item.highlights) ? item.highlights : [],
+    highlights: asStringList(item.highlights),
+    groupSize: item.groupSize || '',
+    durationLabel: item.durationLabel || '',
+    departureTime: item.departureTime || '',
+    meetingPlace: item.meetingPlace || '',
+    feeNote: item.feeNote || '',
+    included: asStringList(item.included),
+    notIncluded: asStringList(item.notIncluded),
+    paymentDeadline: item.paymentDeadline || '',
+    paymentMethods: item.paymentMethods || '',
+    reservationConfirmation: item.reservationConfirmation || '',
+    cancellationConditions: item.cancellationConditions || '',
+    enquiryEmail: item.enquiryEmail || '',
     heroImageUrl: mediaUrl(strapiUrl, item.heroImage),
+    gallery: mapGallery(strapiUrl, item.gallery, item.title),
   }
 }
 
@@ -102,7 +146,7 @@ export function useTourPackages() {
         query: {
           locale: cmsLocale(localeCode || locale.value),
           'filters[slug][$eq]': slug,
-          populate: '*',
+          populate: ['heroImage', 'gallery'],
         },
       })
 

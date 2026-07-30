@@ -1,12 +1,15 @@
 import { Resend } from 'resend'
 
 export interface ContactEmailPayload {
-  name: string
+  firstName: string
+  lastName: string
   email: string
   people: number
   date: string
-  message: string
+  description: string
   to: string
+  tourTitle?: string
+  tourSlug?: string
 }
 
 export interface ContactEmailResult {
@@ -34,16 +37,33 @@ function formatDateLabel(isoDate: string) {
   })
 }
 
+function fullName(payload: ContactEmailPayload) {
+  return `${payload.firstName} ${payload.lastName}`.trim()
+}
+
 function buildHtml(payload: ContactEmailPayload) {
+  const name = fullName(payload)
+  const tourRow = payload.tourTitle
+    ? `<tr>
+      <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; color: #64748b;">Tour</td>
+      <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right;">${escapeHtml(payload.tourTitle)}</td>
+    </tr>`
+    : ''
+
   return `<!DOCTYPE html>
 <html>
 <body style="font-family: Georgia, serif; color: #1a2332; line-height: 1.6; max-width: 560px; margin: 0 auto; padding: 24px;">
   <p style="letter-spacing: 0.2em; text-transform: uppercase; font-size: 11px; color: #0f766e;">HMI Paris</p>
-  <h1 style="font-size: 28px; font-weight: 400; margin: 8px 0 16px;">New contact message</h1>
+  <h1 style="font-size: 28px; font-weight: 400; margin: 8px 0 16px;">New enquiry</h1>
   <table style="width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 14px;">
+    ${tourRow}
     <tr>
-      <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; color: #64748b;">Full name</td>
-      <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right;">${escapeHtml(payload.name)}</td>
+      <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; color: #64748b;">First name</td>
+      <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right;">${escapeHtml(payload.firstName)}</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; color: #64748b;">Last name</td>
+      <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right;">${escapeHtml(payload.lastName)}</td>
     </tr>
     <tr>
       <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; color: #64748b;">Email</td>
@@ -60,29 +80,32 @@ function buildHtml(payload: ContactEmailPayload) {
       <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right;">${escapeHtml(formatDateLabel(payload.date))}</td>
     </tr>
   </table>
-  <p style="font-size: 14px; color: #64748b; margin-bottom: 8px;">Messages (Details)</p>
-  <p style="white-space: pre-wrap; font-size: 15px; margin: 0;">${escapeHtml(payload.message)}</p>
+  <p style="font-size: 14px; color: #64748b; margin-bottom: 8px;">Description</p>
+  <p style="white-space: pre-wrap; font-size: 15px; margin: 0;">${escapeHtml(payload.description)}</p>
   <p style="margin-top: 32px; font-size: 13px; color: #64748b;">
-    Reply directly to this email to respond to ${escapeHtml(payload.name)}.
+    Reply directly to this email to respond to ${escapeHtml(name)}.
   </p>
 </body>
 </html>`
 }
 
 function buildText(payload: ContactEmailPayload) {
-  return [
-    'New contact message from the HMI Paris website',
+  const lines = [
+    'New enquiry from the HMI Paris website',
     '',
-    `Full name: ${payload.name}`,
+    payload.tourTitle ? `Tour: ${payload.tourTitle}` : null,
+    `First name: ${payload.firstName}`,
+    `Last name: ${payload.lastName}`,
     `Email: ${payload.email}`,
     `Number of people: ${payload.people}`,
     `Date: ${formatDateLabel(payload.date)}`,
     '',
-    'Messages (Details):',
-    payload.message,
+    'Description:',
+    payload.description,
     '',
     '— Reply to this email to respond to the sender.',
-  ].join('\n')
+  ]
+  return lines.filter((line) => line !== null).join('\n')
 }
 
 /**
@@ -109,11 +132,13 @@ export async function sendContactEmail(
 
   try {
     const resend = new Resend(apiKey)
+    const name = fullName(payload)
+    const subjectTour = payload.tourTitle ? ` — ${payload.tourTitle}` : ''
     const { data, error } = await resend.emails.send({
       from,
       to: payload.to,
       replyTo: payload.email,
-      subject: `Contact: ${payload.name} — ${formatDateLabel(payload.date)} (${payload.people})`,
+      subject: `Enquiry: ${name}${subjectTour} — ${formatDateLabel(payload.date)} (${payload.people})`,
       html: buildHtml(payload),
       text: buildText(payload),
     })

@@ -74,7 +74,28 @@
     "reservation": "Reservation",
     "destination": "Destination",
     "region": "Area",
-    "duration": "Duration"
+    "duration": "Duration",
+    "fromPrice": "From",
+    "galleryEyebrow": "Photos",
+    "galleryTitle": "Gallery",
+    "enquiryEyebrow": "Booking",
+    "enquiryTitle": "Enquire about this tour",
+    "enquiryIntro": "Send your preferred date and details. This message goes to the team for this tour.",
+    "enquiryTo": "Sent to",
+    "enquirySubmit": "Enquire about this tour",
+    "details": {
+      "groupSize": "Number of people",
+      "duration": "Duration",
+      "departureTime": "Departure time",
+      "meetingPlace": "Meeting place",
+      "fee": "Fee",
+      "included": "What is included",
+      "notIncluded": "Items not included",
+      "paymentDeadline": "Payment deadline",
+      "paymentMethods": "Payment methods",
+      "reservationConfirmation": "Reservation confirmation",
+      "cancellationConditions": "Cancellation conditions"
+    }
   },
   "styles": {
     "vertical": "Services",
@@ -119,12 +140,15 @@
     "intro": "Share your preferred date, group size, and any details we should know. We will reply by email.",
     "thanks": "Thank you",
     "successNote": "We received your message and will reply by email soon.",
-    "name": "Full name",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "firstNamePh": "Latin alphabet only",
+    "lastNamePh": "Latin alphabet only",
     "email": "Email",
     "people": "Number of people",
     "date": "Date",
-    "message": "Messages (Details)",
-    "messagePh": "Tour, transfer, or other requests…",
+    "description": "Description",
+    "descriptionPh": "Tour, transfer, or other requests…",
     "submit": "Send message",
     "sending": "Sending…",
     "error": "Something went wrong. Please try again or email us directly.",
@@ -135,8 +159,10 @@
     "reservationTitle": "Make your day in Paris special.",
     "reservationSubtitle": "Even if dates or themes are still open, feel free to ask.",
     "errors": {
-      "nameRequired": "Please enter your full name.",
+      "firstNameRequired": "Please enter your first name.",
+      "lastNameRequired": "Please enter your last name.",
       "nameShort": "Name must be at least 2 characters.",
+      "nameLatin": "Please use Latin letters only (A–Z).",
       "emailRequired": "Please enter your email.",
       "emailInvalid": "Please enter a valid email address.",
       "peopleRequired": "Please enter the number of people.",
@@ -144,8 +170,8 @@
       "dateRequired": "Please choose a date.",
       "dateInvalid": "Please enter a valid date.",
       "dateFuture": "Please choose a date after today.",
-      "messageRequired": "Please enter your message.",
-      "messageShort": "Message must be at least 10 characters."
+      "descriptionRequired": "Please enter a description.",
+      "descriptionShort": "Description must be at least 10 characters."
     }
   },
   "cookies": {

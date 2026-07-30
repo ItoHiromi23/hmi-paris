@@ -18,7 +18,20 @@ export type TourPackage = {
   featured: boolean
   difficulty: string
   highlights: string[]
+  groupSize: string
+  durationLabel: string
+  departureTime: string
+  meetingPlace: string
+  feeNote: string
+  included: string[]
+  notIncluded: string[]
+  paymentDeadline: string
+  paymentMethods: string
+  reservationConfirmation: string
+  cancellationConditions: string
+  enquiryEmail: string
   heroImageUrl: string | null
+  gallery: Array<{ url: string; alt: string }>
 }
 
 export type StrapiTourPackage = {
@@ -36,5 +49,18 @@ export type StrapiTourPackage = {
   featured?: boolean | null
   difficulty?: string | null
   highlights?: string[] | null
+  groupSize?: string | null
+  durationLabel?: string | null
+  departureTime?: string | null
+  meetingPlace?: string | null
+  feeNote?: string | null
+  included?: string[] | null
+  notIncluded?: string[] | null
+  paymentDeadline?: string | null
+  paymentMethods?: string | null
+  reservationConfirmation?: string | null
+  cancellationConditions?: string | null
+  enquiryEmail?: string | null
   heroImage?: StrapiMedia | null
+  gallery?: StrapiMedia[] | { data?: StrapiMedia[] | null } | null
 }

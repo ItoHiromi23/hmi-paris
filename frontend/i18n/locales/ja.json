@@ -74,7 +74,28 @@
     "reservation": "予約",
     "destination": "目的地",
     "region": "エリア",
-    "duration": "期間"
+    "duration": "期間",
+    "fromPrice": "から",
+    "galleryEyebrow": "写真",
+    "galleryTitle": "ギャラリー",
+    "enquiryEyebrow": "ご予約",
+    "enquiryTitle": "このツアーについて問い合わせる",
+    "enquiryIntro": "ご希望日と詳細をお送りください。このツアー担当宛に届きます。",
+    "enquiryTo": "送信先",
+    "enquirySubmit": "このツアーを問い合わせる",
+    "details": {
+      "groupSize": "人数",
+      "duration": "所要時間",
+      "departureTime": "出発時間",
+      "meetingPlace": "集合場所",
+      "fee": "料金",
+      "included": "含まれるもの",
+      "notIncluded": "含まれないもの",
+      "paymentDeadline": "お支払い期限",
+      "paymentMethods": "お支払い方法",
+      "reservationConfirmation": "予約確定について",
+      "cancellationConditions": "キャンセル条件"
+    }
   },
   "styles": {
     "vertical": "サービス",
@@ -119,12 +140,15 @@
     "intro": "ご希望の日付・人数・詳細をご記入ください。メールにてご返信いたします。",
     "thanks": "ありがとうございます",
     "successNote": "メッセージを受け付けました。メールにてご連絡いたします。",
-    "name": "お名前（フルネーム）",
+    "firstName": "名（First name）",
+    "lastName": "姓（Last name）",
+    "firstNamePh": "ラテン文字のみ",
+    "lastNamePh": "ラテン文字のみ",
     "email": "メール",
     "people": "人数",
     "date": "日付",
-    "message": "メッセージ（詳細）",
-    "messagePh": "ツアー、送迎、その他ご要望など…",
+    "description": "詳細・ご要望",
+    "descriptionPh": "ツアー、送迎、その他ご要望など…",
     "submit": "送信する",
     "sending": "送信中…",
     "error": "送信に失敗しました。もう一度お試しいただくか、直接メールでご連絡ください。",
@@ -135,8 +159,10 @@
     "reservationTitle": "特別な一日を、パリで。",
     "reservationSubtitle": "日程やテーマが未定でも、お気軽にご相談ください。",
     "errors": {
-      "nameRequired": "お名前を入力してください。",
-      "nameShort": "お名前は2文字以上で入力してください。",
+      "firstNameRequired": "名を入力してください。",
+      "lastNameRequired": "姓を入力してください。",
+      "nameShort": "2文字以上で入力してください。",
+      "nameLatin": "ラテン文字（A–Z）のみご使用ください。",
       "emailRequired": "メールアドレスを入力してください。",
       "emailInvalid": "有効なメールアドレスを入力してください。",
       "peopleRequired": "人数を入力してください。",
@@ -144,8 +170,8 @@
       "dateRequired": "日付を選択してください。",
       "dateInvalid": "有効な日付を入力してください。",
       "dateFuture": "本日より後の日付を選択してください。",
-      "messageRequired": "メッセージを入力してください。",
-      "messageShort": "メッセージは10文字以上で入力してください。"
+      "descriptionRequired": "詳細をご記入ください。",
+      "descriptionShort": "詳細は10文字以上で入力してください。"
     }
   },
   "cookies": {

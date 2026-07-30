@@ -71,8 +71,56 @@
       "default": "moderate",
       "pluginOptions": { "i18n": { "localized": false } }
     },
+    "enquiryEmail": {
+      "type": "email",
+      "pluginOptions": { "i18n": { "localized": false } }
+    },
     "highlights": {
       "type": "json",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "groupSize": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "durationLabel": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "departureTime": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "meetingPlace": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "feeNote": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "included": {
+      "type": "json",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "notIncluded": {
+      "type": "json",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "paymentDeadline": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "paymentMethods": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "reservationConfirmation": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "cancellationConditions": {
+      "type": "text",
       "pluginOptions": { "i18n": { "localized": true } }
     },
     "heroImage": {

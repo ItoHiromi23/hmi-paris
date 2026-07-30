@@ -5,6 +5,25 @@
 
 export type LocaleCopy = Record<string, unknown>
 
+/** Shared booking/payment/cancellation copy used across day tours (override per package if needed). */
+const POLICY_EN = {
+  paymentDeadline: 'Within 72 hours of the time the booking confirmation email was sent.',
+  paymentMethods: 'Credit card (Visa, Mastercard), bank transfer',
+  reservationConfirmation:
+    'After payment is confirmed, a voucher will be sent by email. Please print it or take a screenshot — this serves as your participation ticket on the day.',
+  cancellationConditions:
+    '* If you are more than 30 minutes late for the meeting time without prior notice, your reservation will be considered cancelled.\n\nUp to 30 days before the participation date: 0%\nUp to 29 to 14 days before the participation date: 50%\n13 days before the event date to the day of the event: 100%\nIf a ticket fee is required: 100%',
+} as const
+
+const POLICY_JA = {
+  paymentDeadline: '予約確定メール送信時点から72時間以内。',
+  paymentMethods: 'クレジットカード（Visa、Mastercard）、銀行振込',
+  reservationConfirmation:
+    'お支払い確認後、バウチャーをメールでお送りします。印刷またはスクリーンショットをご用意ください。当日は参加証としてご提示ください。',
+  cancellationConditions:
+    '※集合時間に事前連絡なく30分以上遅れた場合、キャンセル扱いとなります。\n\n参加日の30日前まで：0%\n参加日の29〜14日前：50%\n参加日の13日前〜当日：100%\nチケット料金が必要な場合：100%',
+} as const
+
 export const SEED_PACKAGES = [
   {
     slug: 'classic-paris-essentials',
@@ -13,6 +32,7 @@ export const SEED_PACKAGES = [
     currency: 'EUR',
     featured: true,
     difficulty: 'easy',
+    enquiryEmail: 'classic@hmiparis.com',
     en: {
       title: 'Classic Paris essentials',
       summary: 'A Louvre morning, Île de la Cité, and an easy afternoon by the Seine.',
@@ -21,6 +41,14 @@ export const SEED_PACKAGES = [
       destination: 'Louvre & Île de la Cité',
       region: 'Paris',
       highlights: ['Timed Louvre entry', 'Île de la Cité walk', 'Seine-side café'],
+      groupSize: '1 to 6 people (1 group)',
+      durationLabel: '3 days',
+      departureTime: 'By arrangement (typically 9:00 / 10:00)',
+      meetingPlace: 'Hotel lobbies (limited to hotels in Paris)',
+      feeNote: 'From €890',
+      included: ['Private car (including highway tolls)', 'Japanese-speaking guide', 'Timed Louvre entry'],
+      notIncluded: ['Museum tickets beyond timed Louvre entry', 'Meals'],
+      ...POLICY_EN,
     },
     ja: {
       title: 'クラシック・パリ入門',
@@ -30,6 +58,14 @@ export const SEED_PACKAGES = [
       destination: 'ルーヴル＆シテ島',
       region: 'パリ',
       highlights: ['ルーヴル時間指定入場', 'シテ島ウォーキング', 'セーヌ河畔カフェ'],
+      groupSize: '1〜6名（1グループ）',
+      durationLabel: '3日間',
+      departureTime: 'ご相談のうえ決定（目安 9:00 / 10:00）',
+      meetingPlace: 'ホテルロビー（パリ市内ホテルに限る）',
+      feeNote: '€890〜',
+      included: ['専用車（高速道路料金含む）', '日本語ガイド', 'ルーヴル時間指定入場'],
+      notIncluded: ['ルーヴル以外の美術館チケット', '食事代'],
+      ...POLICY_JA,
     },
   },
   {
@@ -39,6 +75,7 @@ export const SEED_PACKAGES = [
     currency: 'EUR',
     featured: true,
     difficulty: 'easy',
+    enquiryEmail: 'montmartre@hmiparis.com',
     en: {
       title: 'Montmartre after dark',
       summary: 'Village lanes, Sacré-Cœur at sunset, and a rooftop dinner with city lights.',
@@ -47,6 +84,14 @@ export const SEED_PACKAGES = [
       destination: 'Montmartre',
       region: 'Paris',
       highlights: ['Sacré-Cœur sunset', 'Hidden stairways', 'Rooftop dinner'],
+      groupSize: '1 to 6 people (1 group)',
+      durationLabel: '4 hours',
+      departureTime: '16:00 / 17:00',
+      meetingPlace: 'Hotel lobbies (limited to hotels in Paris) or Abbesses',
+      feeNote: 'From €280',
+      included: ['Japanese-speaking guide', 'Walking route planning'],
+      notIncluded: ['Rooftop dinner', 'Drinks'],
+      ...POLICY_EN,
     },
     ja: {
       title: 'モンマルトル・アフターダーク',
@@ -56,6 +101,14 @@ export const SEED_PACKAGES = [
       destination: 'モンマルトル',
       region: 'パリ',
       highlights: ['サクレ・クール夕景', '隠れた階段散策', '屋上ディナー'],
+      groupSize: '1〜6名（1グループ）',
+      durationLabel: '約4時間',
+      departureTime: '16:00 / 17:00',
+      meetingPlace: 'ホテルロビー（パリ市内）またはアベス',
+      feeNote: '€280〜',
+      included: ['日本語ガイド', 'ルート案内'],
+      notIncluded: ['屋上ディナー', '飲み物'],
+      ...POLICY_JA,
     },
   },
   {
@@ -65,6 +118,7 @@ export const SEED_PACKAGES = [
     currency: 'EUR',
     featured: true,
     difficulty: 'easy',
+    enquiryEmail: 'marais@hmiparis.com',
     en: {
       title: 'Le Marais private walk',
       summary: 'Hôtels particuliers, Place des Vosges, and local sweet stops.',
@@ -73,6 +127,14 @@ export const SEED_PACKAGES = [
       destination: 'Le Marais',
       region: 'Paris',
       highlights: ['Place des Vosges', 'Courtyard access', 'Sweets & falafel'],
+      groupSize: '1 to 6 people (1 group)',
+      durationLabel: '4 hours',
+      departureTime: '9:00 / 10:00 / 14:00',
+      meetingPlace: 'Hotel lobbies (limited to hotels in Paris)',
+      feeNote: 'From €195',
+      included: ['Japanese-speaking guide', 'Walking tour'],
+      notIncluded: ['Food tastings', 'Shopping'],
+      ...POLICY_EN,
     },
     ja: {
       title: 'マレ地区プライベートウォーク',
@@ -81,15 +143,24 @@ export const SEED_PACKAGES = [
       destination: 'マレ地区',
       region: 'パリ',
       highlights: ['ヴォージュ広場', '中庭アクセス', 'スイーツ＆ファラフェル'],
+      groupSize: '1〜6名（1グループ）',
+      durationLabel: '約4時間',
+      departureTime: '9:00 / 10:00 / 14:00',
+      meetingPlace: 'ホテルロビー（パリ市内ホテルに限る）',
+      feeNote: '€195〜',
+      included: ['日本語ガイド', 'ウォーキングツアー'],
+      notIncluded: ['試食・食事代', 'お買い物'],
+      ...POLICY_JA,
     },
   },
   {
     slug: 'versailles-royal-day',
     durationDays: 1,
-    priceFrom: 245,
+    priceFrom: 1620,
     currency: 'EUR',
     featured: false,
     difficulty: 'moderate',
+    enquiryEmail: 'versailles@hmiparis.com',
     en: {
       title: 'Versailles royal day',
       summary: 'Palace, gardens and Trianon — with return transfers from Paris.',
@@ -98,6 +169,20 @@ export const SEED_PACKAGES = [
       destination: 'Versailles',
       region: 'Paris',
       highlights: ['Priority entry', 'Gardens & Trianon', 'Paris transfers'],
+      groupSize: '1 to 6 people (1 group)',
+      durationLabel: '8 hours',
+      departureTime: '8:00 / 9:00 / 10:00',
+      meetingPlace: 'Hotel lobbies (limited to hotels in Paris)',
+      feeNote: 'From €1,620',
+      included: [
+        'Private car (including highway tolls)',
+        'Japanese assistant guide',
+      ],
+      notIncluded: [
+        'Palace entrance ticket (prices vary depending on the maison or course)',
+        'Meal expenses',
+      ],
+      ...POLICY_EN,
     },
     ja: {
       title: 'ヴェルサイユ・ロイヤルデー',
@@ -107,6 +192,14 @@ export const SEED_PACKAGES = [
       destination: 'ヴェルサイユ',
       region: 'パリ',
       highlights: ['優先入場', '庭園＆トリアノン', 'パリ送迎'],
+      groupSize: '1〜6名（1グループ）',
+      durationLabel: '8時間',
+      departureTime: '8:00 / 9:00 / 10:00',
+      meetingPlace: 'ホテルロビー（パリ市内ホテルに限る）',
+      feeNote: '€1,620〜',
+      included: ['専用車（高速道路料金含む）', '日本語アシスタントガイド'],
+      notIncluded: ['宮殿入場チケット（メゾン・コースにより料金が異なります）', '食事代'],
+      ...POLICY_JA,
     },
   },
   {
@@ -116,6 +209,7 @@ export const SEED_PACKAGES = [
     currency: 'EUR',
     featured: false,
     difficulty: 'easy',
+    enquiryEmail: 'leftbank@hmiparis.com',
     en: {
       title: 'Left Bank literary trail',
       summary: 'Saint-Germain bookshops, café culture, and dusk in the Luxembourg Gardens.',
@@ -124,6 +218,14 @@ export const SEED_PACKAGES = [
       destination: 'Saint-Germain & Latin Quarter',
       region: 'Paris',
       highlights: ['Shakespeare and Company', 'Café terraces', 'Luxembourg Gardens'],
+      groupSize: '1 to 6 people (1 group)',
+      durationLabel: '3 hours',
+      departureTime: '10:00 / 14:00',
+      meetingPlace: 'Hotel lobbies (limited to hotels in Paris) or Saint-Michel',
+      feeNote: 'From €165',
+      included: ['Japanese-speaking guide'],
+      notIncluded: ['Café / bookshop purchases', 'Meals'],
+      ...POLICY_EN,
     },
     ja: {
       title: '左岸文学散策',
@@ -133,6 +235,14 @@ export const SEED_PACKAGES = [
       destination: 'サン＝ジェルマン＆カルチエ・ラタン',
       region: 'パリ',
       highlights: ['シェイクスピア・アンド・カンパニー', 'カフェテラス', 'リュクサンブール公園'],
+      groupSize: '1〜6名（1グループ）',
+      durationLabel: '約3時間',
+      departureTime: '10:00 / 14:00',
+      meetingPlace: 'ホテルロビー（パリ市内）またはサン＝ミシェル',
+      feeNote: '€165〜',
+      included: ['日本語ガイド'],
+      notIncluded: ['カフェ・書店でのお買い物', '食事代'],
+      ...POLICY_JA,
     },
   },
   {
@@ -142,6 +252,7 @@ export const SEED_PACKAGES = [
     currency: 'EUR',
     featured: false,
     difficulty: 'easy',
+    enquiryEmail: 'seine@hmiparis.com',
     en: {
       title: 'Seine twilight cruise',
       summary: 'The Eiffel Tower, Musée d’Orsay and Notre-Dame from the river at night.',
@@ -150,6 +261,14 @@ export const SEED_PACKAGES = [
       destination: 'River Seine',
       region: 'Paris',
       highlights: ['Twilight departure', 'Champagne on board', 'Optional riverside dinner'],
+      groupSize: '1 to 6 people (1 group)',
+      durationLabel: '2.5 hours',
+      departureTime: '18:00 / 19:00',
+      meetingPlace: 'Pier meeting point (details sent after booking)',
+      feeNote: 'From €320',
+      included: ['Cruise ticket', 'Champagne on board', 'Japanese-speaking host'],
+      notIncluded: ['Riverside dinner (optional)', 'Transfer to pier'],
+      ...POLICY_EN,
     },
     ja: {
       title: 'セーヌ夕暮れクルーズ',
@@ -158,6 +277,14 @@ export const SEED_PACKAGES = [
       destination: 'セーヌ川',
       region: 'パリ',
       highlights: ['夕暮れ出発', '船上シャンパン', '河岸ディナー（任意）'],
+      groupSize: '1〜6名（1グループ）',
+      durationLabel: '約2.5時間',
+      departureTime: '18:00 / 19:00',
+      meetingPlace: '乗船桟橋（予約後にご案内）',
+      feeNote: '€320〜',
+      included: ['クルーズチケット', '船上シャンパン', '日本語ホスト'],
+      notIncluded: ['河岸ディナー（任意）', '桟橋までの送迎'],
+      ...POLICY_JA,
     },
   },
 ] as const
