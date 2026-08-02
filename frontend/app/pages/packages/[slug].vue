@@ -182,6 +182,8 @@ useSeoMeta({
 
     <TourDetails :rows="detailRows" />
 
+    <ImportantNotes />
+
     <section id="enquiry" class="py-16 sm:py-20">
       <div class="container-site grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
         <div class="reveal">
@@ -208,7 +210,6 @@ useSeoMeta({
       </div>
     </section>
 
-    <ImportantNotes />
     <ContactBanner variant="reservation" />
   </div>
 </template>
