@@ -365,26 +365,7 @@ async function seedEvents(strapi: Core.Strapi, force: boolean) {
   if (!force) {
     const count = await strapi.documents(UID.event).count({ locale: 'en' })
     if (count > 0) {
-      // Backfill Horse Page detail fields when missing on existing Arc event
-      for (const event of SEED_EVENTS) {
-        const { en, ja, slug, ...shared } = event
-        if (!('aboutTitle' in en) || !en.aboutTitle) continue
-        const existing = await strapi.documents(UID.event).findFirst({
-          locale: 'en',
-          filters: { slug: { $eq: slug } },
-        })
-        const aboutTitle = String((existing as { aboutTitle?: string } | null)?.aboutTitle || '')
-        if (!existing?.documentId || aboutTitle.trim()) continue
-        await upsertLocalized(
-          strapi,
-          UID.event,
-          existing.documentId,
-          { ...shared, slug, inclusions: [...en.inclusions] },
-          { ...en, inclusions: [...en.inclusions] },
-          { ...ja, inclusions: [...ja.inclusions] },
-        )
-        strapi.log.info(`Backfilled event detail fields → ${slug}`)
-      }
+      await backfillEventDetails(strapi)
       strapi.log.info(`Skip seed (${count} existing) → ${UID.event}`)
       return
     }
@@ -407,6 +388,47 @@ async function seedEvents(strapi: Core.Strapi, force: boolean) {
     )
   }
   strapi.log.info(`Seeded ${SEED_EVENTS.length} main events (EN + JA)`)
+}
+
+/** Fill empty Horse-Page fields on existing prod events without changing their slug. */
+async function backfillEventDetails(strapi: Core.Strapi) {
+  const detailedSeeds = SEED_EVENTS.filter(
+    (event) => 'aboutTitle' in event.en && Boolean((event.en as { aboutTitle?: string }).aboutTitle),
+  )
+
+  for (const event of detailedSeeds) {
+    const { en, ja, slug, ...shared } = event
+    let existing = await strapi.documents(UID.event).findFirst({
+      locale: 'en',
+      filters: { slug: { $eq: slug } },
+    })
+
+    // Production may use a different slug (uid from an older title) — still backfill.
+    if (!existing?.documentId) {
+      const candidates = (await strapi.documents(UID.event).findMany({
+        locale: 'en',
+        limit: 50,
+      })) as Array<{ documentId?: string; slug?: string; aboutTitle?: string; featured?: boolean }>
+      existing =
+        candidates.find((row) => !String(row.aboutTitle || '').trim() && row.featured) ||
+        candidates.find((row) => !String(row.aboutTitle || '').trim()) ||
+        null
+    }
+
+    const aboutTitle = String((existing as { aboutTitle?: string } | null)?.aboutTitle || '')
+    if (!existing?.documentId || aboutTitle.trim()) continue
+
+    const keepSlug = String((existing as { slug?: string }).slug || slug)
+    await upsertLocalized(
+      strapi,
+      UID.event,
+      existing.documentId,
+      { ...shared, slug: keepSlug, inclusions: [...en.inclusions] },
+      { ...en, inclusions: [...en.inclusions] },
+      { ...ja, inclusions: [...ja.inclusions] },
+    )
+    strapi.log.info(`Backfilled event detail fields → ${keepSlug}`)
+  }
 }
 
 async function seedOrderedCollection(
