@@ -392,33 +392,40 @@ async function seedEvents(strapi: Core.Strapi, force: boolean) {
 
 /** Fill empty Horse-Page fields on existing prod events without changing their slug. */
 async function backfillEventDetails(strapi: Core.Strapi) {
+  type EventRow = {
+    documentId?: string
+    slug?: string
+    aboutTitle?: string | null
+    featured?: boolean | null
+  }
+
   const detailedSeeds = SEED_EVENTS.filter(
     (event) => 'aboutTitle' in event.en && Boolean((event.en as { aboutTitle?: string }).aboutTitle),
   )
 
   for (const event of detailedSeeds) {
     const { en, ja, slug, ...shared } = event
-    let existing = await strapi.documents(UID.event).findFirst({
+    let existing = (await strapi.documents(UID.event).findFirst({
       locale: 'en',
       filters: { slug: { $eq: slug } },
-    })
+    })) as EventRow | null
 
     // Production may use a different slug (uid from an older title) — still backfill.
     if (!existing?.documentId) {
       const candidates = (await strapi.documents(UID.event).findMany({
         locale: 'en',
         limit: 50,
-      })) as Array<{ documentId?: string; slug?: string; aboutTitle?: string; featured?: boolean }>
+      })) as EventRow[]
       existing =
         candidates.find((row) => !String(row.aboutTitle || '').trim() && row.featured) ||
         candidates.find((row) => !String(row.aboutTitle || '').trim()) ||
         null
     }
 
-    const aboutTitle = String((existing as { aboutTitle?: string } | null)?.aboutTitle || '')
+    const aboutTitle = String(existing?.aboutTitle || '')
     if (!existing?.documentId || aboutTitle.trim()) continue
 
-    const keepSlug = String((existing as { slug?: string }).slug || slug)
+    const keepSlug = String(existing.slug || slug)
     await upsertLocalized(
       strapi,
       UID.event,
