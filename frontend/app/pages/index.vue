@@ -1,117 +1,71 @@
 <script setup lang="ts">
-const { t, locale } = useI18n()
-const localePath = useLocalePath()
-const { fetchPackages } = useTourPackages()
-const { data: packages } = await useLocaleAsyncData('home-packages', (code) => fetchPackages(code))
-
-// Same shared CMS state as the language toggle (do not inject a stale copy)
-const { cms, cmsLocale, sync, heroImageUrl } = useCmsBundle()
-await sync()
-
-const featured = computed(() => (packages.value || []).slice(0, 3))
-const moreTrips = computed(() => (packages.value || []).slice(3, 6))
-
-/** CMS settings only when they match the active UI locale; otherwise i18n. */
-const settingsReady = computed(() => cmsLocale.value === locale.value && cms.value?.settings)
-
-const heroTitle = computed(
-  () => settingsReady.value?.heroTitle?.trim() || t('home.heroTitle'),
-)
-const heroEyebrow = computed(
-  () => settingsReady.value?.heroEyebrow?.trim() || t('home.heroEyebrow'),
-)
-const heroSubtitle = computed(
-  () => settingsReady.value?.heroSubtitle?.trim() || t('home.heroSubtitle'),
-)
-/** Shared (non-localized) field — never blank out during EN↔JA toggle. */
-const heroImage = computed(
-  () =>
-    heroImageUrl.value ||
-    cms.value?.settings?.heroImageUrl?.trim() ||
-    '',
-)
-
-const packagesEyebrow = computed(
-  () => settingsReady.value?.packagesEyebrow?.trim() || '',
-)
-const packagesTitle = computed(() => settingsReady.value?.packagesTitle?.trim() || '')
-const packagesIntro = computed(() => settingsReady.value?.packagesIntro?.trim() || '')
+import { homeContent as c } from '~/data/homeContent'
 
 useReveal()
 
 useSeoMeta({
-  title: () => t('meta.title'),
-  description: () => t('meta.description'),
-  ogLocale: () => (locale.value === 'ja' ? 'ja_JP' : 'en_US'),
+  title: c.meta.title,
+  description: c.meta.description,
+  ogLocale: 'ja_JP',
 })
 </script>
 
 <template>
   <div>
-    <PageHero
-      centered
-      banner-offset
-      :title="heroTitle"
-      :eyebrow="heroEyebrow"
-      :image="heroImage"
+    <section
+      class="relative flex min-h-[clamp(560px,82vh,780px)] items-center overflow-hidden bg-[var(--ink)] text-[var(--paper)]"
     >
-      <div class="space-y-3 text-base text-white sm:text-lg">
-        <p>{{ heroSubtitle }}</p>
-      </div>
-      <template #actions>
-        <NuxtLink :to="localePath('/packages')" class="btn-primary">
-          {{ t('home.findTours') }}
-        </NuxtLink>
-        <NuxtLink :to="localePath('/#services')" class="btn-ghost">
-          {{ t('home.travelStyles') }}
-        </NuxtLink>
-      </template>
-    </PageHero>
+      <img
+        :src="c.hero.image"
+        :alt="`${c.hero.titleLine1}${c.hero.titleLine2}`"
+        class="absolute inset-0 h-full w-full object-cover"
+        width="1800"
+        height="1200"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+      />
+      <div
+        class="absolute inset-0 bg-gradient-to-l from-[rgba(11,17,30,0.93)] via-[rgba(13,20,36,0.70)] to-[rgba(13,20,36,0.30)] max-md:bg-gradient-to-b max-md:from-[rgba(11,17,30,0.82)] max-md:to-[rgba(11,17,30,0.9)]"
+      />
 
-    <MainEventsSection />
-    <OmotenashiStrip />
-
-    <section v-if="featured.length" id="trips" class="py-8 sm:py-12">
-      <div class="container-wide">
-        <div class="reveal flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p class="section-label">{{ packagesEyebrow }}</p>
-            <h2 class="font-display mt-3 text-3xl text-[var(--heading)] sm:text-5xl">
-              {{ packagesTitle }}
-            </h2>
-            <p class="mt-3 max-w-xl text-[var(--muted-fg)]">
-              {{ packagesIntro }}
-            </p>
+      <div class="wrap relative grid w-full justify-items-end">
+        <div class="max-w-[34em] py-14 text-right max-md:py-10 max-md:text-left">
+          <p
+            class="fade-up d1 font-serif-latin text-[20px] italic tracking-[0.05em] text-[var(--brass-2)]"
+          >
+            {{ c.hero.eyebrow }}
+          </p>
+          <h1
+            class="fade-up d2 mt-[18px] font-display text-[clamp(28px,4.3vw,48px)] font-bold leading-[1.35] tracking-[0.04em] text-[#fbf7ee]"
+          >
+            {{ c.hero.titleLine1 }}<br />{{ c.hero.titleLine2 }}
+          </h1>
+          <p
+            class="fade-up d3 mt-6 font-serif-latin text-[17px] uppercase tracking-[0.22em] text-[#cdbd9a]"
+          >
+            {{ c.hero.latin }}
+          </p>
+          <p
+            class="fade-up d4 mt-6 max-w-[30em] text-[15.5px] text-[#dcd7cc] md:ml-auto"
+          >
+            {{ c.hero.lead }}
+          </p>
+          <div
+            class="fade-up d5 mt-8 flex flex-wrap justify-end gap-4 max-md:justify-start"
+          >
+            <NuxtLink to="/#services" class="btn-solid">{{ c.hero.ctaPrivate }}</NuxtLink>
+            <NuxtLink to="/contact" class="btn-ghost">{{ c.hero.ctaGroup }}</NuxtLink>
           </div>
-          <NuxtLink :to="localePath('/packages')" class="btn-ghost-dark !py-3">
-            {{ t('home.allTours') }}
-          </NuxtLink>
-        </div>
-
-        <div class="mt-12 grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          <PackageCard
-            v-for="(pkg, index) in featured"
-            :key="pkg.slug"
-            :package="pkg"
-            :index="index"
-          />
-        </div>
-
-        <div v-if="moreTrips.length" class="mt-6 grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          <PackageCard
-            v-for="(pkg, index) in moreTrips"
-            :key="pkg.slug"
-            :package="pkg"
-            :index="index + 3"
-          />
         </div>
       </div>
     </section>
 
+    <MainEventsSection />
+    <HomeGreet />
+    <DestinationStrip />
     <TravelStyles />
     <WhyHmi />
-    <FeesSection />
-    <ImportantNotes />
     <NewsSection />
     <ContactBanner />
   </div>

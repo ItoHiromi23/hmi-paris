@@ -1,39 +1,30 @@
 <script setup lang="ts">
-import type { CmsBundle } from '~/types/cms'
-
-const { t } = useI18n()
-const localePath = useLocalePath()
-const cms = inject<Ref<CmsBundle | null>>('cms', ref(null))
-
-const reasons = computed(() => cms.value?.reasons || [])
-const title = computed(() => cms.value?.settings.whyTitle || '')
-const italic = computed(() => cms.value?.settings.whyItalic || '')
+import { homeContent as c } from '~/data/homeContent'
 </script>
 
 <template>
-  <section v-if="reasons.length" id="why" class="py-16 sm:py-24">
-    <div class="container-wide">
-      <div class="reveal flex flex-wrap items-end justify-between gap-6">
-        <div class="max-w-2xl">
-          <p v-if="italic" class="section-label">{{ italic }}</p>
-          <h2 v-if="title" class="font-display mt-3 text-3xl text-[var(--heading)] sm:text-5xl">
-            {{ title }}
-          </h2>
-        </div>
-        <NuxtLink :to="localePath('/about')" class="btn-ghost-dark !py-3">{{ t('why.cta') }}</NuxtLink>
-      </div>
+  <section id="why" class="bg-[var(--paper-2)] py-[88px]">
+    <div class="wrap">
+      <p class="sec-eyebrow">{{ c.why.eyebrow }}</p>
+      <h2 class="sec-title mt-2.5">{{ c.why.title }}</h2>
+      <p class="sec-latin mt-2 mb-[38px]">{{ c.why.latin }}</p>
 
-      <div class="reveal mt-12 grid gap-4 sm:grid-cols-2">
+      <div class="grid grid-cols-1 sm:grid-cols-2">
         <article
-          v-for="reason in reasons"
-          :key="reason.id"
-          class="flex gap-5 rounded-[1.25rem] border border-[var(--line)] bg-[var(--surface-2)] p-6"
+          v-for="(reason, index) in c.why.items"
+          :key="reason.n"
+          class="border-t border-[var(--line)] px-9 py-8"
+          :class="index < 2 ? 'sm:border-t-0' : ''"
         >
-          <span class="font-display text-2xl text-[var(--teal)]">{{ reason.number }}</span>
-          <div>
-            <h3 class="font-display text-xl text-[var(--heading)]">{{ reason.title }}</h3>
-            <p class="mt-2 text-sm text-[var(--muted-fg)]">{{ reason.description }}</p>
+          <div
+            class="mb-3 flex items-center gap-3 font-serif-latin text-[15px] tracking-[0.2em] text-[var(--brass)] before:block before:h-px before:w-[26px] before:bg-[var(--brass)]"
+          >
+            {{ reason.n }}
           </div>
+          <h3 class="font-display text-[18px] font-bold tracking-[0.03em] text-[var(--ink)]">
+            {{ reason.title }}
+          </h3>
+          <p class="mt-2 text-[14px] text-[#54534b]">{{ reason.text }}</p>
         </article>
       </div>
     </div>

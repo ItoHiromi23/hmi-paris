@@ -1,4 +1,5 @@
 import type {
+  CmsAboutProfile,
   CmsBundle,
   CmsCancellationRule,
   CmsFeeTier,
@@ -47,6 +48,24 @@ const EMPTY_SETTINGS: CmsSiteSettings = {
   cancellationTitle: '',
   notesEyebrow: '',
   notesTitle: '',
+  aboutEyebrow: '',
+  aboutTitle: '',
+  aboutLatin: '',
+  aboutHeroImageUrl: '',
+  aboutPhiloBefore: '',
+  aboutPhiloAccent: '',
+  aboutPhiloAfter: '',
+  aboutPhiloLine2: '',
+  aboutSectionEyebrow: '',
+  aboutSectionTitle: '',
+  aboutP1: '',
+  aboutP2: '',
+  aboutP3: '',
+  aboutProfileEyebrow: '',
+  aboutProfileTitle: '',
+  aboutCtaTitle: '',
+  aboutCtaSubtitle: '',
+  aboutCtaButton: '',
 }
 
 function sortByOrder<T extends { sortOrder: number }>(rows: T[]) {
@@ -87,27 +106,37 @@ export function useCmsContent() {
     const localeParam = cmsLocale(String(localeCode || locale.value || 'en'))
     const strapiUrl = strapiBaseUrl()
 
-    const [settingsRes, services, reasons, fees, news, tourDetails, cancellation, notes] =
-      await Promise.all([
-        $fetch<{ data: CmsSiteSettings | null }>(`${strapiUrl}/api/site-setting`, {
-          query: {
-            locale: localeParam,
-            status: 'published',
-          },
-          // Avoid any intermediary caching the previous locale's payload
-          headers: { 'Cache-Control': 'no-cache' },
-        }).catch(() => null),
-        fetchCollection<CmsService & { documentId?: string }>('services', localeParam),
-        fetchCollection<CmsWhyReason & { documentId?: string }>('why-reasons', localeParam),
-        fetchCollection<CmsFeeTier & { documentId?: string }>('fee-tiers', localeParam),
-        fetchCollection<CmsNewsItem & { documentId?: string }>('news-items', localeParam),
-        fetchCollection<CmsTourDetail & { documentId?: string }>('tour-details', localeParam),
-        fetchCollection<CmsCancellationRule & { documentId?: string }>(
-          'cancellation-rules',
-          localeParam,
-        ),
-        fetchCollection<CmsSiteNote & { documentId?: string }>('site-notes', localeParam),
-      ])
+    const [
+      settingsRes,
+      services,
+      reasons,
+      fees,
+      news,
+      tourDetails,
+      aboutProfiles,
+      cancellation,
+      notes,
+    ] = await Promise.all([
+      $fetch<{ data: CmsSiteSettings | null }>(`${strapiUrl}/api/site-setting`, {
+        query: {
+          locale: localeParam,
+          status: 'published',
+        },
+        // Avoid any intermediary caching the previous locale's payload
+        headers: { 'Cache-Control': 'no-cache' },
+      }).catch(() => null),
+      fetchCollection<CmsService & { documentId?: string }>('services', localeParam),
+      fetchCollection<CmsWhyReason & { documentId?: string }>('why-reasons', localeParam),
+      fetchCollection<CmsFeeTier & { documentId?: string }>('fee-tiers', localeParam),
+      fetchCollection<CmsNewsItem & { documentId?: string }>('news-items', localeParam),
+      fetchCollection<CmsTourDetail & { documentId?: string }>('tour-details', localeParam),
+      fetchCollection<CmsAboutProfile & { documentId?: string }>('about-profiles', localeParam),
+      fetchCollection<CmsCancellationRule & { documentId?: string }>(
+        'cancellation-rules',
+        localeParam,
+      ),
+      fetchCollection<CmsSiteNote & { documentId?: string }>('site-notes', localeParam),
+    ])
 
     const rawSettings = settingsRes?.data || null
     const settings: CmsSiteSettings = {
@@ -163,6 +192,16 @@ export function useCmsContent() {
       })),
     )
 
+    const mappedAboutProfiles: CmsAboutProfile[] = sortByOrder(
+      aboutProfiles.map((p, i) => ({
+        id: p.documentId || p.id || i,
+        label: p.label,
+        value: p.value,
+        isEmail: Boolean(p.isEmail),
+        sortOrder: p.sortOrder ?? i,
+      })),
+    )
+
     const mappedCancel: CmsCancellationRule[] = sortByOrder(
       cancellation.map((c, i) => ({
         id: c.documentId || c.id || i,
@@ -189,6 +228,7 @@ export function useCmsContent() {
       fees: mappedFees,
       news: mappedNews,
       tourDetails: mappedTourDetails,
+      aboutProfiles: mappedAboutProfiles,
       cancellation: mappedCancel,
       feeNotes: noteRows.filter((n) => n.kind === 'fee').map((n) => n.text),
       importantNotes: noteRows.filter((n) => n.kind === 'important').map((n) => n.text),

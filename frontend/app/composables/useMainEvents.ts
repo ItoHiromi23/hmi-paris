@@ -1,4 +1,12 @@
-import type { MainEvent, StrapiMainEvent } from '~/types/event'
+import type {
+  EventCancellationRow,
+  EventDetailRow,
+  EventHighlight,
+  EventNavLink,
+  EventScheduleItem,
+  MainEvent,
+  StrapiMainEvent,
+} from '~/types/event'
 import type { StrapiMedia } from '~/types/package'
 import { normalizeCurrency } from '~/composables/useTourPackages'
 
@@ -12,27 +20,159 @@ function mediaUrl(strapiUrl: string, media?: StrapiMedia | null): string | null 
   return `${strapiUrl}${media.url}`
 }
 
+function asString(value: unknown) {
+  return typeof value === 'string' ? value : ''
+}
+
+function asStringList(value: unknown): string[] {
+  if (!Array.isArray(value)) return []
+  return value.map((item) => String(item)).filter(Boolean)
+}
+
+function asNavLinks(value: unknown): EventNavLink[] {
+  if (!Array.isArray(value)) return []
+  return value
+    .map((item) => {
+      if (!item || typeof item !== 'object') return null
+      const row = item as Record<string, unknown>
+      const href = asString(row.href).trim()
+      const label = asString(row.label).trim()
+      if (!href || !label) return null
+      return { href, label }
+    })
+    .filter((item): item is EventNavLink => Boolean(item))
+}
+
+function asHighlights(value: unknown): EventHighlight[] {
+  if (!Array.isArray(value)) return []
+  return value
+    .map((item) => {
+      if (!item || typeof item !== 'object') return null
+      const row = item as Record<string, unknown>
+      const title = asString(row.title).trim()
+      const body = asString(row.body).trim()
+      if (!title && !body) return null
+      return {
+        num: asString(row.num),
+        title,
+        body,
+        caveat: asString(row.caveat),
+      }
+    })
+    .filter((item): item is EventHighlight => Boolean(item))
+}
+
+function asSchedule(value: unknown): EventScheduleItem[] {
+  if (!Array.isArray(value)) return []
+  return value
+    .map((item) => {
+      if (!item || typeof item !== 'object') return null
+      const row = item as Record<string, unknown>
+      const time = asString(row.time).trim()
+      const what = asString(row.what).trim()
+      if (!time && !what) return null
+      return { time, what }
+    })
+    .filter((item): item is EventScheduleItem => Boolean(item))
+}
+
+function asDetailRows(value: unknown): EventDetailRow[] {
+  if (!Array.isArray(value)) return []
+  return value
+    .map((item) => {
+      if (!item || typeof item !== 'object') return null
+      const row = item as Record<string, unknown>
+      const label = asString(row.label).trim()
+      const valueText = asString(row.value).trim()
+      if (!label && !valueText) return null
+      return { label, value: valueText }
+    })
+    .filter((item): item is EventDetailRow => Boolean(item))
+}
+
+function asCancellationRows(value: unknown): EventCancellationRow[] {
+  if (!Array.isArray(value)) return []
+  return value
+    .map((item) => {
+      if (!item || typeof item !== 'object') return null
+      const row = item as Record<string, unknown>
+      const when = asString(row.when).trim()
+      const fee = asString(row.fee).trim()
+      if (!when && !fee) return null
+      return { when, fee }
+    })
+    .filter((item): item is EventCancellationRow => Boolean(item))
+}
+
 function mapEvent(strapiUrl: string, item: StrapiMainEvent): MainEvent {
   return {
     id: item.documentId || item.id,
     documentId: item.documentId,
     title: item.title,
     slug: item.slug,
-    label: item.label || '',
-    badgeText: item.badgeText || '',
-    category: item.category || '',
-    summary: item.summary || '',
-    description: item.description || '',
-    inclusions: Array.isArray(item.inclusions) ? item.inclusions : [],
+    label: asString(item.label),
+    badgeText: asString(item.badgeText),
+    category: asString(item.category),
+    summary: asString(item.summary),
+    description: asString(item.description),
+    subLatin: asString(item.subLatin),
+    edition: asString(item.edition),
+    guideLabel: asString(item.guideLabel),
+    navLinks: asNavLinks(item.navLinks),
+    aboutKicker: asString(item.aboutKicker),
+    aboutTitle: asString(item.aboutTitle),
+    aboutLead: asString(item.aboutLead),
+    aboutBody: asString(item.aboutBody),
+    aboutImageUrl: mediaUrl(strapiUrl, item.aboutImage) || item.aboutImageUrl || null,
+    aboutImageCaption: asString(item.aboutImageCaption),
+    highlightsKicker: asString(item.highlightsKicker),
+    highlightsTitle: asString(item.highlightsTitle),
+    highlights: asHighlights(item.highlights),
+    highlightsImageUrl:
+      mediaUrl(strapiUrl, item.highlightsImage) || item.highlightsImageUrl || null,
+    highlightsImageCaption: asString(item.highlightsImageCaption),
+    tourKicker: asString(item.tourKicker),
+    tourTitle: asString(item.tourTitle),
+    inclusions: asStringList(item.inclusions),
+    exclusions: asStringList(item.exclusions),
+    exclusionsTitle: asString(item.exclusionsTitle),
+    tourNote: asString(item.tourNote),
+    flowKicker: asString(item.flowKicker),
+    flowTitle: asString(item.flowTitle),
+    schedule: asSchedule(item.schedule),
+    meetingTitle: asString(item.meetingTitle),
+    meetingBody: asString(item.meetingBody),
+    meetingCaveat: asString(item.meetingCaveat),
+    meetingImageUrl: mediaUrl(strapiUrl, item.meetingImage) || item.meetingImageUrl || null,
+    meetingImageCaption: asString(item.meetingImageCaption),
+    flowNote: asString(item.flowNote),
+    detailsKicker: asString(item.detailsKicker),
+    detailsTitle: asString(item.detailsTitle),
+    detailRows: asDetailRows(item.detailRows),
+    cancellationTitle: asString(item.cancellationTitle),
+    cancellationHeaderWhen: asString(item.cancellationHeaderWhen),
+    cancellationHeaderFee: asString(item.cancellationHeaderFee),
+    cancellationRows: asCancellationRows(item.cancellationRows),
+    detailsNote: asString(item.detailsNote),
+    bookingKicker: asString(item.bookingKicker),
+    bookingTitle: asString(item.bookingTitle),
+    bookingSteps: asSchedule(item.bookingSteps),
+    notesKicker: asString(item.notesKicker),
+    notesTitle: asString(item.notesTitle),
+    notesList: asStringList(item.notesList),
+    ctaKicker: asString(item.ctaKicker),
+    ctaTitle: asString(item.ctaTitle),
+    ctaButton: asString(item.ctaButton),
+    ctaScarce: asString(item.ctaScarce),
     heroImageUrl: mediaUrl(strapiUrl, item.heroImage) || item.heroImageUrl || null,
     eventDate: item.eventDate || null,
-    venue: item.venue || '',
+    venue: asString(item.venue),
     priceFrom: item.priceFrom != null ? Number(item.priceFrom) : null,
     currency: normalizeCurrency(item.currency),
-    ctaLabel: item.ctaLabel || '',
+    ctaLabel: asString(item.ctaLabel),
     featured: Boolean(item.featured),
     sortOrder: item.sortOrder ?? 0,
-    notes: item.notes || '',
+    notes: asString(item.notes),
   }
 }
 
@@ -64,25 +204,11 @@ export function formatJaDate(iso: string | null | undefined) {
 
 export function useMainEvents() {
   const config = useRuntimeConfig()
-  const { t, locale } = useI18n()
+  const { locale } = useI18n()
   const strapiUrl = String(config.public.strapiUrl || 'http://127.0.0.1:1337')
     .replace(/\/$/, '')
     .replace('://localhost', '://127.0.0.1')
   const { formatPrice } = useTourPackages()
-
-  /** Local test heroes when CMS media is empty (dev / preview). */
-  const localHeroBySlug: Record<string, string> = {
-    'arc-de-triomphe-2026': '/images/horse-race-test.png',
-  }
-
-  function withFallbacks(event: MainEvent): MainEvent {
-    return {
-      ...event,
-      category: event.category || t('events.categoryFallback'),
-      ctaLabel: event.ctaLabel || t('events.detailCta'),
-      heroImageUrl: event.heroImageUrl || localHeroBySlug[event.slug] || null,
-    }
-  }
 
   async function fetchEvents(localeCode?: string): Promise<MainEvent[]> {
     try {
@@ -96,7 +222,7 @@ export function useMainEvents() {
       })
 
       if (!data?.data?.length) return []
-      return data.data.map((item) => withFallbacks(mapEvent(strapiUrl, item)))
+      return data.data.map((item) => mapEvent(strapiUrl, item))
     } catch (err) {
       console.error('[events] Failed to load from Strapi', err)
       return []
@@ -115,7 +241,7 @@ export function useMainEvents() {
 
       const item = data?.data?.[0]
       if (!item) return null
-      return withFallbacks(mapEvent(strapiUrl, item))
+      return mapEvent(strapiUrl, item)
     } catch (err) {
       console.error('[events] Failed to load event from Strapi', slug, err)
       return null

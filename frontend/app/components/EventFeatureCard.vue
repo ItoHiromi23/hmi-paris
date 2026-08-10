@@ -10,8 +10,7 @@ const { t } = useI18n()
 const localePath = useLocalePath()
 const route = useRoute()
 
-const fallbackHero = '/images/paris-placeholder.svg'
-const heroSrc = computed(() => props.event.heroImageUrl || fallbackHero)
+const heroSrc = computed(() => props.event.heroImageUrl || '')
 
 /** Sticky offset under fixed chrome (+ race banner on home). */
 const stickyTop = computed(() => {
@@ -88,7 +87,7 @@ const stickyTop = computed(() => {
     </div>
 
     <!-- 2) Image scrolls up and covers the sticky text (wrapper from lg only) -->
-    <div class="event-feature__media relative z-10 overflow-hidden rounded-md">
+    <div v-if="heroSrc" class="event-feature__media relative z-10 overflow-hidden rounded-md">
       <img
         :src="optimizeImageUrl(heroSrc, 1600, 72)"
         :srcset="imageSrcSet(heroSrc, [800, 1200, 1600, 2000], 72)"

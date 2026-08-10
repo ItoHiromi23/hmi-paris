@@ -293,55 +293,331 @@ export const SEED_EVENTS = [
   {
     slug: 'arc-de-triomphe-2026',
     heroImageUrl: '',
+    aboutImageUrl: '/images/events/arc-about.jpg',
+    highlightsImageUrl: '/images/events/arc-highlights.jpg',
+    meetingImageUrl: '/images/events/arc-meeting.jpg',
     eventDate: '2026-10-04',
-    priceFrom: 180,
+    priceFrom: 160,
     currency: 'EUR',
     featured: true,
     sortOrder: 1,
     en: {
-      title: 'Prix de l’Arc de Triomphe 2026 viewing bus tour',
+      title: 'Prix de l’Arc de Triomphe viewing tour',
       label: 'Shared bus tour',
       badgeText: '2026 10.4 SUN Arc de Triomphe viewing bus tour',
-      category: 'Seasonal special event',
+      category: 'Qatar Prix de l’Arc de Triomphe',
       summary:
-        'The 105th Prix de l’Arc de Triomphe at Longchamp — top jockeys and horses, with a Japanese-speaking guide.',
+        'Sunday 4 October 2026 at ParisLongchamp — the 105th Arc, with a Japanese-speaking guide and round-trip bus.',
       description:
-        'A special bus tour to watch the Qatar Prix de l’Arc de Triomphe at Longchamp. Experience European racing atmosphere up close, with Japanese guidance even if it’s your first race day.',
-      venue: 'Longchamp Racecourse (Paris)',
+        'A special bus tour to watch the Qatar Prix de l’Arc de Triomphe at Longchamp.',
+      venue: 'ParisLongchamp Racecourse',
       ctaLabel: 'View details',
-      notes: 'Programme may change with weather or race conditions. Details are confirmed at booking.',
+      notes: '',
+      subLatin: 'ParisLongchamp — 4 October 2026',
+      edition: '105th edition',
+      guideLabel: 'Japanese-speaking guide',
+      navLinks: [
+        { href: '#about', label: 'The race' },
+        { href: '#highlights', label: 'Highlights' },
+        { href: '#tour', label: 'What’s included' },
+        { href: '#flow', label: 'Programme' },
+        { href: '#details', label: 'Price & details' },
+        { href: '#booking', label: 'Booking' },
+        { href: '#notes', label: 'Please note' },
+      ],
+      aboutKicker: 'The Race',
+      aboutTitle: 'A Sunday in October when Paris holds its breath',
+      aboutLead:
+        'On the first weekend of October, the Bois de Boulogne comes alive. Thoroughbreds from France, Ireland, Britain, Germany and Japan gather at ParisLongchamp. Over 2,400 metres and roughly two and a half minutes, €5 million in prize money is on the line.',
+      aboutBody:
+        '4 October 2026 marks the memorable 105th running. As of May registration, last year’s winner Daryz and Japanese contenders including Forever Young are among seven Japanese horses listed. The final field is confirmed at the end of September.\n\nJoin the world’s premier race — also a stage for European high society. Elegant dresses and hats, champagne in hand: enjoy the unique atmosphere of a European racecourse.',
+      aboutImageCaption:
+        'The stands at ParisLongchamp and the lawn (Pelouse) spread out in front.',
+      highlightsKicker: 'Highlights',
+      highlightsTitle: 'What you will witness on the day',
+      highlights: [
+        {
+          num: '①',
+          title: 'The paddock, up close',
+          body: 'Before the race, runners circle the paddock. Coat, presence, and the tension as jockeys mount — the power of a thoroughbred that television never fully conveys.',
+          caveat: '',
+        },
+        {
+          num: '②',
+          title: 'The final straight from the lawn',
+          body: 'Your viewing area is the standing general admission along the home straight (Pelouse de l’Arrivée). Horses thunder past; hoofbeats and cheers from every side. Feel the Arc’s climax in the most visceral place.',
+          caveat: '※ Access to the enclosed OR enclosure (Pelouse de l’Arrivée OR) is not included.',
+        },
+        {
+          num: '③',
+          title: 'Betting made clear, in Japanese',
+          body: 'French betting differs from Japan in system and terms. You receive a course map and a Japanese guide to wagering. Even first-timers may find one ticket changes how the race feels.',
+          caveat: '',
+        },
+      ],
+      highlightsImageCaption:
+        'The paddock (ronde de présentation) — runners circle in front of the crowd before the race.',
+      tourKicker: "What's Included",
+      tourTitle: 'What’s included in the tour',
       inclusions: [
-        'Round-trip bus to Longchamp',
+        'Round-trip bus from central Paris',
         'Standing ticket (Pelouse de l’Arrivée)',
         'Paddock access',
-        'Course map & betting guide',
         'Japanese-speaking guide',
+        'Racecourse map (Japanese)',
+        'Betting & ticket-purchase guide (Japanese)',
       ],
+      exclusionsTitle: 'Not included',
+      exclusions: [
+        'Food and drink (many food trucks, kiosks and bars on site)',
+        'Betting stakes',
+      ],
+      tourNote:
+        'Pelouse standing areas do not guarantee a seat. Expect long periods on your feet — wear comfortable shoes.',
+      flowKicker: 'Programme',
+      flowTitle: 'Day schedule',
+      schedule: [
+        { time: '10:30', what: 'Meet at Place Saint-Augustin, by the Jeanne d’Arc equestrian statue. Your guide will welcome you.' },
+        { time: '10:40', what: 'Depart by bus for Longchamp.' },
+        { time: '11:30', what: 'Arrive at the Longchamp bus parking. Enter after security checks.' },
+        { time: '16:05', what: 'Arc de Triomphe off. Watch from the lawn.' },
+        { time: '17:40', what: 'After the ceremony, regroup and return to central Paris by bus.' },
+        { time: '18:30', what: 'Disband near Place Saint-Augustin.' },
+      ],
+      meetingTitle: 'Meeting-point landmark',
+      meetingBody:
+        'The Jeanne d’Arc equestrian statue on the square in front of Église Saint-Augustin. Your guide waits by the statue.',
+      meetingCaveat:
+        'Place Saint-Augustin, 75008 Paris / Métro line 9, Saint-Augustin — exit at the station.',
+      meetingImageCaption: '',
+      flowNote:
+        'Start times and the day’s programme may change according to France Galop’s official announcements.',
+      detailsKicker: 'Price & Practical',
+      detailsTitle: 'Price & tour details',
+      detailRows: [
+        { label: 'Date', value: 'Sunday 4 October 2026' },
+        { label: 'Price', value: '€160 per person' },
+        { label: 'Minimum', value: '1 guest' },
+        { label: 'Capacity', value: 'Places are limited' },
+        {
+          label: 'Meeting point',
+          value:
+            'Place Saint-Augustin, 75008 Paris / Métro line 9, Saint-Augustin\nNear the Jeanne d’Arc equestrian statue',
+        },
+        { label: 'Meeting time', value: '10:30' },
+        { label: 'Disband', value: 'Near Place Saint-Augustin / around 18:30' },
+        { label: 'Duration', value: 'About 8 hours' },
+        { label: 'Language', value: 'Japanese' },
+        { label: 'Payment', value: 'Credit card (Visa / Mastercard), bank transfer' },
+        { label: 'Payment deadline', value: 'Within 3 days of confirmed booking' },
+        { label: 'Booking deadline', value: '25 September 2026 (or when sold out)' },
+        {
+          label: 'Dress',
+          value:
+            'No formal code; smart casual recommended. You will be outdoors for long periods — comfortable shoes and weather-ready layers.',
+        },
+      ],
+      cancellationTitle: 'Cancellation policy',
+      cancellationHeaderWhen: 'When you cancel',
+      cancellationHeaderFee: 'Fee',
+      cancellationRows: [
+        {
+          when: 'From booking confirmation through race day',
+          fee: '100% of the tour price (tickets non-refundable / non-changeable)',
+        },
+      ],
+      detailsNote:
+        'The Arc runs rain or shine. We do not cancel for weather. If the organiser cancels or postpones the race, no refund is given.',
+      bookingKicker: 'How to Book',
+      bookingTitle: 'How to book',
+      bookingSteps: [
+        { time: '01', what: 'Tell us your party size via the form or email.' },
+        { time: '02', what: 'We check availability and reply within 48 hours.' },
+        { time: '03', what: 'We send payment instructions. Booking is confirmed once payment is received.' },
+        {
+          time: '04',
+          what: 'After payment, we email a voucher with meeting place, time and day-of notes. Show it on your phone on the day.',
+        },
+      ],
+      notesKicker: 'Please Note',
+      notesTitle: 'Please note',
+      notesList: [
+        'Some credit-card security settings may prevent use of on-site ticket machines.',
+        'Some races after the Arc cannot be watched on this tour.',
+        'This is a direct round-trip bus from Paris. Timing may shift with race progress or traffic.',
+        'If the race is cancelled due to disaster, strike or organiser decision, the tour does not run.',
+        'Cancellation fee is 100% of the product price from the moment booking is complete.',
+        'Prohibited items at the racecourse include explosives, weapons, knives, bottles, balls, cans, spray cans, banners, plastic bottles (except ≤50cl with captive caps), drones, megaphones, horns, helmets, e-scooters, animals, and other items security may refuse on site.',
+        'Buses are not wheelchair-accessible; wheelchair users cannot join.',
+        'Large luggage such as suitcases cannot be brought.',
+      ],
+      ctaKicker: 'Reservation',
+      ctaTitle: 'Spend that day with us',
+      ctaButton: 'Book / enquire',
+      ctaScarce: 'Places are limited.',
     },
     ja: {
-      title: '凱旋門賞 2026 観戦バスツアー',
+      title: '凱旋門賞 観戦ツアー',
       label: '混乗バスツアー',
       badgeText: '2026 10.4 SUN 凱旋門賞観戦バスツアー',
-      category: '季節限定・特別イベント',
+      category: "Qatar Prix de l'Arc de Triomphe",
       summary:
-        'パリ・ロンシャン競馬場で開催される第105回凱旋門賞。世界トップクラスの騎手と名馬が競うヨーロッパ競馬の華やかな一日を、日本語ガイドとともに。',
+        '2026年10月4日（日）パリロンシャン競馬場で開催される第105回凱旋門賞。日本語ガイド同行、往復送迎バス付きの観戦ツアー。',
       description:
-        'パリ郊外のロンシャン競馬場で開催される凱旋門賞（Qatar Prix de l’Arc de Triomphe）を観戦する特別バスツアーです。ヨーロッパ競馬ならではの格式ある雰囲気と、出走馬・騎手の迫力を間近で体験できます。初めての競馬観戦でも安心の日本語ガイド同行付きです。',
-      venue: 'ロンシャン競馬場（パリ）',
+        'パリ郊外のロンシャン競馬場で開催される凱旋門賞を観戦する特別バスツアーです。',
+      venue: 'パリロンシャン競馬場',
       ctaLabel: '詳細を見る',
-      notes: '天候・出走状況により内容が変更となる場合があります。詳細はお申し込み時にご案内します。',
-      inclusions: [
-        'ロンシャン競馬場までの往復送迎バス',
-        '立ち見チケット（Pelouse de l’Arrivée）',
-        'パドック入場',
-        '競馬場マップ・投票方法の説明資料',
-        '日本語ガイド同行',
+      notes: '',
+      subLatin: 'ParisLongchamp — 4 October 2026',
+      edition: '第105回',
+      guideLabel: '日本語ガイド同行',
+      navLinks: [
+        { href: '#about', label: '凱旋門賞とは' },
+        { href: '#highlights', label: '見どころ' },
+        { href: '#tour', label: 'ツアー内容' },
+        { href: '#flow', label: '当日の流れ' },
+        { href: '#details', label: '料金・詳細' },
+        { href: '#booking', label: 'ご予約' },
+        { href: '#notes', label: '注意事項' },
       ],
+      aboutKicker: 'The Race',
+      aboutTitle: 'パリが息をのむ、10月の日曜日',
+      aboutLead:
+        '10月最初の週末、ブローニュの森が華やぎます。フランス、アイルランド、イギリス、ドイツ、そして日本から、世界最高峰のサラブレッドがパリロンシャン競馬場に集結。2,400メートル、およそ2分半の攻防に、総賞金500万ユーロが懸けられます。',
+      aboutBody:
+        '2026年10月4日に行われるのは、記念すべき第105回。5月の登録時点では、昨年の覇者ダリーズ（Daryz）や、フォーエバーヤング（Forever Young）をはじめとする日本馬7頭が名を連ねています。出走馬の確定は9月末です。\n\n世界最高峰のレース凱旋門賞へ！欧州セレブの社交場でもあり、優雅で華やかな空気に包まれます♪ 素敵なドレスや帽子を身につけたご婦人方や、シャンパンを片手に団欒を楽しむ紳士たち。気品溢れるヨーロッパ競馬場の独特な雰囲気をお楽しみください。',
+      aboutImageCaption:
+        'パリロンシャン競馬場のスタンドと、目の前に広がる芝生エリア（Pelouse）。',
+      highlightsKicker: 'Highlights',
+      highlightsTitle: 'この日、あなたが立ち会うもの',
+      highlights: [
+        {
+          num: '①',
+          title: '本場のパドックを、間近で',
+          body: 'レース前、出走馬が周回するパドック。世界中から集まった名馬の毛艶、気配、そして騎手が跨がる瞬間の張り詰めた空気。テレビ画面では決して伝わらないサラブレッドの迫力がそこにあります。',
+          caveat: '',
+        },
+        {
+          num: '②',
+          title: '芝生から見る、最後の直線',
+          body: '本ツアーの観戦エリアは、最後の直線沿いに広がる立ち見自由席（Pelouse de l\'Arrivée）。目の前を馬群が駆け抜けます。地響きのような蹄の音と、四方から上がる歓声。凱旋門賞のクライマックスを、もっとも体感的な場所で。',
+          caveat: '※ゴール前の囲われた客席（Pelouse de l\'Arrivée OR）へはアクセスできません。',
+        },
+        {
+          num: '③',
+          title: '日本語で安心、馬券の手引き',
+          body: 'フランスの馬券は仕組みも用語も日本とは異なります。競馬場内マップと、賭け方・馬券購入方法をまとめた日本語資料をお渡しします。競馬が初めての方も一枚買えばレースの見え方が変わるかもしれません。',
+          caveat: '',
+        },
+      ],
+      highlightsImageCaption:
+        'パドック（ronde de présentation）— レース前、出走馬が観客の目の前を周回します。',
+      tourKicker: "What's Included",
+      tourTitle: 'ツアーに含まれるもの',
+      inclusions: [
+        'パリ市内発着の往復送迎バス',
+        '立ち見自由席チケット（Pelouse de l\'Arrivée）',
+        'パドックへのアクセス',
+        '日本語ガイド同行',
+        '競馬場内マップ（日本語）',
+        '賭け方・馬券購入方法の資料（日本語）',
+      ],
+      exclusionsTitle: '含まれないもの',
+      exclusions: [
+        '飲食代（競馬場内に多数のキッチンカー、売店、バーがございます）',
+        '馬券の購入費用',
+      ],
+      tourNote:
+        '立ち見自由席（Pelouse）は着席の保証がないエリアです。長時間の立ち歩きとなりますので、歩きやすい靴でお越しください。',
+      flowKicker: 'Programme',
+      flowTitle: '当日の流れ',
+      schedule: [
+        { time: '10:30', what: 'サントオギュスタン広場、ジャンヌダルク騎馬像前に集合。ガイドがお迎えします。' },
+        { time: '10:40', what: 'バスにてロンシャン競馬場へ出発。' },
+        { time: '11:30', what: 'ロンシャン競馬場のバスパーキングに到着。セキュリティチェックを経て入場します。' },
+        { time: '16:05', what: '凱旋門賞、発走。芝生エリアにて観戦。' },
+        { time: '17:40', what: '表彰式終了後、集合してバスにてパリ市内へ。' },
+        { time: '18:30', what: 'サントオギュスタン広場付近にて解散。' },
+      ],
+      meetingTitle: '集合場所の目印',
+      meetingBody:
+        'サントオギュスタン教会前の広場に立つ、ジャンヌダルク騎馬像。この像の前でガイドがお待ちしております。',
+      meetingCaveat:
+        'サントオギュスタン広場（Place Saint-Augustin, 75008 Paris）／メトロ9号線 Saint-Augustin 駅下車すぐ',
+      meetingImageCaption: '',
+      flowNote:
+        '発走時刻および当日のプログラムは、フランスギャロ（France Galop）の公式発表により変更となる場合がございます。',
+      detailsKicker: 'Price & Practical',
+      detailsTitle: '料金・ツアー詳細',
+      detailRows: [
+        { label: '開催日', value: '2026年10月4日（日）' },
+        { label: '料金', value: 'お一人様 160 €' },
+        { label: '最少催行人数', value: '1名' },
+        { label: '定員', value: 'ご案内できる席には限りがございます' },
+        {
+          label: '集合場所',
+          value:
+            'サントオギュスタン広場（Place Saint-Augustin, 75008 Paris）／メトロ9号線 Saint-Augustin 駅\nジャンヌダルク騎馬像周辺',
+        },
+        { label: '集合時間', value: '10:30' },
+        { label: '解散', value: 'サントオギュスタン広場付近／18:30 頃' },
+        { label: '所要時間', value: '約8時間' },
+        { label: '言語', value: '日本語' },
+        { label: 'お支払い方法', value: 'クレジットカード（Visa / Mastercard）、銀行振込' },
+        { label: 'お支払い期限', value: 'ご予約確定後 3日以内' },
+        { label: '申込締切', value: '2026年9月25日（定員に達し次第、締切）' },
+        {
+          label: '服装',
+          value:
+            '特に規定はございませんが、スマートカジュアルをおすすめします。屋外で長時間過ごしますので、歩きやすい靴と、天候に応じた上着をご用意ください。',
+        },
+      ],
+      cancellationTitle: 'キャンセル規定',
+      cancellationHeaderWhen: 'キャンセルのお申し出',
+      cancellationHeaderFee: '取消料',
+      cancellationRows: [
+        {
+          when: 'お申し込み直後から当日まで',
+          fee: 'ツアー料金の100%（チケット代を含め、返金・変更はできません）',
+        },
+      ],
+      detailsNote:
+        '凱旋門賞は雨天決行です。悪天候によるツアーの中止はございません。主催者側の判断によりレースが中止・順延となった場合も、ご返金はございません。あらかじめご了承ください。',
+      bookingKicker: 'How to Book',
+      bookingTitle: 'ご予約の流れ',
+      bookingSteps: [
+        { time: '01', what: '下記フォームまたはメールにて、ご希望の人数をお知らせください。' },
+        { time: '02', what: '空席を確認のうえ、48時間以内にお返事いたします。' },
+        { time: '03', what: 'お支払いのご案内をお送りします。ご入金の確認をもってご予約確定となります。' },
+        {
+          time: '04',
+          what: 'お支払い確認後に、集合場所・時間・当日の注意事項を記載したバウチャーをメールでお送りします。当日はスマートフォンの画面でご提示ください。',
+        },
+      ],
+      notesKicker: 'Please Note',
+      notesTitle: '注意事項',
+      notesList: [
+        'クレジットカードの種類（セキュリティー）により、競馬場内の券売機がご利用いただけない場合があります。',
+        '当日、凱旋門賞の後に行われるいくつかのレースは観戦いただけません。',
+        'パリ発着の往復直行バスツアーです。行程は当日のレース進行、交通渋滞の有無など諸事情により前後する場合があります。',
+        '天災、ストライキ、主催者側の都合などにより競馬レースが中止となった場合、当ツアーは不催行となります。',
+        'キャンセル料は、ご予約完了直後より商品料金の100%です。',
+        '競馬場へは、爆発物・武器・刃物・瓶・ボール・缶・スプレー缶・バンドロール・横断幕・プラスチックボトル（50cl以下で、キャップが本体から外れないタイプのペットボトルは可）・ドローン・メガホン・ラッパ・ヘルメット・電動キックボード・動物等の持ち込みが禁止されています。その他、セキュリティ上の理由により現地で持ち込みを拒否される物品がある可能性があります。',
+        '使用するバスには車椅子の設備がないため、車椅子をご利用のお客様はご参加いただけません。',
+        'スーツケースなど大きなお荷物の持ち込みはできません。',
+      ],
+      ctaKicker: 'Reservation',
+      ctaTitle: 'その一日に、ご一緒します',
+      ctaButton: 'ご予約・お問い合わせ',
+      ctaScarce: 'ご案内できる席には限りがございます。',
     },
   },
   {
     slug: 'paris-christmas-lights-2026',
     heroImageUrl: '',
+    aboutImageUrl: '',
+    highlightsImageUrl: '',
+    meetingImageUrl: '',
     eventDate: '2026-12-15',
     priceFrom: 95,
     currency: 'EUR',
@@ -707,6 +983,7 @@ export const SEED_SETTINGS_SHARED = {
   contactEmail: 'info@hmiparis.com',
   contactPhone: '+33 1 84 00 00 00',
   heroImageUrl: '',
+  aboutHeroImageUrl: '/images/home/dest-paris.jpg',
 }
 
 export const SEED_SETTINGS_EN = {
@@ -743,6 +1020,27 @@ export const SEED_SETTINGS_EN = {
   cancellationTitle: 'Cancellation policy',
   notesEyebrow: 'Please note',
   notesTitle: 'Before you book',
+  aboutEyebrow: 'À propos',
+  aboutTitle: 'About us',
+  aboutLatin: 'About HMI Paris',
+  aboutPhiloBefore: 'Even far from home, we want you to feel ',
+  aboutPhiloAccent: 'the same sense of ease',
+  aboutPhiloAfter: ' you know.',
+  aboutPhiloLine2:
+    'HMI Paris brings Japanese hospitality to every moment of your time in Paris.',
+  aboutSectionEyebrow: 'About HMI Paris',
+  aboutSectionTitle: 'Travel shaped by living in Paris.',
+  aboutP1:
+    'Based in Paris, we offer private tours and chauffeur services across the city and beyond — from Mont-Saint-Michel to Versailles and destinations throughout France. We craft each journey around your wishes, lifestyle, and purpose of stay.',
+  aboutP2:
+    'Flexible schedules, paces that match your interests, and coordination spanning history, art, cuisine, and shopping — all from the perspective of people who live here. With experienced drivers and guides, we keep travel effortless so you can enjoy refined sightseeing. Day trips, half-day tours, and more: we help make your valuable time richer.',
+  aboutP3:
+    'We want you to experience not only the classics, but the real France. First visits, honeymoons, anniversaries, family trips — we welcome every occasion with thoughtful hospitality, so your time in France becomes a lifelong memory.',
+  aboutProfileEyebrow: 'Profile',
+  aboutProfileTitle: 'Overview',
+  aboutCtaTitle: 'We look forward to meeting you in Paris.',
+  aboutCtaSubtitle: 'Once your travel or business plans are set, feel free to get in touch.',
+  aboutCtaButton: 'Contact us',
 }
 
 export const SEED_SETTINGS_JA = {
@@ -778,4 +1076,71 @@ export const SEED_SETTINGS_JA = {
   cancellationTitle: 'キャンセルポリシー',
   notesEyebrow: 'ご注意事項',
   notesTitle: 'ご確認ください',
+  aboutEyebrow: 'À propos',
+  aboutTitle: '会社案内',
+  aboutLatin: 'About HMI Paris',
+  aboutPhiloBefore: '遠く離れた異国でも、',
+  aboutPhiloAccent: '「いつもの安心」',
+  aboutPhiloAfter: 'のなかで過ごしてほしい。',
+  aboutPhiloLine2:
+    'HMI Paris は、日本のおもてなしの心を、パリでのひとときにお届けします。',
+  aboutSectionEyebrow: 'HMI Paris について',
+  aboutSectionTitle: 'パリで暮らすからこそ、ご案内できる旅を。',
+  aboutP1:
+    'パリを拠点に、パリ市内はもちろん、モンサンミッシェルやヴェルサイユをはじめとするフランス各地へのプライベートツアー・専用車サービスをご提供しています。お客様のご要望やライフスタイル、ご滞在の目的に寄り添いながら、一組さまごとにオーダーメイドの旅を作り上げます。',
+  aboutP2:
+    '柔軟なスケジュール調整はもちろん、ご興味やペースに合わせたプランを、歴史や芸術、グルメやショッピングまで、現地で暮らすからこその視点でコーディネート。経験豊富なドライバーやガイドとともに、移動の負担を最小限に抑えながら、快適で上質な観光をお楽しみいただけます。日帰り旅行や半日観光など、お客様の大切な時間をより豊かにするお手伝いをいたします。',
+  aboutP3:
+    '「定番の観光地はもちろん、本当のフランスを体験していただきたい」——そんな思いを胸に、一組一組のお客様との出会いを大切にし、安心と感動に満ちた旅づくりをお手伝いしています。初めてのフランス旅行、ハネムーン、記念日、家族旅行など、あらゆるシーンに寄り添い、フランスで過ごす時間が一生の思い出となるよう、心のこもった上質なおもてなしで皆様をお迎えいたします。',
+  aboutProfileEyebrow: 'Profile',
+  aboutProfileTitle: '概要',
+  aboutCtaTitle: 'パリでお会いできるのを楽しみに。',
+  aboutCtaSubtitle: 'ご旅行・ご出張の予定が決まったら、お気軽にご連絡ください。',
+  aboutCtaButton: 'お問い合わせ',
 }
+
+export const SEED_ABOUT_PROFILES = [
+  {
+    sortOrder: 1,
+    isEmail: false,
+    en: { label: 'Trade name', value: 'HMI Paris' },
+    ja: { label: '屋号', value: 'HMI Paris' },
+  },
+  {
+    sortOrder: 2,
+    isEmail: false,
+    en: {
+      label: 'Services',
+      value: 'Private tours · chauffeur service · interpreting / attend',
+    },
+    ja: {
+      label: '事業内容',
+      value: 'プライベートツアー・専用車サービス・通訳／アテンド',
+    },
+  },
+  {
+    sortOrder: 3,
+    isEmail: false,
+    en: { label: 'Areas', value: 'Paris and destinations across France' },
+    ja: { label: '対応エリア', value: 'パリおよびフランス各地' },
+  },
+  {
+    sortOrder: 4,
+    isEmail: false,
+    en: { label: 'Languages', value: 'Japanese' },
+    ja: { label: '対応言語', value: '日本語' },
+  },
+  {
+    sortOrder: 5,
+    isEmail: false,
+    en: { label: 'Reservations', value: 'By reservation only' },
+    ja: { label: 'ご予約', value: '完全予約制' },
+  },
+  {
+    sortOrder: 6,
+    isEmail: true,
+    en: { label: 'Contact', value: 'info@hmiparis.com' },
+    ja: { label: 'お問い合わせ', value: 'info@hmiparis.com' },
+  },
+] as const
+

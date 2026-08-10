@@ -1,51 +1,22 @@
 <script setup lang="ts">
-import type { CmsBundle } from '~/types/cms'
+import { homeContent as c } from '~/data/homeContent'
 
 const props = defineProps<{
-  /** When true, header sits in a fixed chrome stack (e.g. under the race banner). */
   embedded?: boolean
 }>()
 
-const { locale, locales, t, setLocale } = useI18n()
-const switchLocalePath = useSwitchLocalePath()
-const localePath = useLocalePath()
 const route = useRoute()
 const menuOpen = ref(false)
-const scrolled = ref(false)
-const cms = inject<Ref<CmsBundle | null>>('cms', ref(null))
-const { load: loadCms } = useCmsBundle()
 
-async function onLocaleClick(code: string, event: Event) {
-  event.preventDefault()
-  if (code === locale.value) return
-  // Prefetch CMS for the target locale first so shared fields (hero image) stay put
-  await loadCms(code)
-  await setLocale(code)
-}
+const links = [
+  { to: '/', label: c.nav.home, home: true },
+  { to: '/#event', label: c.nav.event },
+  { to: '/#services', label: c.nav.services },
+  { to: '/about', label: c.nav.about },
+  { to: '/contact', label: c.nav.contact },
+]
 
-const brand = computed(() => cms.value?.settings.brandName || 'HMI')
-const tagline = computed(() => cms.value?.settings.brandTagline || 'paris')
-const solid = computed(() => scrolled.value || menuOpen.value)
-
-const links = computed(() => [
-  { to: localePath('/packages'), label: t('nav.tours') },
-  { to: localePath('/events'), label: t('nav.events') },
-  { to: localePath('/#services'), label: t('nav.styles') },
-  { to: localePath('/#why'), label: t('nav.why') },
-  { to: localePath('/about'), label: t('nav.about') },
-  { to: localePath('/contact'), label: t('nav.contact') },
-])
-
-const availableLocales = computed(() =>
-  (locales.value as Array<{ code: string; name: string }>).map((l) => ({
-    code: l.code,
-    name: l.code === 'en' ? t('lang.en') : t('lang.ja'),
-  })),
-)
-
-function onScroll() {
-  scrolled.value = window.scrollY > 24
-}
+const isHome = computed(() => route.path === '/' || route.path === '')
 
 watch(
   () => route.fullPath,
@@ -53,163 +24,73 @@ watch(
     menuOpen.value = false
   },
 )
-
-onMounted(() => {
-  onScroll()
-  window.addEventListener('scroll', onScroll, { passive: true })
-})
-
-onBeforeUnmount(() => {
-  window.removeEventListener('scroll', onScroll)
-})
 </script>
 
 <template>
   <header
-    class="transition-all duration-400"
-    :class="[
-      props.embedded ? 'relative w-full' : 'fixed inset-x-0 top-0 z-50',
-      solid
-        ? 'border-b border-[var(--line)] bg-white/95 shadow-lg shadow-[var(--void)]/5 backdrop-blur-xl'
-        : 'bg-transparent',
-    ]"
+    class="z-50 border-b border-[var(--line)] bg-[rgba(246,242,233,0.86)] backdrop-blur-[10px]"
+    :class="props.embedded ? 'relative w-full' : 'sticky top-0'"
   >
-    <div class="container-wide flex h-[4.5rem] items-center justify-between lg:h-20">
-      <NuxtLink :to="localePath('/')" class="relative z-10 flex items-baseline gap-2">
-        <span
-          class="text-xl font-bold tracking-[0.08em] sm:text-2xl"
-          :class="solid ? 'text-[var(--heading)]' : 'text-white'"
-        >
-          {{ brand }}
-        </span>
-        <span
-          class="font-display text-base italic"
-          :class="solid ? 'text-[var(--teal)]' : 'text-[var(--teal-bright)]'"
-        >
-          {{ tagline }}
-        </span>
+    <div class="wrap flex h-[74px] items-center justify-between">
+      <NuxtLink to="/" class="relative z-10 flex flex-col leading-none">
+        <img
+          src="/images/home/logo-header.png"
+          alt="HMI Paris"
+          class="block h-7 w-auto md:h-[28px]"
+          width="160"
+          height="28"
+        />
       </NuxtLink>
 
-      <nav class="hidden items-center gap-6 xl:gap-8 lg:flex">
+      <nav class="hidden items-center gap-[34px] lg:flex">
         <NuxtLink
           v-for="link in links"
           :key="link.to"
           :to="link.to"
-          class="text-[12px] font-semibold uppercase tracking-[0.16em] transition"
+          class="relative px-0 py-1.5 text-[14px] tracking-[0.14em] text-[var(--ink)] transition after:absolute after:bottom-0 after:left-0 after:right-full after:h-px after:bg-[var(--brass)] after:transition-[right] after:duration-300 hover:after:right-0"
           :class="
-            solid
-              ? 'text-[var(--body)] hover:text-[var(--teal)]'
-              : 'text-white/95 hover:text-white'
+            (link.home && isHome) || route.path === link.to
+              ? 'text-[var(--brass)] after:!right-0'
+              : link.to === '/#event'
+                ? 'text-[var(--brass)]'
+                : ''
           "
         >
           {{ link.label }}
-        </NuxtLink>
-
-        <div
-          class="flex items-center overflow-hidden rounded-full border text-[11px] font-semibold uppercase tracking-[0.14em]"
-          :class="
-            solid
-              ? 'border-[var(--line)] bg-white text-[var(--heading)]'
-              : 'border-white/40 bg-[var(--void)]/25 text-white'
-          "
-          role="group"
-          :aria-label="t('lang.label')"
-        >
-          <NuxtLink
-            v-for="item in availableLocales"
-            :key="item.code"
-            :to="switchLocalePath(item.code)"
-            class="px-3 py-1.5 transition"
-            :class="
-              locale === item.code
-                ? solid
-                  ? 'bg-[var(--teal)] text-white'
-                  : 'bg-white text-[var(--heading)]'
-                : solid
-                  ? 'hover:bg-[var(--paper)]'
-                  : 'hover:bg-white/10'
-            "
-            :aria-current="locale === item.code ? 'true' : undefined"
-            @click="onLocaleClick(item.code, $event)"
-          >
-            {{ item.name }}
-          </NuxtLink>
-        </div>
-
-        <NuxtLink :to="localePath('/packages')" class="btn-primary !px-5 !py-2.5 text-[11px]">
-          {{ t('nav.findTours') }}
         </NuxtLink>
       </nav>
 
-      <div class="flex items-center gap-2 lg:hidden">
-        <div
-          class="flex items-center overflow-hidden rounded-full border text-[10px] font-semibold uppercase tracking-[0.12em]"
-          :class="
-            solid
-              ? 'border-[var(--line)] bg-white text-[var(--heading)]'
-              : 'border-white/40 bg-[var(--void)]/25 text-white'
-          "
-          role="group"
-          :aria-label="t('lang.label')"
-        >
-          <NuxtLink
-            v-for="item in availableLocales"
-            :key="item.code"
-            :to="switchLocalePath(item.code)"
-            class="px-2.5 py-1.5 transition"
-            :class="
-              locale === item.code
-                ? solid
-                  ? 'bg-[var(--teal)] text-white'
-                  : 'bg-white text-[var(--heading)]'
-                : ''
-            "
-            @click="onLocaleClick(item.code, $event)"
-          >
-            {{ item.name }}
-          </NuxtLink>
-        </div>
-
-        <button
-          type="button"
-          class="relative z-10 flex h-11 w-11 items-center justify-center"
-          :aria-expanded="menuOpen"
-          :aria-label="t('nav.toggleMenu')"
-          @click="menuOpen = !menuOpen"
-        >
-          <div class="flex w-6 flex-col gap-1.5">
-            <span
-              class="block h-px w-full transition"
-              :class="[solid ? 'bg-[var(--heading)]' : 'bg-white', menuOpen && 'translate-y-[7px] rotate-45']"
-            />
-            <span
-              class="block h-px w-full transition"
-              :class="[solid ? 'bg-[var(--heading)]' : 'bg-white', menuOpen && 'opacity-0']"
-            />
-            <span
-              class="block h-px w-full transition"
-              :class="[solid ? 'bg-[var(--heading)]' : 'bg-white', menuOpen && '-translate-y-[7px] -rotate-45']"
-            />
-          </div>
-        </button>
-      </div>
+      <button
+        type="button"
+        class="relative z-10 flex h-11 w-[42px] flex-col items-center justify-center lg:hidden"
+        :aria-expanded="menuOpen"
+        :aria-label="c.nav.menu"
+        @click="menuOpen = !menuOpen"
+      >
+        <span
+          class="mb-1.5 block h-[1.5px] w-5 bg-[var(--ink)] transition"
+          :class="menuOpen && 'translate-y-[7px] rotate-45'"
+        />
+        <span
+          class="mb-1.5 block h-[1.5px] w-5 bg-[var(--ink)] transition"
+          :class="menuOpen && 'opacity-0'"
+        />
+        <span
+          class="block h-[1.5px] w-5 bg-[var(--ink)] transition"
+          :class="menuOpen && '-translate-y-[7px] -rotate-45'"
+        />
+      </button>
     </div>
 
-    <div
-      v-if="menuOpen"
-      class="border-t border-[var(--line)] bg-white lg:hidden"
-    >
-      <nav class="container-wide flex flex-col gap-1 py-5">
+    <div v-if="menuOpen" class="border-t border-[var(--line)] bg-[var(--paper)] lg:hidden">
+      <nav class="flex flex-col">
         <NuxtLink
           v-for="link in links"
           :key="link.to"
           :to="link.to"
-          class="py-3 text-[13px] font-semibold uppercase tracking-[0.16em] text-[var(--heading)]"
+          class="border-b border-[var(--line)] px-7 py-4 text-[14px] tracking-[0.1em] text-[var(--ink)]"
         >
           {{ link.label }}
-        </NuxtLink>
-        <NuxtLink :to="localePath('/packages')" class="btn-primary mt-3 w-full">
-          {{ t('nav.findTours') }}
         </NuxtLink>
       </nav>
     </div>

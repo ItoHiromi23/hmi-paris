@@ -1,14 +1,15 @@
 {
   "meta": {
-    "title": "HMI Paris — パリ観光・専用車・空港送迎（日本語サポート）",
-    "description": "パリ在住日本人スタッフによるプライベートツアー、専用車ガイド、空港送迎、通訳同行、オーダーメイド手配。"
+    "title": "トップ｜HMI PARIS",
+    "description": "パリ発の日本語 旅行・コンシェルジュサービス HMI PARIS。観光ツアー、専用車＆ガイド、通訳・アテンド。"
   },
   "nav": {
+    "home": "トップ",
     "tours": "ツアー",
-    "events": "特別イベント",
+    "events": "凱旋門賞 2026",
     "styles": "サービス",
     "why": "選ばれる理由",
-    "about": "会社概要",
+    "about": "会社案内",
     "contact": "お問い合わせ",
     "findTours": "ツアーを探す",
     "toggleMenu": "メニューを開く"
@@ -22,23 +23,30 @@
     "findTours": "ツアーを探す",
     "travelStyles": "旅行スタイル",
     "allTours": "すべてのツアー",
-    "heroEyebrow": "HMI Paris ・ 日本語サポート",
-    "heroTitle": "どんな場面でも、日本語で安心を。",
-    "heroSubtitle": "観光ツアー、専用車、通訳同行、空港送迎まで。パリ在住の日本人スタッフが、あなたの滞在を支えます。"
+    "heroEyebrow": "Bonjour, et bienvenue.",
+    "heroTitle": "パリでの時間に、\n日本のおもてなしを。",
+    "heroLatin": "HMI Paris — Concierge & Travel Guide, in Japanese",
+    "heroSubtitle": "観光ツアーから専用車まで。パリに精通した日本語スタッフが、お客様一人ひとりの滞在に寄り添います。",
+    "ctaPrivate": "プライベートサービス",
+    "ctaGroup": "グループツアー"
   },
   "omotenashi": {
-    "aria": "おもてなしのご案内",
+    "aria": "ごあいさつ",
     "welcome": "いらっしゃいませ",
-    "message": "パリ在住の日本人スタッフが、心を込めてお迎えします",
+    "eyebrow": "ごあいさつ",
+    "title": "はじめてのパリも、何度目かのパリも。",
+    "vertical": "言葉の不安を、\n旅の自由に。",
+    "message": "HMI Paris は、現地に暮らす日本語スタッフが、移動・観光・ビジネスのあらゆる場面をサポートする、パリ発の旅行・コンシェルジュサービスです。言葉の不安をなくし、安心して「自分だけのパリ」を楽しんでいただくこと。快適で上質な旅行体験をお届けします。",
     "tags": "日本語対応 ・ 安心サポート ・ おもてなし"
   },
   "destinations": {
-    "eyebrow": "人気のエリア",
-    "title": "パリの名所を、エリアごとに",
+    "eyebrow": "人気の行き先",
+    "title": "パリから、忘れられない一日へ。",
+    "latin": "Popular Destinations",
     "allTours": "すべてのツアー →"
   },
   "events": {
-    "eyebrow": "特別なお知らせ",
+    "eyebrow": "季節限定・特別イベント",
     "title": "メインイベント",
     "intro": "季節限定の特別催事を、日本語サポート付きでご案内します。内容は随時更新されます。",
     "all": "すべてのイベント",
@@ -55,7 +63,12 @@
     "askContact": "お問い合わせください",
     "format": "形態",
     "categoryFallback": "季節限定・特別イベント",
-    "raceBannerLive": "開催告知"
+    "raceBannerLive": "季節限定"
+  },
+  "news": {
+    "eyebrow": "お知らせ",
+    "title": "新着情報",
+    "latin": "News"
   },
   "packages": {
     "eyebrow": "ツアー一覧",
@@ -98,39 +111,45 @@
     }
   },
   "styles": {
+    "eyebrow": "サービス",
+    "title": "パリ滞在を支える、4つのサービス",
+    "latin": "Our Services",
     "vertical": "サービス",
     "intro": "日帰りツアー、専用車＆ガイド、空港送迎、通訳同行、オーダーメイドからお選びください。",
     "cta": "詳しく相談する"
   },
   "why": {
-    "cta": "HMI Parisについて"
+    "cta": "HMI Parisについて",
+    "latin": "Why HMI Paris"
   },
   "footer": {
     "services": "サービス",
-    "dayTours": "観光ツアー",
-    "carGuide": "専用車＆ガイド",
+    "dayTours": "パリ発 観光ツアー",
+    "carGuide": "専用車 ＆ 日本語ガイド",
+    "interpret": "通訳・アテンド",
     "airport": "空港送迎",
     "tourList": "ツアー一覧",
     "specialEvents": "特別イベント",
     "company": "会社情報",
-    "about": "会社概要",
+    "about": "会社案内",
     "contact": "お問い合わせ",
     "privacy": "プライバシーポリシー",
     "cookies": "クッキーポリシー",
     "legal": "特定商取引・サイト表記",
     "email": "メール",
-    "rights": "© {year} HMI Paris. 無断転載を禁じます。",
+    "rights": "© {year} HMI PARIS — Concierge & Travel in Paris",
+    "photoCredit": "Photos : Unsplash（フリー素材・差し替え可）",
     "tagline": "心を込めたおもてなし ・ パリ在住日本人スタッフ",
-    "blurb": "観光ツアー、専用車サービスから通訳同行・空港送迎まで。パリ在住の日本人スタッフが、滞在全体を丁寧にサポートします。"
+    "blurb": "観光ツアー・専用車・通訳アテンドまで。パリに暮らす日本語スタッフが、お客様の滞在に寄り添います。"
   },
   "about": {
-    "title": "会社概要",
-    "eyebrow": "HMI Parisについて",
-    "hero": "パリでの滞在を、日本語で安心してお過ごしいただけるようサポートします。",
-    "sectionEyebrow": "私たちについて",
-    "sectionTitle": "日本人旅行者のためのパリ・スタジオ",
-    "p1": "HMI Parisは、安心してパリを楽しみたい方のためのサポートデスクです。パリ在住の日本人スタッフが、観光ツアー、専用車、空港送迎、通訳同行、オーダーメイド手配を行います。",
-    "p2": "英語がStrapiの原文（ソース）で、日本語は同一エントリの翻訳です。文言はフロントを触らずにStrapiから編集できます。",
+    "title": "会社案内",
+    "eyebrow": "À propos",
+    "hero": "About HMI Paris",
+    "sectionEyebrow": "HMI Paris について",
+    "sectionTitle": "パリで暮らすからこそ、ご案内できる旅を。",
+    "p1": "パリを拠点に、パリ市内はもちろん、モンサンミッシェルやヴェルサイユをはじめとするフランス各地へのプライベートツアー・専用車サービスをご提供しています。",
+    "p2": "柔軟なスケジュール調整はもちろん、ご興味やペースに合わせたプランを、現地で暮らすからこその視点でコーディネートします。",
     "p3": "ご連絡は"
   },
   "contact": {
@@ -152,9 +171,9 @@
     "submit": "送信する",
     "sending": "送信中…",
     "error": "送信に失敗しました。もう一度お試しいただくか、直接メールでご連絡ください。",
-    "ctaTitle": "パリ滞在のご相談、お気軽にどうぞ。",
-    "ctaSubtitle": "お見積り・ご相談は無料です。日本語または英語でご連絡ください。",
-    "ctaButton": "お問い合わせ",
+    "ctaTitle": "パリ滞在のご相談は、お気軽に。",
+    "ctaSubtitle": "お見積り・ご相談はすべて無料です。日本語でお問い合わせください。",
+    "ctaButton": "お問い合わせはこちら",
     "reservationEyebrow": "ご予約",
     "reservationTitle": "特別な一日を、パリで。",
     "reservationSubtitle": "日程やテーマが未定でも、お気軽にご相談ください。",

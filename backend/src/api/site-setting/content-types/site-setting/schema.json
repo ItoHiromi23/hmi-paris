@@ -153,6 +153,78 @@
     "notesTitle": {
       "type": "string",
       "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "aboutEyebrow": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "aboutTitle": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "aboutLatin": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "aboutHeroImageUrl": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": false } }
+    },
+    "aboutPhiloBefore": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "aboutPhiloAccent": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "aboutPhiloAfter": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "aboutPhiloLine2": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "aboutSectionEyebrow": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "aboutSectionTitle": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "aboutP1": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "aboutP2": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "aboutP3": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "aboutProfileEyebrow": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "aboutProfileTitle": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "aboutCtaTitle": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "aboutCtaSubtitle": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "aboutCtaButton": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
     }
   }
 }

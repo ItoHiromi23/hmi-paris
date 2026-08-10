@@ -1,5 +1,6 @@
 import type { Core } from '@strapi/strapi'
 import {
+  SEED_ABOUT_PROFILES,
   SEED_CANCEL,
   SEED_EVENTS,
   SEED_FEES,
@@ -22,6 +23,7 @@ const UID = {
   fee: 'api::fee-tier.fee-tier',
   news: 'api::news-item.news-item',
   tourDetail: 'api::tour-detail.tour-detail',
+  aboutProfile: 'api::about-profile.about-profile',
   cancel: 'api::cancellation-rule.cancellation-rule',
   note: 'api::site-note.site-note',
   settings: 'api::site-setting.site-setting',
@@ -36,6 +38,7 @@ const EDITORIAL_UIDS = [
   UID.fee,
   UID.news,
   UID.tourDetail,
+  UID.aboutProfile,
   UID.cancel,
   UID.note,
   UID.settings,
@@ -56,6 +59,8 @@ const PUBLIC_ACTIONS = [
   `${UID.news}.findOne`,
   `${UID.tourDetail}.find`,
   `${UID.tourDetail}.findOne`,
+  `${UID.aboutProfile}.find`,
+  `${UID.aboutProfile}.findOne`,
   `${UID.cancel}.find`,
   `${UID.cancel}.findOne`,
   `${UID.note}.find`,
@@ -360,6 +365,26 @@ async function seedEvents(strapi: Core.Strapi, force: boolean) {
   if (!force) {
     const count = await strapi.documents(UID.event).count({ locale: 'en' })
     if (count > 0) {
+      // Backfill Horse Page detail fields when missing on existing Arc event
+      for (const event of SEED_EVENTS) {
+        const { en, ja, slug, ...shared } = event
+        if (!('aboutTitle' in en) || !en.aboutTitle) continue
+        const existing = await strapi.documents(UID.event).findFirst({
+          locale: 'en',
+          filters: { slug: { $eq: slug } },
+        })
+        const aboutTitle = String((existing as { aboutTitle?: string } | null)?.aboutTitle || '')
+        if (!existing?.documentId || aboutTitle.trim()) continue
+        await upsertLocalized(
+          strapi,
+          UID.event,
+          existing.documentId,
+          { ...shared, slug, inclusions: [...en.inclusions] },
+          { ...en, inclusions: [...en.inclusions] },
+          { ...ja, inclusions: [...ja.inclusions] },
+        )
+        strapi.log.info(`Backfilled event detail fields → ${slug}`)
+      }
       strapi.log.info(`Skip seed (${count} existing) → ${UID.event}`)
       return
     }
@@ -428,6 +453,30 @@ async function seedSettings(strapi: Core.Strapi, force: boolean) {
   const existingEn = await strapi.documents(UID.settings).findFirst({ locale: 'en' })
   const existingJa = await strapi.documents(UID.settings).findFirst({ locale: 'ja' })
 
+  const aboutFields = (locale: 'en' | 'ja') => {
+    const copy = locale === 'en' ? SEED_SETTINGS_EN : SEED_SETTINGS_JA
+    return {
+      aboutHeroImageUrl: SEED_SETTINGS_SHARED.aboutHeroImageUrl,
+      aboutEyebrow: copy.aboutEyebrow,
+      aboutTitle: copy.aboutTitle,
+      aboutLatin: copy.aboutLatin,
+      aboutPhiloBefore: copy.aboutPhiloBefore,
+      aboutPhiloAccent: copy.aboutPhiloAccent,
+      aboutPhiloAfter: copy.aboutPhiloAfter,
+      aboutPhiloLine2: copy.aboutPhiloLine2,
+      aboutSectionEyebrow: copy.aboutSectionEyebrow,
+      aboutSectionTitle: copy.aboutSectionTitle,
+      aboutP1: copy.aboutP1,
+      aboutP2: copy.aboutP2,
+      aboutP3: copy.aboutP3,
+      aboutProfileEyebrow: copy.aboutProfileEyebrow,
+      aboutProfileTitle: copy.aboutProfileTitle,
+      aboutCtaTitle: copy.aboutCtaTitle,
+      aboutCtaSubtitle: copy.aboutCtaSubtitle,
+      aboutCtaButton: copy.aboutCtaButton,
+    }
+  }
+
   if (!existingEn?.documentId) {
     await upsertLocalized(
       strapi,
@@ -466,6 +515,18 @@ async function seedSettings(strapi: Core.Strapi, force: boolean) {
     strapi.log.info('Repaired polluted English site settings (single type)')
   }
 
+  // Backfill about-page fields when missing (non-destructive)
+  const enAboutTitle = String((existingEn as { aboutTitle?: string }).aboutTitle || '')
+  if (!enAboutTitle.trim()) {
+    await strapi.documents(UID.settings).update({
+      documentId: existingEn.documentId,
+      locale: 'en',
+      data: aboutFields('en'),
+      status: 'published',
+    })
+    strapi.log.info('Backfilled about fields → site settings (EN)')
+  }
+
   // Single type: keep editor EN; repair JA when missing or polluted by bad auto-translate
   const jaTitle = String((existingJa as { heroTitle?: string } | null)?.heroTitle || '')
   const needsCuratedJa = !existingJa || !HAS_JP.test(jaTitle) || jaTitle.includes('123')
@@ -479,7 +540,18 @@ async function seedSettings(strapi: Core.Strapi, force: boolean) {
     })
     strapi.log.info('Applied curated Japanese translations → site settings (single type)')
   } else {
-    strapi.log.info('Skip seed (settings EN + JA ok) → site settings')
+    const jaAboutTitle = String((existingJa as { aboutTitle?: string } | null)?.aboutTitle || '')
+    if (!jaAboutTitle.trim()) {
+      await strapi.documents(UID.settings).update({
+        documentId: existingEn.documentId,
+        locale: 'ja',
+        data: aboutFields('ja'),
+        status: 'published',
+      })
+      strapi.log.info('Backfilled about fields → site settings (JA)')
+    } else {
+      strapi.log.info('Skip seed (settings EN + JA ok) → site settings')
+    }
   }
 }
 
@@ -528,6 +600,7 @@ export default {
     await seedOrderedCollection(strapi, UID.fee, [...SEED_FEES], orderedOpts)
     await seedOrderedCollection(strapi, UID.news, [...SEED_NEWS], orderedOpts)
     await seedOrderedCollection(strapi, UID.tourDetail, [...SEED_TOUR_DETAILS], orderedOpts)
+    await seedOrderedCollection(strapi, UID.aboutProfile, [...SEED_ABOUT_PROFILES], orderedOpts)
     await seedOrderedCollection(strapi, UID.cancel, [...SEED_CANCEL], orderedOpts)
 
     // Repair incomplete site-notes (older seed collapsed rows that share sortOrder)

@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "about_profiles",
+  "info": {
+    "singularName": "about-profile",
+    "pluralName": "about-profiles",
+    "displayName": "About Profile",
+    "description": "Company profile table rows on the about page"
+  },
+  "options": { "draftAndPublish": true },
+  "pluginOptions": {
+    "i18n": { "localized": true }
+  },
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "value": {
+      "type": "text",
+      "required": true,
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "isEmail": {
+      "type": "boolean",
+      "default": false,
+      "pluginOptions": { "i18n": { "localized": false } }
+    },
+    "sortOrder": {
+      "type": "integer",
+      "default": 0,
+      "pluginOptions": { "i18n": { "localized": false } }
+    }
+  }
+}

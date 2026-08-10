@@ -1,36 +1,20 @@
 <script setup lang="ts">
-const { cms, cmsLocale, sync, load } = useCmsBundle()
-const { locale } = useI18n()
+const { cms, sync } = useCmsBundle()
 const route = useRoute()
-const localePath = useLocalePath()
 
 await sync()
-
-watch(
-  () => locale.value,
-  async (code, prev) => {
-    if (code === prev) return
-    if (cmsLocale.value !== code) {
-      await load(code)
-    }
-  },
-)
-
 provide('cms', cms)
 
-const isHome = computed(() => {
-  const home = localePath('/')
-  return route.path === home || route.path === `${home}/`
-})
+const isHome = computed(() => route.path === '/' || route.path === '')
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col">
+  <div class="flex min-h-screen flex-col bg-[var(--paper)]">
     <div class="fixed inset-x-0 top-0 z-50 flex flex-col">
       <EventRaceBanner v-if="isHome" />
       <SiteHeader embedded />
     </div>
-    <main class="flex-1">
+    <main class="flex-1" :class="isHome ? 'pt-[calc(74px+2.75rem)]' : 'pt-[74px]'">
       <slot />
     </main>
     <SiteFooter />

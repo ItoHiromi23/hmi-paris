@@ -33,9 +33,9 @@ if (isProd) {
     'max-age=63072000; includeSubDomains; preload'
   securityHeaders['Content-Security-Policy'] = [
     "default-src 'self'",
-    "img-src 'self' data: blob:",
-    "style-src 'self' 'unsafe-inline'",
-    "font-src 'self' data:",
+    "img-src 'self' data: blob: https:",
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    "font-src 'self' data: https://fonts.gstatic.com",
     "script-src 'self' 'unsafe-inline'",
     `connect-src 'self' ${strapiUrl} https:`,
     "frame-ancestors 'self'",
@@ -51,28 +51,13 @@ export default defineNuxtConfig({
   devtools: { enabled: !isProd },
   modules: ['@nuxtjs/tailwindcss', '@nuxt/image', '@nuxtjs/i18n'],
   i18n: {
-    locales: [
-      { code: 'en', language: 'en', name: 'English', file: 'en.json' },
-      { code: 'ja', language: 'ja', name: '日本語', file: 'ja.json' },
-    ],
-    defaultLocale: 'en',
+    locales: [{ code: 'ja', language: 'ja', name: '日本語', file: 'ja.json' }],
+    defaultLocale: 'ja',
     langDir: 'locales',
-    strategy: 'prefix_except_default',
-    detectBrowserLanguage: {
-      useCookie: true,
-      cookieKey: 'hmi_locale',
-      redirectOn: 'root',
-      fallbackLocale: 'en',
-    },
+    strategy: 'no_prefix',
+    detectBrowserLanguage: false,
   },
-  css: [
-    // Subsetted unicode-range files (not full japanese-*.css ~1MB each)
-    '@fontsource/noto-sans-jp/400.css',
-    '@fontsource/noto-serif-jp/400.css',
-    '@fontsource/outfit/latin-400.css',
-    '@fontsource/outfit/latin-600.css',
-    '~/assets/css/main.css',
-  ],
+  css: ['~/assets/css/main.css'],
   image: {
     domains: imageDomains,
     format: ['webp', 'avif'],
@@ -87,20 +72,26 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: 'HMI Paris — Paris tours, private car & airport transfer',
-      htmlAttrs: { lang: 'en' },
+      title: 'トップ｜HMI PARIS',
+      htmlAttrs: { lang: 'ja' },
       meta: [
         {
           name: 'description',
           content:
-            'Private Paris tours, chauffeured guides, airport transfers, interpreting and custom arrangements with English & Japanese support.',
+            'パリ発の日本語 旅行・コンシェルジュサービス HMI PARIS。観光ツアー、専用車＆ガイド、通訳・アテンド。',
         },
-        { name: 'theme-color', content: '#0f766e' },
+        { name: 'theme-color', content: '#15223b' },
         { property: 'og:site_name', content: 'HMI Paris' },
         { property: 'og:type', content: 'website' },
         { name: 'robots', content: 'index, follow' },
       ],
       link: [
+        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Shippori+Mincho+B1:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap',
+        },
         { rel: 'agent', href: '/agents.txt' },
         { rel: 'llms', href: '/llms.txt' },
         { rel: 'llms-full', href: '/llms-full.txt' },

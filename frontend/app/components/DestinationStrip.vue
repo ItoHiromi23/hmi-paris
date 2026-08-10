@@ -1,85 +1,38 @@
 <script setup lang="ts">
-const { t, locale } = useI18n()
-const localePath = useLocalePath()
-const { fetchPackages } = useTourPackages()
-const { data: packages } = await useLocaleAsyncData('dest-packages', (code) => fetchPackages(code))
-
-const destinations = computed(() => {
-  const seen = new Set<string>()
-  const rows: Array<{
-    name: string
-    tagline: string
-    href: string
-    image: string
-  }> = []
-
-  for (const pkg of packages.value || []) {
-    const name = pkg.destination || pkg.title
-    if (!name || seen.has(name)) continue
-    seen.add(name)
-    rows.push({
-      name,
-      tagline: pkg.summary || pkg.region || '',
-      href: localePath(`/packages/${pkg.slug}`),
-      image: pkg.heroImageUrl || '/images/paris-placeholder.svg',
-    })
-  }
-
-  return rows
-})
-
-const count = computed(() => destinations.value.length)
-
-/** Desktop grid only — mobile/tablet use a horizontal snap scroll. */
-const desktopGridClass = computed(() => {
-  if (count.value <= 1) return 'lg:mx-auto lg:max-w-md lg:grid-cols-1'
-  if (count.value === 2) return 'lg:mx-auto lg:max-w-4xl lg:grid-cols-2'
-  return 'lg:grid-cols-3'
-})
+import { homeContent as c } from '~/data/homeContent'
 </script>
 
 <template>
-  <section v-if="destinations.length" class="py-16 sm:py-20">
-    <div class="container-wide">
-      <div class="reveal flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <p class="section-label">{{ t('destinations.eyebrow') }}</p>
-          <h2 class="font-display mt-3 text-3xl text-[var(--heading)] sm:text-5xl">
-            {{ t('destinations.title') }}
-          </h2>
-        </div>
-        <NuxtLink
-          :to="localePath('/packages')"
-          class="text-[12px] font-semibold uppercase tracking-[0.18em] text-[var(--teal)] hover:text-[var(--heading)]"
-        >
-          {{ t('destinations.allTours') }}
-        </NuxtLink>
-      </div>
+  <section class="bg-[var(--paper)] py-[88px]">
+    <div class="wrap">
+      <p class="sec-eyebrow">{{ c.destinations.eyebrow }}</p>
+      <h2 class="sec-title mt-2.5">{{ c.destinations.title }}</h2>
+      <p class="sec-latin mt-2 mb-[38px]">{{ c.destinations.latin }}</p>
 
-      <div
-        class="reveal snap-x-row mt-10 flex gap-4 overflow-x-auto pb-3 [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-5 [&::-webkit-scrollbar]:hidden lg:grid lg:gap-5 lg:overflow-visible lg:pb-0"
-        :class="desktopGridClass"
-      >
+      <div class="grid gap-[22px] sm:grid-cols-2 lg:grid-cols-3">
         <NuxtLink
-          v-for="dest in destinations"
+          v-for="dest in c.destinations.items"
           :key="dest.name"
-          :to="dest.href"
-          class="group relative w-[min(78vw,20rem)] shrink-0 overflow-hidden rounded-[1.25rem] shadow-md sm:w-[min(52vw,22rem)] lg:w-auto lg:max-w-none lg:shrink"
+          to="/contact"
+          class="group relative block aspect-[3/4] overflow-hidden rounded-[2px] bg-[var(--ink)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brass-2)] max-md:aspect-[16/10]"
         >
-          <div class="relative aspect-[4/5]">
-            <img
-              :src="optimizeImageUrl(dest.image, 900, 68)"
-              :alt="dest.name"
-              class="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-              loading="lazy"
-            />
-            <div
-              class="absolute inset-0 bg-gradient-to-t from-[var(--void)]/80 via-[var(--void)]/20 to-transparent"
-            />
-            <div class="absolute inset-x-0 bottom-0 p-6">
-              <h3 class="font-display text-3xl text-white">{{ dest.name }}</h3>
-              <p class="mt-2 line-clamp-2 text-sm text-white/85">{{ dest.tagline }}</p>
-            </div>
+          <img
+            :src="dest.image"
+            :alt="dest.name"
+            class="h-full w-full object-cover transition duration-700 ease-[cubic-bezier(0.2,0.6,0.2,1)] group-hover:scale-[1.07]"
+            loading="lazy"
+          />
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-[rgba(11,17,30,0.86)] via-[rgba(11,17,30,0.08)] via-[58%] to-transparent"
+          />
+          <div class="absolute inset-x-0 bottom-0 z-[2] p-6 text-[#fbf7ee] sm:px-6 sm:pb-7">
+            <p class="font-serif-latin text-[11px] uppercase tracking-[0.18em] text-[var(--brass-2)]">
+              {{ dest.en }}
+            </p>
+            <h3 class="mt-1.5 font-display text-[22px] font-bold tracking-[0.03em]">
+              {{ dest.name }}
+            </h3>
+            <p class="mt-2 text-[13px] leading-[1.7] text-[#dad5c9]">{{ dest.text }}</p>
           </div>
         </NuxtLink>
       </div>

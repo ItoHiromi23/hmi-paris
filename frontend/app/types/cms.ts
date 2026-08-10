@@ -53,6 +53,14 @@ export interface CmsSiteNote {
   sortOrder: number
 }
 
+export interface CmsAboutProfile {
+  id: string | number
+  label: string
+  value: string
+  isEmail: boolean
+  sortOrder: number
+}
+
 export interface CmsSiteSettings {
   brandName: string
   brandTagline: string
@@ -89,6 +97,24 @@ export interface CmsSiteSettings {
   cancellationTitle: string
   notesEyebrow: string
   notesTitle: string
+  aboutEyebrow: string
+  aboutTitle: string
+  aboutLatin: string
+  aboutHeroImageUrl: string
+  aboutPhiloBefore: string
+  aboutPhiloAccent: string
+  aboutPhiloAfter: string
+  aboutPhiloLine2: string
+  aboutSectionEyebrow: string
+  aboutSectionTitle: string
+  aboutP1: string
+  aboutP2: string
+  aboutP3: string
+  aboutProfileEyebrow: string
+  aboutProfileTitle: string
+  aboutCtaTitle: string
+  aboutCtaSubtitle: string
+  aboutCtaButton: string
 }
 
 export interface CmsBundle {
@@ -98,6 +124,7 @@ export interface CmsBundle {
   fees: CmsFeeTier[]
   news: CmsNewsItem[]
   tourDetails: CmsTourDetail[]
+  aboutProfiles: CmsAboutProfile[]
   cancellation: CmsCancellationRule[]
   feeNotes: string[]
   importantNotes: string[]

@@ -47,8 +47,217 @@
       "type": "richtext",
       "pluginOptions": { "i18n": { "localized": true } }
     },
+    "subLatin": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "edition": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "guideLabel": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "navLinks": {
+      "type": "json",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "aboutKicker": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "aboutTitle": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "aboutLead": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "aboutBody": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "aboutImageCaption": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "aboutImageUrl": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": false } }
+    },
+    "aboutImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"],
+      "pluginOptions": { "i18n": { "localized": false } }
+    },
+    "highlightsKicker": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "highlightsTitle": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "highlights": {
+      "type": "json",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "highlightsImageCaption": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "highlightsImageUrl": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": false } }
+    },
+    "highlightsImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"],
+      "pluginOptions": { "i18n": { "localized": false } }
+    },
+    "tourKicker": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "tourTitle": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
     "inclusions": {
       "type": "json",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "exclusions": {
+      "type": "json",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "exclusionsTitle": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "tourNote": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "flowKicker": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "flowTitle": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "schedule": {
+      "type": "json",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "meetingTitle": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "meetingBody": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "meetingCaveat": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "meetingImageCaption": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "meetingImageUrl": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": false } }
+    },
+    "meetingImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"],
+      "pluginOptions": { "i18n": { "localized": false } }
+    },
+    "flowNote": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "detailsKicker": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "detailsTitle": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "detailRows": {
+      "type": "json",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "cancellationTitle": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "cancellationHeaderWhen": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "cancellationHeaderFee": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "cancellationRows": {
+      "type": "json",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "detailsNote": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "bookingKicker": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "bookingTitle": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "bookingSteps": {
+      "type": "json",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "notesKicker": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "notesTitle": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "notesList": {
+      "type": "json",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "ctaKicker": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "ctaTitle": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "ctaButton": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "ctaScarce": {
+      "type": "string",
       "pluginOptions": { "i18n": { "localized": true } }
     },
     "heroImageUrl": {

@@ -68,13 +68,8 @@ if (props.priority && !isLocalAsset.value) {
     />
 
     <div
-      class="relative container-wide flex h-full min-h-[inherit] flex-col pb-16 sm:pb-20"
+      class="relative container-wide flex h-full min-h-[inherit] flex-col justify-end pb-16 pt-16 sm:pb-20 sm:pt-20"
       :class="[
-        bannerOffset
-          ? 'justify-end pt-[9.5rem] sm:pt-[10.5rem]'
-          : centered
-            ? 'items-center justify-center text-center pt-28 sm:pt-32'
-            : 'justify-end pt-28 sm:pt-32',
         centered && 'items-center text-center',
       ]"
     >

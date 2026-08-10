@@ -1,31 +1,26 @@
 <script setup lang="ts">
-import type { CmsBundle } from '~/types/cms'
-
-const cms = inject<Ref<CmsBundle | null>>('cms', ref(null))
-
-const news = computed(() => cms.value?.news || [])
-const eyebrow = computed(() => cms.value?.settings.newsEyebrow || '')
-const title = computed(() => cms.value?.settings.newsTitle || '')
+import { homeContent as c } from '~/data/homeContent'
 </script>
 
 <template>
-  <section v-if="news.length" id="news" class="py-16 sm:py-20">
-    <div class="container-wide">
-      <div class="reveal flex flex-wrap items-end gap-4">
-        <h2 class="font-display text-4xl text-[var(--heading)] sm:text-5xl">{{ title }}</h2>
-        <p class="section-label mb-1.5">{{ eyebrow }}</p>
-      </div>
+  <section id="news" class="bg-[var(--paper)] py-[88px]">
+    <div class="wrap">
+      <p class="sec-eyebrow">{{ c.news.eyebrow }}</p>
+      <h2 class="sec-title mt-2.5">{{ c.news.title }}</h2>
+      <p class="sec-latin mt-2 mb-[38px]">{{ c.news.latin }}</p>
 
-      <ul class="reveal mt-10">
-        <li
-          v-for="item in news"
-          :key="item.id"
-          class="flex flex-col gap-2 border-t border-[var(--line)] py-6 sm:flex-row sm:items-baseline sm:gap-10"
+      <div class="max-w-[760px] border-t border-[var(--line)]">
+        <div
+          v-for="item in c.news.items"
+          :key="item.date"
+          class="flex flex-wrap items-baseline gap-7 border-b border-[var(--line)] px-1 py-5"
         >
-          <time class="font-display shrink-0 text-lg text-[var(--amber)]">{{ item.dateLabel }}</time>
-          <p class="text-[var(--warm-muted)]">{{ item.title }}</p>
-        </li>
-      </ul>
+          <time class="min-w-[96px] font-serif-latin text-[15px] tracking-[0.12em] text-[var(--brass)]">
+            {{ item.date }}
+          </time>
+          <p class="m-0 text-[15px] text-[#3a3a34]">{{ item.title }}</p>
+        </div>
+      </div>
     </div>
   </section>
 </template>

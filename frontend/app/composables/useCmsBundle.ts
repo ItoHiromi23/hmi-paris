@@ -1,41 +1,32 @@
 import type { CmsBundle } from '~/types/cms'
 
+/** Strapi content is authored in Japanese — always load `ja`. */
+const CMS_LOCALE = 'ja' as const
+
 /**
- * Shared CMS bundle for the active UI locale.
- * Language toggles call `load(code)` so hero copy swaps with the locale.
+ * Shared CMS bundle (Japanese Strapi content).
+ * UI locale toggle only affects i18n chrome, not CMS copy.
  */
 export function useCmsBundle() {
-  const { locale } = useI18n()
   const { fetchCms } = useCmsContent()
 
   const cms = useState<CmsBundle | null>('cms-active', () => null)
   const cmsLocale = useState<string | null>('cms-loaded-locale', () => null)
   const pending = useState('cms-pending', () => false)
-  /** heroImageUrl is non-localized in Strapi — keep last good URL across EN↔JA toggles. */
   const heroImageUrl = useState('cms-hero-image-url', () => '')
 
-  async function load(code: string) {
-    const target = code === 'ja' ? 'ja' : 'en'
+  async function load(_code?: string) {
     pending.value = true
     try {
-      const bundle = await fetchCms(target)
+      const bundle = await fetchCms(CMS_LOCALE)
       const nextHero = bundle.settings?.heroImageUrl?.trim() || ''
       if (nextHero) {
         heroImageUrl.value = nextHero
       } else if (heroImageUrl.value) {
-        // Secondary locale payloads sometimes omit shared fields — keep prior hero
         bundle.settings.heroImageUrl = heroImageUrl.value
-      } else if (target !== 'en') {
-        // Cold load of JA with empty shared field: pull from EN once
-        const en = await fetchCms('en')
-        const enHero = en.settings?.heroImageUrl?.trim() || ''
-        if (enHero) {
-          heroImageUrl.value = enHero
-          bundle.settings.heroImageUrl = enHero
-        }
       }
       cms.value = bundle
-      cmsLocale.value = target
+      cmsLocale.value = CMS_LOCALE
       return bundle
     } finally {
       pending.value = false
@@ -43,12 +34,12 @@ export function useCmsBundle() {
   }
 
   async function sync() {
-    if (cms.value && cmsLocale.value === locale.value) {
+    if (cms.value && cmsLocale.value === CMS_LOCALE) {
       const existing = cms.value.settings?.heroImageUrl?.trim()
       if (existing) heroImageUrl.value = existing
       return cms.value
     }
-    return load(locale.value)
+    return load(CMS_LOCALE)
   }
 
   return { cms, cmsLocale, pending, heroImageUrl, load, sync }
