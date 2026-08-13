@@ -1,10 +1,6 @@
 <script setup lang="ts">
 const { t } = useI18n()
-const { locale } = useI18n()
-const { fetchPackages } = useTourPackages()
-const { data: packages, pending } = await useLocaleAsyncData('all-packages', (code) =>
-  fetchPackages(code),
-)
+const { packages } = useTourPackages()
 
 useReveal()
 
@@ -30,8 +26,7 @@ useSeoMeta({
 
     <section class="py-16 sm:py-20">
       <div class="container-wide">
-        <p v-if="pending" class="text-[var(--muted-fg)]">{{ t('common.loading') }}</p>
-        <div v-else class="grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <PackageCard
             v-for="(pkg, index) in packages"
             :key="pkg.slug"

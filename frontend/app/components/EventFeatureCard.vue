@@ -40,9 +40,9 @@ const stickyTop = computed(() => {
               {{ event.category }}
             </p>
           </div>
-          <h3 class="font-display mt-3 text-2xl leading-snug text-[var(--event-navy)] sm:text-3xl lg:text-[2.1rem]">
+          <h2 class="font-display mt-3 text-2xl leading-snug text-[var(--event-navy)] sm:text-3xl lg:text-[2.1rem]">
             {{ event.title }}
-          </h3>
+          </h2>
           <p
             v-if="event.eventDate"
             class="mt-2 text-sm text-[var(--muted-fg)]"
@@ -94,6 +94,8 @@ const stickyTop = computed(() => {
         sizes="(max-width: 1024px) 100vw, min(1120px, 92vw)"
         :alt="event.title"
         class="event-feature__img absolute inset-0 h-full w-full max-lg:relative max-lg:inset-auto max-lg:h-auto max-lg:rounded-md max-lg:object-contain"
+        width="1600"
+        height="1067"
         loading="lazy"
         decoding="async"
       />

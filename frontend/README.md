@@ -1,75 +1,37 @@
-# Nuxt Minimal Starter
+# HMI Paris
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Static Nuxt site for HMI Paris. Pages are prerendered. The only live server endpoint is `POST /api/contact`, which sends enquiry mail via Resend.
 
 ## Setup
 
-Make sure to install dependencies:
-
 ```bash
-# npm
 npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
+cp .env.example .env
 ```
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
+## Development
 
 ```bash
-# npm
 npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
+
+Open `http://localhost:3000`.
 
 ## Production
 
-Build the application for production:
-
 ```bash
-# npm
 npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
+npm run start
 ```
 
-Locally preview production build:
+Prerendered HTML is generated at build time. Keep `RESEND_API_KEY`, `EMAIL_FROM`, and `CONTACT_TO` set so the contact form can deliver mail. Without `RESEND_API_KEY` the form still validates and accepts submissions locally; mail is skipped.
 
-```bash
-# npm
-npm run preview
+## Content
 
-# pnpm
-pnpm preview
+Copy lives in `app/data/` (`cms.ts`, `packages.ts`, `events.ts`). Edit those files and rebuild — there is no CMS.
 
-# yarn
-yarn preview
+## Agent discovery
 
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+- `/llms.txt`, `/llms-full.txt`, `/agents.txt`
+- `/catalog.json`
+- `/.well-known/agent-manifest.json`

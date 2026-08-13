@@ -3,12 +3,8 @@ const localePath = useLocalePath()
 const route = useRoute()
 const slug = computed(() => String(route.params.slug))
 
-const { fetchEventBySlug, formatJaDate } = useMainEvents()
-const { data: event } = await useLocaleAsyncData(
-  () => `event-${slug.value}`,
-  (code) => fetchEventBySlug(slug.value, code),
-  { watch: [slug] },
-)
+const { getEventBySlug, formatJaDate } = useMainEvents()
+const event = computed(() => getEventBySlug(slug.value))
 
 if (!event.value) {
   throw createError({ statusCode: 404, statusMessage: 'Event not found' })
@@ -150,7 +146,9 @@ useSeoMeta({
         <p v-for="(paragraph, i) in aboutParagraphs" :key="i">{{ paragraph }}</p>
         <figure v-if="event.aboutImageUrl">
           <img
-            :src="event.aboutImageUrl"
+            :src="optimizeImageUrl(event.aboutImageUrl, 1200, 70)"
+            :srcset="imageSrcSet(event.aboutImageUrl, [640, 900, 1200], 70)"
+            sizes="(max-width: 900px) 100vw, 720px"
             :alt="event.aboutImageCaption || event.aboutTitle"
             width="1400"
             height="1050"
@@ -181,7 +179,9 @@ useSeoMeta({
 
         <figure v-if="event.highlightsImageUrl">
           <img
-            :src="event.highlightsImageUrl"
+            :src="optimizeImageUrl(event.highlightsImageUrl, 1200, 70)"
+            :srcset="imageSrcSet(event.highlightsImageUrl, [640, 900, 1200], 70)"
+            sizes="(max-width: 900px) 100vw, 720px"
             :alt="event.highlightsImageCaption || event.highlightsTitle"
             width="1400"
             height="1050"
@@ -235,7 +235,9 @@ useSeoMeta({
         >
           <figure v-if="event.meetingImageUrl">
             <img
-              :src="event.meetingImageUrl"
+              :src="optimizeImageUrl(event.meetingImageUrl, 760, 70)"
+              :srcset="imageSrcSet(event.meetingImageUrl, [400, 760], 70)"
+              sizes="(max-width: 768px) 100vw, 380px"
               :alt="event.meetingImageCaption || event.meetingTitle"
               width="760"
               height="1013"

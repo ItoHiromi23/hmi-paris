@@ -1,8 +1,7 @@
 <script setup lang="ts">
-const { t, locale } = useI18n()
+const { t } = useI18n()
 const localePath = useLocalePath()
-const { fetchEvents, formatJaDate } = useMainEvents()
-const { data: events } = await useLocaleAsyncData('events-index', (code) => fetchEvents(code))
+const { events, formatJaDate } = useMainEvents()
 
 useReveal()
 

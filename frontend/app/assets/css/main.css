@@ -12,6 +12,7 @@
   --panel: #fffdf8;
   --brass: #a9854c;
   --brass-2: #c5a368;
+  --brass-text: #7a5e30;
   --text: #22231f;
   --muted: #6c6a60;
   --line: #dfd6c4;
@@ -25,7 +26,7 @@
   --surface-2: var(--paper-2);
   --surface-3: #e8e0d0;
   --line-strong: rgba(21, 34, 59, 0.18);
-  --teal: var(--brass);
+  --teal: var(--brass-text);
   --teal-bright: var(--brass-2);
   --sun: #a9854c;
   --sun-deep: #8a6c38;
@@ -35,7 +36,7 @@
   --muted-fg: var(--muted);
   --on-dark: #fbf7ee;
   --alert: #a9362d;
-  --amber: var(--brass);
+  --amber: var(--brass-text);
   --amber-bright: var(--brass-2);
   --amber-deep: var(--sun-deep);
   --copper: var(--sun-deep);
@@ -50,7 +51,7 @@
   --radius: 2px;
   --event-navy: var(--ink);
   --event-maroon: #6b2d3c;
-  --event-gold: var(--brass);
+  --event-gold: var(--brass-text);
   --event-cream: var(--panel);
   --serif: 'Cormorant Garamond', Georgia, serif;
   --mincho: 'Shippori Mincho B1', 'Noto Serif JP', Georgia, serif;
@@ -58,8 +59,10 @@
 }
 
 @layer base {
-  html {
-    scroll-behavior: smooth;
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
   }
 
   body {
@@ -141,7 +144,7 @@
   .sec-eyebrow {
     font-family: var(--serif);
     font-style: italic;
-    color: var(--brass);
+    color: var(--brass-text);
     font-size: 18px;
     letter-spacing: 0.04em;
   }
@@ -159,7 +162,7 @@
     font-family: var(--serif);
     letter-spacing: 0.26em;
     text-transform: uppercase;
-    color: var(--brass);
+    color: var(--brass-text);
     font-size: 12px;
   }
 

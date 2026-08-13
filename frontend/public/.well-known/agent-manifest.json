@@ -1,12 +1,13 @@
 {
   "schema_version": "0.1",
   "name": "HMI Paris",
-  "description": "Curated Paris tourist packages — Montmartre, Le Marais, Louvre, Versailles, Seine.",
+  "description": "Japanese-speaking Paris tours, private car, interpreting, and seasonal events.",
   "website": "https://hmiparis.fr",
-  "contact": "hello@hmiparis.fr",
+  "contact": "info@hmiparis.com",
   "policy": "/agents.txt",
   "llms": "/llms.txt",
   "llms_full": "/llms-full.txt",
+  "catalog": "/catalog.json",
   "sitemap": "/sitemap.xml",
   "capabilities": {
     "read_catalog": true,
@@ -23,8 +24,7 @@
     {
       "type": "catalog",
       "format": "json",
-      "url": "http://localhost:1337/api/tour-packages",
-      "notes": "Strapi public API when CMS is running"
+      "url": "/catalog.json"
     },
     {
       "type": "enquiry",
@@ -39,5 +39,17 @@
     { "slug": "versailles-royal-day", "url": "/packages/versailles-royal-day" },
     { "slug": "left-bank-literary-trail", "url": "/packages/left-bank-literary-trail" },
     { "slug": "seine-twilight-cruise", "url": "/packages/seine-twilight-cruise" }
+  ],
+  "destinations": [
+    { "slug": "mont-saint-michel", "url": "/destinations/mont-saint-michel" },
+    { "slug": "paris", "url": "/destinations/paris" },
+    { "slug": "champagne", "url": "/destinations/champagne" },
+    { "slug": "versailles", "url": "/destinations/versailles" },
+    { "slug": "auvers-sur-oise", "url": "/destinations/auvers-sur-oise" },
+    { "slug": "giverny", "url": "/destinations/giverny" }
+  ],
+  "events": [
+    { "slug": "arc-de-triomphe-2026", "url": "/events/arc-de-triomphe-2026" },
+    { "slug": "paris-christmas-lights-2026", "url": "/events/paris-christmas-lights-2026" }
   ]
 }

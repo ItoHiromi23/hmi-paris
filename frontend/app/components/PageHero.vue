@@ -20,16 +20,25 @@ const props = withDefaults(
 )
 
 const image = computed(() => props.image || '/images/paris-placeholder.svg')
-const isLocalAsset = computed(() => image.value.startsWith('/'))
-const src = computed(() => optimizeImageUrl(image.value, props.compact ? 1400 : 1800, 68))
+const skipOptimize = computed(
+  () => image.value.endsWith('.svg') || image.value.startsWith('data:'),
+)
+const src = computed(() =>
+  skipOptimize.value
+    ? image.value
+    : optimizeImageUrl(image.value, props.compact ? 1400 : 1800, 68),
+)
 const srcset = computed(() =>
-  isLocalAsset.value
+  skipOptimize.value
     ? ''
-    : imageSrcSet(image.value, props.compact ? [800, 1200, 1600] : [960, 1280, 1600, 2000]),
+    : imageSrcSet(
+        image.value,
+        props.compact ? [800, 1200, 1600] : [960, 1280, 1600, 2000],
+        68,
+      ),
 )
 
-// Preload only remote/optimized LCP images — skip local SVG placeholders
-if (props.priority && !isLocalAsset.value) {
+if (props.priority && !skipOptimize.value) {
   useHead({
     link: [
       {
@@ -39,6 +48,7 @@ if (props.priority && !isLocalAsset.value) {
         imageSrcset: srcset.value || undefined,
         imageSizes: '100vw',
         fetchpriority: 'high',
+        type: 'image/webp',
       },
     ],
   })

@@ -1,11 +1,41 @@
 <script setup lang="ts">
-import { homeContent as c } from '~/data/homeContent'
+import type { CmsBundle } from '~/types/cms'
 
 useReveal()
 
+const cms = inject<Ref<CmsBundle | null>>('cms', ref(null))
+const s = computed(() => cms.value?.settings)
+
+const heroImage = computed(() => s.value?.heroImageUrl?.trim() || '')
+const eyebrow = computed(() => s.value?.heroEyebrow?.trim() || '')
+const title = computed(() => s.value?.heroTitle?.trim() || '')
+const latin = computed(() => s.value?.heroLatin?.trim() || '')
+const lead = computed(() => s.value?.heroSubtitle?.trim() || '')
+const ctaPrimary = computed(() => s.value?.heroCtaPrimary?.trim() || '')
+const ctaSecondary = computed(() => s.value?.heroCtaSecondary?.trim() || '')
+const heroWidths = [640, 750, 960, 1280, 1600]
+const heroSrc = optSrc('hero', 960)
+const heroSrcset = optSrcSet('hero', heroWidths)
+const heroAvifSrc = optSrc('hero', 1280, 'avif')
+const heroAvifSrcset = optSrcSet('hero', heroWidths, 'avif')
+
+useHead({
+  link: [
+    {
+      rel: 'preload',
+      as: 'image',
+      href: heroAvifSrc,
+      imageSrcset: heroAvifSrcset,
+      imageSizes: '100vw',
+      fetchpriority: 'high',
+      type: 'image/avif',
+    },
+  ],
+})
+
 useSeoMeta({
-  title: c.meta.title,
-  description: c.meta.description,
+  title: () => s.value?.metaTitle?.trim() || '',
+  description: () => s.value?.metaDescription?.trim() || '',
   ogLocale: 'ja_JP',
 })
 </script>
@@ -13,18 +43,28 @@ useSeoMeta({
 <template>
   <div>
     <section
+      v-if="title || heroImage"
       class="relative flex min-h-[clamp(560px,82vh,780px)] items-center overflow-hidden bg-[var(--ink)] text-[var(--paper)]"
     >
-      <img
-        :src="c.hero.image"
-        :alt="`${c.hero.titleLine1}${c.hero.titleLine2}`"
-        class="absolute inset-0 h-full w-full object-cover"
-        width="1800"
-        height="1200"
-        loading="eager"
-        fetchpriority="high"
-        decoding="async"
-      />
+      <picture v-if="heroImage" class="contents">
+        <source
+          type="image/avif"
+          :srcset="heroAvifSrcset"
+          sizes="100vw"
+        />
+        <img
+          :src="heroSrc"
+          :srcset="heroSrcset"
+          sizes="100vw"
+          :alt="title"
+          class="absolute inset-0 h-full w-full object-cover"
+          width="1800"
+          height="1200"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </picture>
       <div
         class="absolute inset-0 bg-gradient-to-l from-[rgba(11,17,30,0.93)] via-[rgba(13,20,36,0.70)] to-[rgba(13,20,36,0.30)] max-md:bg-gradient-to-b max-md:from-[rgba(11,17,30,0.82)] max-md:to-[rgba(11,17,30,0.9)]"
       />
@@ -32,30 +72,39 @@ useSeoMeta({
       <div class="wrap relative grid w-full justify-items-end">
         <div class="max-w-[34em] py-14 text-right max-md:py-10 max-md:text-left">
           <p
+            v-if="eyebrow"
             class="fade-up d1 font-serif-latin text-[20px] italic tracking-[0.05em] text-[var(--brass-2)]"
           >
-            {{ c.hero.eyebrow }}
+            {{ eyebrow }}
           </p>
           <h1
-            class="fade-up d2 mt-[18px] font-display text-[clamp(28px,4.3vw,48px)] font-bold leading-[1.35] tracking-[0.04em] text-[#fbf7ee]"
+            v-if="title"
+            class="mt-[18px] whitespace-pre-line font-display text-[clamp(28px,4.3vw,48px)] font-bold leading-[1.35] tracking-[0.04em] text-[#fbf7ee]"
           >
-            {{ c.hero.titleLine1 }}<br />{{ c.hero.titleLine2 }}
+            {{ title }}
           </h1>
           <p
+            v-if="latin"
             class="fade-up d3 mt-6 font-serif-latin text-[17px] uppercase tracking-[0.22em] text-[#cdbd9a]"
           >
-            {{ c.hero.latin }}
+            {{ latin }}
           </p>
           <p
+            v-if="lead"
             class="fade-up d4 mt-6 max-w-[30em] text-[15.5px] text-[#dcd7cc] md:ml-auto"
           >
-            {{ c.hero.lead }}
+            {{ lead }}
           </p>
           <div
+            v-if="ctaPrimary || ctaSecondary"
             class="fade-up d5 mt-8 flex flex-wrap justify-end gap-4 max-md:justify-start"
           >
-            <NuxtLink to="/#services" class="btn-solid">{{ c.hero.ctaPrivate }}</NuxtLink>
-            <NuxtLink to="/contact" class="btn-ghost">{{ c.hero.ctaGroup }}</NuxtLink>
+            <NuxtLink v-if="ctaPrimary" to="/#services" class="btn-solid">{{
+              ctaPrimary
+            }}</NuxtLink>
+            <NuxtLink v-if="ctaSecondary" to="/contact" class="btn-ghost">{{
+              ctaSecondary
+            }}</NuxtLink>
           </div>
         </div>
       </div>

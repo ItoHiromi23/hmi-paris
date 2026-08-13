@@ -1,3 +1,4 @@
+import { getPackageBySlug } from '~/data/packages'
 import { sendContactEmail } from '../utils/contactEmail'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -49,37 +50,13 @@ function minAllowedDate(): string {
   return `${y}-${m}-${day}`
 }
 
-async function resolveTourRecipient(tourSlug: string): Promise<{
-  to: string
-  title: string
-} | null> {
-  const config = useRuntimeConfig()
-  const strapiUrl = String(config.public.strapiUrl || '')
-    .replace(/\/$/, '')
-    .replace('://localhost', '://127.0.0.1')
-  if (!strapiUrl || !tourSlug) return null
-
-  try {
-    const data = await $fetch<{
-      data: Array<{ title?: string; enquiryEmail?: string | null }>
-    }>(`${strapiUrl}/api/tour-packages`, {
-      query: {
-        locale: 'en',
-        'filters[slug][$eq]': tourSlug,
-        'fields[0]': 'title',
-        'fields[1]': 'enquiryEmail',
-        'pagination[pageSize]': 1,
-      },
-    })
-    const item = data?.data?.[0]
-    if (!item) return null
-    return {
-      to: String(item.enquiryEmail || '').trim(),
-      title: String(item.title || tourSlug).trim(),
-    }
-  } catch (err) {
-    console.error('[contact] Failed to resolve tour recipient', tourSlug, err)
-    return null
+function resolveTourRecipient(tourSlug: string): { to: string; title: string } | null {
+  if (!tourSlug) return null
+  const tour = getPackageBySlug(tourSlug)
+  if (!tour) return null
+  return {
+    to: String(tour.enquiryEmail || '').trim(),
+    title: String(tour.title || tourSlug).trim(),
   }
 }
 
@@ -147,7 +124,7 @@ export default defineEventHandler(async (event) => {
   let to = fallbackTo
   let tourTitle = ''
   if (tourSlug) {
-    const tour = await resolveTourRecipient(tourSlug)
+    const tour = resolveTourRecipient(tourSlug)
     if (!tour) {
       throw createError({ statusCode: 404, statusMessage: 'Tour not found' })
     }

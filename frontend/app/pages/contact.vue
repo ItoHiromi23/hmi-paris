@@ -30,7 +30,7 @@ useSeoMeta({
         <div class="reveal">
           <SectionHeading
             :eyebrow="t('contact.studio')"
-            :title="s?.contactEmail || 'info@hmiparis.com'"
+            :title="s?.contactEmail || ''"
           />
           <p class="mt-6 max-w-md text-[var(--muted-fg)] leading-relaxed">
             {{ t('contact.intro') }}

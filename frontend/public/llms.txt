@@ -1,32 +1,39 @@
 # HMI Paris
 
-> Curated Paris tourist packages — neighbourhood walks, iconic museums, and Seine evenings.
+> パリ発の日本語旅行・コンシェルジュサービス。観光ツアー、専用車＆ガイド、通訳・アテンド。
 
-HMI Paris is a travel studio focused exclusively on Paris experiences. Packages cover Montmartre, Le Marais, the Louvre, Versailles, the Left Bank, and the Seine. The public site is built with Nuxt; content is managed in Strapi.
+HMI Paris is a Paris-based travel studio. The public site is a static Nuxt app. The only dynamic endpoint is the contact form, which sends enquiry email.
 
 ## Discovery
 
-- [Agents policy](https://hmiparis.fr/agents.txt): What autonomous agents may do
-- [Full context](https://hmiparis.fr/llms-full.txt): Extended brand and catalog summary
-- [Sitemap](https://hmiparis.fr/sitemap.xml): Crawlable pages
-- [Tour packages API](http://localhost:1337/api/tour-packages): Strapi collection (when CMS is running)
+- [Agents policy](/agents.txt): What autonomous agents may do
+- [Full context](/llms-full.txt): Extended brand and catalog summary
+- [Catalog JSON](/catalog.json): Machine-readable packages and events
+- [Sitemap](/sitemap.xml): Crawlable pages
 
 ## Key pages
 
-- [Home](https://hmiparis.fr/): Brand story and featured Paris packages
-- [Packages](https://hmiparis.fr/packages): Full catalog of Paris experiences
-- [About](https://hmiparis.fr/about): Studio purpose and approach
-- [Contact](https://hmiparis.fr/contact): Enquire about a package
+- [Home](/): Brand story and featured Paris packages
+- [Packages](/packages): Full catalog of Paris experiences
+- [Events](/events): Seasonal tours including Arc de Triomphe 2026
+- [About](/about): Studio purpose and approach
+- [Contact](/contact): Enquire about a package or event
+- [Mont-Saint-Michel](/destinations/mont-saint-michel): モンサンミッシェル & ノルマンディー田舎村 一日ツアー
+- [パリ街歩きツアー](/destinations/paris): 屋根のない美術館を、日本語で歩く。マレ、モンマルトル、王道コース、よくばり1日コース。190€〜
+- [シャンパーニュ地方](/destinations/champagne): 白亜のカーヴをめぐる、泡の旅。エペルネー／オーヴィレール、またはランス。1,620€〜
+- [ヴェルサイユ宮殿](/destinations/versailles): 華麗な歴史が詰まったフランス黄金時代の宮殿。宮殿または離宮 740€〜／宮殿と離宮 1,150€〜
+- [ゴッホの家](/destinations/auvers-sur-oise): オーヴェル・シュル・オワーズ。専用車でめぐるゴッホ最後の70日。940€〜
+- [ジヴェルニー](/destinations/giverny): セーヌが結ぶ、二つのモネ。ジヴェルニー＆ヴェトゥイユ。専用車でめぐるモネの旅。940€〜
 
 ## Featured packages
 
-- [Classic Paris Essentials](https://hmiparis.fr/packages/classic-paris-essentials): Louvre & Île de la Cité (3 days)
-- [Montmartre After Dark](https://hmiparis.fr/packages/montmartre-after-dark): Sacré-Cœur sunset evening
-- [Le Marais Private Walk](https://hmiparis.fr/packages/le-marais-private-walk): Courtyards and Place des Vosges
-- [Versailles Royal Day](https://hmiparis.fr/packages/versailles-royal-day): Palace and gardens day trip
-- [Left Bank Literary Trail](https://hmiparis.fr/packages/left-bank-literary-trail): Saint-Germain & Luxembourg
-- [Seine Twilight Cruise](https://hmiparis.fr/packages/seine-twilight-cruise): Evening river cruise
+- [クラシック・パリ入門](/packages/classic-paris-essentials): ルーヴル＆シテ島（3日間）
+- [モンマルトル・アフターダーク](/packages/montmartre-after-dark): サクレ・クール夕景
+- [マレ地区プライベートウォーク](/packages/le-marais-private-walk): ヴォージュ広場と中庭
+- [ヴェルサイユ・ロイヤルデー](/packages/versailles-royal-day): 宮殿・庭園日帰り
+- [左岸文学散策](/packages/left-bank-literary-trail): サン＝ジェルマン＆リュクサンブール
+- [セーヌ夕暮れクルーズ](/packages/seine-twilight-cruise): 夜の川クルーズ
 
 ## Optional
 
-- [Contact email](mailto:hello@hmiparis.fr)
+- [Contact email](mailto:info@hmiparis.com)

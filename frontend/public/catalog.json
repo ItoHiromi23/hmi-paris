@@ -1,0 +1,188 @@
+{
+  "brand": "HMI Paris",
+  "locale": "ja",
+  "contact": {
+    "email": "info@hmiparis.com",
+    "phone": "+33 1 84 00 00 00",
+    "location": "マレ地区・パリ4区",
+    "form": "/contact"
+  },
+  "packages": [
+    {
+      "slug": "classic-paris-essentials",
+      "title": "クラシック・パリ入門",
+      "summary": "ルーヴルの朝、シテ島、セーヌ河畔で過ごすゆとりの午後。",
+      "destination": "ルーヴル＆シテ島",
+      "region": "パリ",
+      "durationDays": 3,
+      "durationLabel": "3日間",
+      "priceFrom": 890,
+      "currency": "EUR",
+      "featured": true,
+      "url": "/packages/classic-paris-essentials"
+    },
+    {
+      "slug": "montmartre-after-dark",
+      "title": "モンマルトル・アフターダーク",
+      "summary": "村のような路地、サクレ・クールの夕景、屋上からの夜景ディナー。",
+      "destination": "モンマルトル",
+      "region": "パリ",
+      "durationDays": 1,
+      "durationLabel": "約4時間",
+      "priceFrom": 280,
+      "currency": "EUR",
+      "featured": true,
+      "url": "/packages/montmartre-after-dark"
+    },
+    {
+      "slug": "le-marais-private-walk",
+      "title": "マレ地区プライベートウォーク",
+      "summary": "オテル・パルティキュリエ、ヴォージュ広場、話題のスイーツ巡り。",
+      "destination": "マレ地区",
+      "region": "パリ",
+      "durationDays": 1,
+      "durationLabel": "約4時間",
+      "priceFrom": 195,
+      "currency": "EUR",
+      "featured": true,
+      "url": "/packages/le-marais-private-walk"
+    },
+    {
+      "slug": "versailles-royal-day",
+      "title": "ヴェルサイユ・ロイヤルデー",
+      "summary": "宮殿・庭園・トリアノン。パリ市内からの往復送迎付き。",
+      "destination": "ヴェルサイユ",
+      "region": "パリ",
+      "durationDays": 1,
+      "durationLabel": "8時間",
+      "priceFrom": 1620,
+      "currency": "EUR",
+      "featured": false,
+      "url": "/packages/versailles-royal-day"
+    },
+    {
+      "slug": "left-bank-literary-trail",
+      "title": "左岸文学散策",
+      "summary": "サン＝ジェルマンの本屋、カフェ文化、黄昏のリュクサンブール。",
+      "destination": "サン＝ジェルマン＆カルチエ・ラタン",
+      "region": "パリ",
+      "durationDays": 1,
+      "durationLabel": "約3時間",
+      "priceFrom": 165,
+      "currency": "EUR",
+      "featured": false,
+      "url": "/packages/left-bank-literary-trail"
+    },
+    {
+      "slug": "seine-twilight-cruise",
+      "title": "セーヌ夕暮れクルーズ",
+      "summary": "エッフェル塔、オルセー、ノートルダムを川から眺める夜。",
+      "destination": "セーヌ川",
+      "region": "パリ",
+      "durationDays": 1,
+      "durationLabel": "約2.5時間",
+      "priceFrom": 320,
+      "currency": "EUR",
+      "featured": false,
+      "url": "/packages/seine-twilight-cruise"
+    }
+  ],
+  "destinations": [
+    {
+      "slug": "mont-saint-michel",
+      "title": "モンサンミッシェル & ノルマンディー田舎村",
+      "summary": "人を惹きつけてやまない「西洋の驚異」へ、日本人アシスタントガイドがご案内。途中、ノルマンディーの素敵な田舎村にも立ち寄る、よくばりな一日ツアー。",
+      "destination": "モンサンミッシェル",
+      "region": "ノルマンディー",
+      "durationLabel": "1日",
+      "priceFrom": 1700,
+      "currency": "EUR",
+      "featured": true,
+      "url": "/destinations/mont-saint-michel"
+    },
+    {
+      "slug": "paris",
+      "title": "パリ街歩きツアー",
+      "summary": "屋根のない美術館を、日本語で歩く。初めてでも、何度目でも。あなたの「好き」に合わせて、パリを自由に組み立てる一日を。",
+      "destination": "パリ",
+      "region": "パリ",
+      "durationLabel": "3〜8時間",
+      "priceFrom": 190,
+      "currency": "EUR",
+      "featured": true,
+      "url": "/destinations/paris"
+    },
+    {
+      "slug": "champagne",
+      "title": "シャンパーニュ地方 ― 白亜のカーヴをめぐる、泡の旅",
+      "summary": "専用車で葡萄畑の丘を走り、名門メゾンの扉を訪ねます。シャンパン醸造の秘密に触れ、黄金の輝きを味わう一日にご案内します。",
+      "destination": "シャンパーニュ地方",
+      "region": "シャンパーニュ",
+      "durationLabel": "8時間",
+      "priceFrom": 1620,
+      "currency": "EUR",
+      "featured": true,
+      "url": "/destinations/champagne"
+    },
+    {
+      "slug": "versailles",
+      "title": "華麗な歴史が詰まったフランス黄金時代の宮殿",
+      "summary": "太陽王ルイ14世が築いた、贅を尽くしたきらびやかな宮殿。専用車と日本語アシスタントガイドで、鏡の回廊からトリアノン離宮までご案内します。",
+      "destination": "ヴェルサイユ宮殿",
+      "region": "イル＝ド＝フランス",
+      "durationLabel": "5〜8時間",
+      "priceFrom": 740,
+      "currency": "EUR",
+      "featured": true,
+      "url": "/destinations/versailles"
+    },
+    {
+      "slug": "auvers-sur-oise",
+      "title": "ゴッホの家 ｜ オーヴェル・シュル・オワーズ",
+      "summary": "ゴッホが最後の70日間を過ごした街。専用車でめぐる、画家の足跡をたどる一日。",
+      "destination": "オーヴェル＝シュル＝オワーズ",
+      "region": "イル＝ド＝フランス",
+      "durationLabel": "6時間",
+      "priceFrom": 940,
+      "currency": "EUR",
+      "featured": true,
+      "url": "/destinations/auvers-sur-oise"
+    },
+    {
+      "slug": "giverny",
+      "title": "セーヌが結ぶ、二つのモネ ｜ ジヴェルニー & ヴェトゥイユ",
+      "summary": "モネが生涯をかけて造り上げた庭、ジヴェルニー。そして彼が画家として飛躍したもう一つの村ヴェトゥイユへ。専用車でめぐるモネの旅。",
+      "destination": "ジヴェルニー",
+      "region": "イル＝ド＝フランス",
+      "durationLabel": "約6時間",
+      "priceFrom": 940,
+      "currency": "EUR",
+      "featured": true,
+      "url": "/destinations/giverny"
+    }
+  ],
+  "events": [
+    {
+      "slug": "arc-de-triomphe-2026",
+      "title": "凱旋門賞 観戦ツアー",
+      "summary": "2026年10月4日（日）パリロンシャン競馬場で開催される第105回凱旋門賞。日本語ガイド同行、往復送迎バス付きの観戦ツアー。",
+      "venue": "パリロンシャン競馬場",
+      "eventDate": "2026-10-04",
+      "priceFrom": 160,
+      "currency": "EUR",
+      "featured": true,
+      "url": "/events/arc-de-triomphe-2026"
+    },
+    {
+      "slug": "paris-christmas-lights-2026",
+      "title": "パリ・クリスマスイルミネーション 夜の散策",
+      "summary": "シャンゼリゼ通りやオペラ座周辺など、パリの冬を彩る光の名所を日本語ガイドとゆっくり巡ります。",
+      "venue": "パリ市内",
+      "eventDate": "2026-12-15",
+      "priceFrom": 95,
+      "currency": "EUR",
+      "featured": true,
+      "url": "/events/paris-christmas-lights-2026"
+    }
+  ]
+}

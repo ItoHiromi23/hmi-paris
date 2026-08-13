@@ -11,6 +11,11 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://hmiparis.fr/events</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://hmiparis.fr/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -19,6 +24,21 @@
     <loc>https://hmiparis.fr/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://hmiparis.fr/privacy</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://hmiparis.fr/legal</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://hmiparis.fr/cookies</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
   </url>
   <url>
     <loc>https://hmiparis.fr/packages/classic-paris-essentials</loc>
@@ -47,6 +67,46 @@
   </url>
   <url>
     <loc>https://hmiparis.fr/packages/seine-twilight-cruise</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://hmiparis.fr/events/arc-de-triomphe-2026</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://hmiparis.fr/events/paris-christmas-lights-2026</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://hmiparis.fr/destinations/mont-saint-michel</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://hmiparis.fr/destinations/paris</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://hmiparis.fr/destinations/champagne</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://hmiparis.fr/destinations/versailles</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://hmiparis.fr/destinations/auvers-sur-oise</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://hmiparis.fr/destinations/giverny</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>

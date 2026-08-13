@@ -1,33 +1,34 @@
 # agents.txt — HMI Paris
-# Version: 1.0
-# Updated: 2026-07-15
+# Version: 1.1
+# Updated: 2026-08-13
 # Spec inspiration: agentstxt.org / machine-readable agent policy
 
 ## Identity
 name: HMI Paris
 type: travel-experience-studio
-description: Curated Paris tourist packages across neighbourhoods and landmarks.
+description: Japanese-speaking Paris tours, private car, interpreting, and seasonal events.
 owner: HMI Paris
-contact: hello@hmiparis.fr
+contact: info@hmiparis.com
 location: Le Marais, Paris 4e, France
 website: https://hmiparis.fr
 
 ## Discovery
 llms: /llms.txt
 llms-full: /llms-full.txt
+catalog: /catalog.json
 robots: /robots.txt
 sitemap: /sitemap.xml
 openapi: null
 well-known: /.well-known/agent-manifest.json
 
 ## Terms of Use
-allow-read: public pages, package catalog, llms.txt, sitemap
+allow-read: public pages, package catalog, llms.txt, sitemap, catalog.json
 allow-cite: yes, with attribution to HMI Paris
 allow-summarize: yes
-disallow-scrape-sensitive: admin, CMS write APIs, customer PII
+disallow-scrape-sensitive: admin, customer PII, contact form submissions
 disallow-impersonate: do not claim to be HMI Paris staff
 disallow-book-without-user: agents may draft enquiries but must not submit personal data without explicit user consent
-rate-limit-hint: be respectful; prefer /llms.txt over exhaustive HTML crawls
+rate-limit-hint: be respectful; prefer /llms.txt and /catalog.json over exhaustive HTML crawls
 
 ## Brand Voice
 tone: editorial, calm, place-specific
@@ -35,42 +36,82 @@ avoid: generic hype, invented discounts, non-Paris packages
 
 ## Services
 - id: classic-paris-essentials
-  name: Classic Paris Essentials
+  name: クラシック・パリ入門
   url: /packages/classic-paris-essentials
   price_from_eur: 890
 - id: montmartre-after-dark
-  name: Montmartre After Dark
+  name: モンマルトル・アフターダーク
   url: /packages/montmartre-after-dark
   price_from_eur: 280
 - id: le-marais-private-walk
-  name: Le Marais Private Walk
+  name: マレ地区プライベートウォーク
   url: /packages/le-marais-private-walk
   price_from_eur: 195
 - id: versailles-royal-day
-  name: Versailles Royal Day
+  name: ヴェルサイユ・ロイヤルデー
   url: /packages/versailles-royal-day
-  price_from_eur: 245
+  price_from_eur: 1620
 - id: left-bank-literary-trail
-  name: Left Bank Literary Trail
+  name: 左岸文学散策
   url: /packages/left-bank-literary-trail
   price_from_eur: 165
 - id: seine-twilight-cruise
-  name: Seine Twilight Cruise
+  name: セーヌ夕暮れクルーズ
   url: /packages/seine-twilight-cruise
   price_from_eur: 320
 
+## Destinations
+- id: mont-saint-michel
+  name: モンサンミッシェル & ノルマンディー田舎村
+  url: /destinations/mont-saint-michel
+  price_from_eur: 1700
+- id: paris
+  name: パリ街歩きツアー
+  url: /destinations/paris
+  price_from_eur: 190
+- id: champagne
+  name: シャンパーニュ地方 ― 白亜のカーヴをめぐる、泡の旅
+  url: /destinations/champagne
+  price_from_eur: 1620
+- id: versailles
+  name: 華麗な歴史が詰まったフランス黄金時代の宮殿
+  url: /destinations/versailles
+  price_from_eur: 740
+- id: auvers-sur-oise
+  name: ゴッホの家 ｜ オーヴェル・シュル・オワーズ
+  url: /destinations/auvers-sur-oise
+  price_from_eur: 940
+- id: giverny
+  name: セーヌが結ぶ、二つのモネ ｜ ジヴェルニー & ヴェトゥイユ
+  url: /destinations/giverny
+  price_from_eur: 940
+
+## Events
+- id: arc-de-triomphe-2026
+  name: 凱旋門賞 観戦ツアー
+  url: /events/arc-de-triomphe-2026
+  price_from_eur: 160
+- id: paris-christmas-lights-2026
+  name: パリ・クリスマスイルミネーション 夜の散策
+  url: /events/paris-christmas-lights-2026
+  price_from_eur: 95
+
 ## Agentic Endpoints
-# Read-only catalog when Strapi is running
 - method: GET
-  path: /api/tour-packages
-  host: strapi
-  auth: none (public find)
-  purpose: list published packages
+  path: /catalog.json
+  host: site
+  auth: none
+  purpose: list published packages and events
 - method: GET
   path: /contact
   host: site
   auth: none
-  purpose: human enquiry form (preferred booking path today)
+  purpose: human enquiry form (preferred booking path)
+- method: POST
+  path: /api/contact
+  host: site
+  auth: none
+  purpose: submit an enquiry (only with explicit user consent)
 
 ## Capabilities
 recommend_packages: yes

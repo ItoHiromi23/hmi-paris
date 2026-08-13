@@ -1,34 +1,50 @@
 <script setup lang="ts">
-import { homeContent as c } from '~/data/homeContent'
+import type { CmsBundle } from '~/types/cms'
+
+const cms = inject<Ref<CmsBundle | null>>('cms', ref(null))
+const s = computed(() => cms.value?.settings)
+
+const eyebrow = computed(() => s.value?.servicesEyebrow?.trim() || '')
+const title = computed(() => s.value?.servicesTitle?.trim() || '')
+const latin = computed(() => s.value?.servicesLatin?.trim() || '')
+const items = computed(() => cms.value?.services || [])
+const hasContent = computed(
+  () => Boolean(eyebrow.value || title.value || latin.value || items.value.length),
+)
 </script>
 
 <template>
-  <section id="services" class="bg-[var(--paper)] py-[88px]">
+  <section v-if="hasContent" id="services" class="bg-[var(--paper)] py-[88px]">
     <div class="wrap">
-      <p class="sec-eyebrow">{{ c.services.eyebrow }}</p>
-      <h2 class="sec-title mt-2.5">{{ c.services.title }}</h2>
-      <p class="sec-latin mt-2 mb-[38px]">{{ c.services.latin }}</p>
+      <p v-if="eyebrow" class="sec-eyebrow">{{ eyebrow }}</p>
+      <h2 v-if="title" class="sec-title mt-2.5">{{ title }}</h2>
+      <p v-if="latin" class="sec-latin mt-2 mb-[38px]">{{ latin }}</p>
 
       <div
-        class="grid grid-cols-1 gap-px border border-[var(--line)] bg-[var(--line)] sm:grid-cols-2 lg:grid-cols-3"
+        v-if="items.length"
+        class="mx-auto grid max-w-[860px] grid-cols-1 gap-px border border-[var(--line)] bg-[var(--line)] sm:grid-cols-2"
       >
-        <NuxtLink
-          v-for="service in c.services.items"
-          :key="service.title"
-          to="/contact"
-          class="group relative bg-[var(--panel)] px-8 py-[38px] transition hover:bg-[#fffefb]"
+        <article
+          v-for="service in items"
+          :key="service.id"
+          class="bg-[var(--panel)] px-8 py-[38px] text-center transition hover:bg-[#fffefb]"
         >
-          <div class="mb-[22px] h-[46px] w-[46px] text-[var(--brass)]">
-            <ServiceIcon :name="service.icon" class="!h-full !w-full" />
+          <div class="mx-auto mb-[22px] h-[46px] w-[46px] text-[var(--brass)]">
+            <ServiceIcon :name="service.icon" />
           </div>
           <h3 class="font-display text-[20px] font-bold tracking-[0.04em] text-[var(--ink)]">
             {{ service.title }}
           </h3>
-          <p class="mt-1 mb-4 font-serif-latin text-[11px] uppercase tracking-[0.18em] text-[var(--brass)]">
-            {{ service.en }}
+          <p
+            v-if="service.category"
+            class="mt-1 mb-4 font-serif-latin text-[11px] uppercase tracking-[0.18em] text-[var(--brass-text)]"
+          >
+            {{ service.category }}
           </p>
-          <p class="m-0 text-[14px] leading-[1.85] text-[#54534b]">{{ service.text }}</p>
-        </NuxtLink>
+          <p v-if="service.description" class="m-0 text-[14px] leading-[1.85] text-[#54534b]">
+            {{ service.description }}
+          </p>
+        </article>
       </div>
     </div>
   </section>

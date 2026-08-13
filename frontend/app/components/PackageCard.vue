@@ -65,9 +65,9 @@ watch(
         <p class="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--teal)]">
           {{ package.destination }}
         </p>
-        <h3 class="font-display mt-2 line-clamp-2 min-h-[3.25rem] text-2xl leading-tight text-[var(--heading)] sm:min-h-[3.5rem] sm:text-[1.7rem]">
+        <h2 class="font-display mt-2 line-clamp-2 min-h-[3.25rem] text-2xl leading-tight text-[var(--heading)] sm:min-h-[3.5rem] sm:text-[1.7rem]">
           {{ package.title }}
-        </h3>
+        </h2>
         <p class="mt-3 line-clamp-2 min-h-[2.75rem] text-sm leading-relaxed text-[var(--muted-fg)]">
           {{ package.summary }}
         </p>

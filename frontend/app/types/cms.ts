@@ -61,6 +61,16 @@ export interface CmsAboutProfile {
   sortOrder: number
 }
 
+export interface CmsDestination {
+  id: string | number
+  name: string
+  nameEn: string
+  description: string
+  imageUrl: string
+  href: string
+  sortOrder: number
+}
+
 export interface CmsSiteSettings {
   brandName: string
   brandTagline: string
@@ -72,11 +82,23 @@ export interface CmsSiteSettings {
   heroTitle: string
   heroSubtitle: string
   heroImageUrl: string
+  heroLatin: string
+  heroCtaPrimary: string
+  heroCtaSecondary: string
+  greetVertical: string
+  greetEyebrow: string
+  greetTitle: string
+  greetLead: string
+  destinationsEyebrow: string
+  destinationsTitle: string
+  destinationsLatin: string
   servicesEyebrow: string
   servicesTitle: string
+  servicesLatin: string
   whyEyebrow: string
   whyItalic: string
   whyTitle: string
+  whyLatin: string
   feesEyebrow: string
   feesTitle: string
   packagesEyebrow: string
@@ -84,6 +106,7 @@ export interface CmsSiteSettings {
   packagesIntro: string
   newsEyebrow: string
   newsTitle: string
+  newsLatin: string
   contactCtaTitle: string
   contactCtaSubtitle: string
   contactCtaButton: string
@@ -115,6 +138,23 @@ export interface CmsSiteSettings {
   aboutCtaTitle: string
   aboutCtaSubtitle: string
   aboutCtaButton: string
+  navHome: string
+  navEvent: string
+  navServices: string
+  navAbout: string
+  navContact: string
+  navMenu: string
+  footerServicesTitle: string
+  footerCompanyTitle: string
+  footerAbout: string
+  footerContact: string
+  footerCopy: string
+  footerPhotoCredit: string
+  metaTitle: string
+  metaDescription: string
+  raceBannerTag: string
+  raceBannerText: string
+  raceBannerCta: string
 }
 
 export interface CmsBundle {
@@ -125,6 +165,7 @@ export interface CmsBundle {
   news: CmsNewsItem[]
   tourDetails: CmsTourDetail[]
   aboutProfiles: CmsAboutProfile[]
+  destinations: CmsDestination[]
   cancellation: CmsCancellationRule[]
   feeNotes: string[]
   importantNotes: string[]

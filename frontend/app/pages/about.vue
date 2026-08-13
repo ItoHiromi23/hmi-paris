@@ -72,7 +72,9 @@ useSeoMeta({
     <section class="relative overflow-hidden bg-[var(--ink)] py-6 text-[var(--paper)]">
       <img
         v-if="heroImage"
-        :src="heroImage"
+        :src="optimizeImageUrl(heroImage, 1600, 70)"
+        :srcset="imageSrcSet(heroImage, [800, 1200, 1600], 70)"
+        sizes="100vw"
         :alt="title"
         class="absolute inset-0 h-full w-full object-cover"
         width="1700"
@@ -117,7 +119,7 @@ useSeoMeta({
         >
           {{ philo.before }}<span
             v-if="philo.accent"
-            class="text-[var(--brass)]"
+            class="text-[var(--brass-text)]"
           >{{ philo.accent }}</span>{{ philo.after }}
           <template v-if="philo.line2">
             <br />

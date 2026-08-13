@@ -2,22 +2,7 @@
 import process from 'node:process'
 
 const isProd = process.env.NODE_ENV === 'production'
-const strapiUrl = process.env.NUXT_PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337'
 const siteUrl = process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000'
-
-function hostnameOf(url: string): string | null {
-  try {
-    return new URL(url).hostname
-  } catch {
-    return null
-  }
-}
-
-const strapiHost = hostnameOf(strapiUrl)
-const imageDomains = ['localhost', '127.0.0.1']
-if (strapiHost && !imageDomains.includes(strapiHost)) {
-  imageDomains.push(strapiHost)
-}
 
 const securityHeaders: Record<string, string> = {
   'X-Frame-Options': 'SAMEORIGIN',
@@ -25,7 +10,7 @@ const securityHeaders: Record<string, string> = {
   'Referrer-Policy': 'strict-origin-when-cross-origin',
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
   'Cross-Origin-Opener-Policy': 'same-origin',
-  'Cross-Origin-Resource-Policy': 'cross-origin',
+  'Cross-Origin-Resource-Policy': 'same-origin',
 }
 
 if (isProd) {
@@ -33,17 +18,45 @@ if (isProd) {
     'max-age=63072000; includeSubDomains; preload'
   securityHeaders['Content-Security-Policy'] = [
     "default-src 'self'",
-    "img-src 'self' data: blob: https:",
+    "img-src 'self' data: blob:",
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' data: https://fonts.gstatic.com",
     "script-src 'self' 'unsafe-inline'",
-    `connect-src 'self' ${strapiUrl} https:`,
+    "connect-src 'self'",
     "frame-ancestors 'self'",
     "base-uri 'self'",
     "form-action 'self'",
     "object-src 'none'",
   ].join('; ')
 }
+
+const jaFontsHref =
+  'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Shippori+Mincho+B1:wght@700&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap'
+
+const prerenderRoutes = [
+  '/',
+  '/packages',
+  '/events',
+  '/about',
+  '/contact',
+  '/privacy',
+  '/legal',
+  '/cookies',
+  '/packages/classic-paris-essentials',
+  '/packages/montmartre-after-dark',
+  '/packages/le-marais-private-walk',
+  '/packages/versailles-royal-day',
+  '/packages/left-bank-literary-trail',
+  '/packages/seine-twilight-cruise',
+  '/events/arc-de-triomphe-2026',
+  '/events/paris-christmas-lights-2026',
+  '/destinations/mont-saint-michel',
+  '/destinations/paris',
+  '/destinations/champagne',
+  '/destinations/versailles',
+  '/destinations/auvers-sur-oise',
+  '/destinations/giverny',
+]
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -59,9 +72,10 @@ export default defineNuxtConfig({
   },
   css: ['~/assets/css/main.css'],
   image: {
-    domains: imageDomains,
+    provider: 'ipx',
+    domains: ['localhost', '127.0.0.1'],
     format: ['webp', 'avif'],
-    quality: 70,
+    quality: 60,
     screens: {
       sm: 640,
       md: 768,
@@ -90,13 +104,18 @@ export default defineNuxtConfig({
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
         {
           rel: 'stylesheet',
-          href: 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Shippori+Mincho+B1:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap',
+          href: jaFontsHref,
+          media: 'print',
+          onload: "this.media='all'",
+          'data-hmi-fonts': '1',
         },
         { rel: 'agent', href: '/agents.txt' },
         { rel: 'llms', href: '/llms.txt' },
         { rel: 'llms-full', href: '/llms-full.txt' },
         { rel: 'alternate', type: 'text/plain', href: '/llms.txt', title: 'llms.txt' },
+        { rel: 'alternate', type: 'application/json', href: '/catalog.json', title: 'catalog' },
       ],
+      noscript: [{ innerHTML: `<link rel="stylesheet" href="${jaFontsHref}">` }],
     },
   },
   runtimeConfig: {
@@ -105,34 +124,61 @@ export default defineNuxtConfig({
     emailFrom: process.env.EMAIL_FROM || 'onboarding@resend.dev',
     contactTo: process.env.CONTACT_TO || 'arditbhoti@gmail.com',
     public: {
-      strapiUrl,
       siteUrl,
     },
   },
   vite: {
     build: {
-      cssMinify: true,
+      cssMinify: 'esbuild',
       minify: 'esbuild',
+      sourcemap: false,
+      cssCodeSplit: true,
     },
   },
   nitro: {
-    // Railway / Node long-running process (not serverless)
+    // Node process: prerendered pages + /api/contact for mail
     preset: 'node-server',
     compressPublicAssets: true,
+    minify: true,
+    prerender: {
+      crawlLinks: true,
+      routes: prerenderRoutes,
+      ignore: ['/_ipx/**'],
+    },
     routeRules: {
-      // SWR only in production — in dev it blocks Strapi edits from showing for ~60s
-      ...(isProd
-        ? {
-            '/': { swr: 60 },
-            '/packages': { swr: 60 },
-            '/events': { swr: 60 },
-          }
-        : {}),
-      '/**': { headers: securityHeaders },
+      '/**': {
+        headers: {
+          ...securityHeaders,
+          'Cache-Control': 'public, max-age=300',
+        },
+      },
+      '/_nuxt/**': {
+        headers: {
+          ...securityHeaders,
+          'Cache-Control': 'public, max-age=31536000, immutable',
+        },
+      },
+      '/_ipx/**': {
+        headers: {
+          ...securityHeaders,
+          'Cache-Control': 'public, max-age=31536000, immutable',
+        },
+      },
+      '/images/**': {
+        headers: {
+          ...securityHeaders,
+          'Cache-Control': 'public, max-age=2592000, stale-while-revalidate=604800',
+        },
+      },
+      '/api/contact': {
+        prerender: false,
+        headers: { ...securityHeaders, 'Cache-Control': 'no-store' },
+      },
       '/agents.txt': { headers: { 'Content-Type': 'text/plain; charset=utf-8' } },
       '/llms.txt': { headers: { 'Content-Type': 'text/plain; charset=utf-8' } },
       '/llms-full.txt': { headers: { 'Content-Type': 'text/plain; charset=utf-8' } },
       '/robots.txt': { headers: { 'Content-Type': 'text/plain; charset=utf-8' } },
+      '/catalog.json': { headers: { 'Content-Type': 'application/json; charset=utf-8' } },
       '/.well-known/agent-manifest.json': {
         headers: { 'Content-Type': 'application/json; charset=utf-8' },
       },

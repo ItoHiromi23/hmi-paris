@@ -6,12 +6,8 @@ const localePath = useLocalePath()
 const route = useRoute()
 const slug = computed(() => String(route.params.slug))
 
-const { fetchPackageBySlug, formatPrice } = useTourPackages()
-const { data: pkg } = await useLocaleAsyncData(
-  () => `package-${slug.value}`,
-  (code) => fetchPackageBySlug(slug.value, code),
-  { watch: [slug] },
-)
+const { getPackageBySlug, formatPrice } = useTourPackages()
+const pkg = computed(() => getPackageBySlug(slug.value))
 
 if (!pkg.value) {
   throw createError({ statusCode: 404, statusMessage: t('packages.notFound') })
@@ -78,8 +74,8 @@ const detailRows = computed(() => (pkg.value ? buildDetailRows(pkg.value) : []))
 useReveal()
 
 useSeoMeta({
-  title: `${pkg.value.title} — HMI Paris`,
-  description: pkg.value.summary,
+  title: () => `${pkg.value?.title || ''} — HMI Paris`,
+  description: () => pkg.value?.summary || '',
 })
 </script>
 
@@ -171,6 +167,8 @@ useSeoMeta({
               :srcset="imageSrcSet(image.url, [400, 640, 900, 1200], 70)"
               sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
               :alt="image.alt"
+              width="900"
+              height="675"
               class="h-full w-full object-cover"
               loading="lazy"
               decoding="async"
