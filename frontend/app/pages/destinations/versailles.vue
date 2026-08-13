@@ -1,12 +1,22 @@
 <script setup lang="ts">
+const heroWidths = [640, 960, 1280, 1600]
+const heroSrc = optSrc('versailles-hero', 1280)
+const heroSrcset = optSrcSet('versailles-hero', heroWidths)
+const heroAvifSrc = optSrc('versailles-hero', 1280, 'avif')
+const heroAvifSrcset = optSrcSet('versailles-hero', heroWidths, 'avif')
+const portraitWidths = [400, 640, 825]
+const landscapeWidths = [640, 960, 1100]
+
 useHead({
   link: [
     {
       rel: 'preload',
       as: 'image',
-      href: optimizeImageUrl('/images/destinations/versailles/hero.jpg', 1600, 70),
+      href: heroAvifSrc,
+      imageSrcset: heroAvifSrcset,
+      imageSizes: '100vw',
       fetchpriority: 'high',
-      type: 'image/webp',
+      type: 'image/avif',
     },
   ],
 })
@@ -42,20 +52,23 @@ const rays = (() => {
 <template>
   <div class="versailles-page">
     <header class="hero">
-      <img
-        class="hero-photo"
-        :src="optimizeImageUrl('/images/destinations/versailles/hero.jpg', 1600, 70)"
-        :srcset="imageSrcSet('/images/destinations/versailles/hero.jpg', [800, 1200, 1600, 2000], 70)"
-        sizes="100vw"
-        alt="ヴェルサイユ宮殿"
-        width="1600"
-        height="1067"
-        loading="eager"
-        fetchpriority="high"
-        decoding="async"
-      />
+      <picture class="hero-media">
+        <source type="image/avif" :srcset="heroAvifSrcset" sizes="100vw" />
+        <img
+          class="hero-photo"
+          :src="heroSrc"
+          :srcset="heroSrcset"
+          sizes="100vw"
+          alt="ヴェルサイユ宮殿"
+          width="1600"
+          height="1200"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </picture>
       <svg class="sun" viewBox="0 0 500 500" aria-hidden="true" focusable="false">
-        <g id="rays">
+        <g id="versailles-rays">
           <line
             v-for="(ray, i) in rays"
             :key="i"
@@ -110,13 +123,19 @@ const rays = (() => {
                 </p>
               </div>
               <figure class="stop-photo">
-                <img
-                  :src="optimizeImageUrl('/images/destinations/versailles/gallery-glaces.jpg', 825, 68)"
-                  alt="ヴェルサイユ宮殿 鏡の回廊"
-                  loading="lazy"
-                  width="825"
-                  height="1100"
-                />
+                <picture>
+                  <source type="image/avif" :srcset="optSrcSet('versailles-glaces', portraitWidths, 'avif')" sizes="(max-width: 760px) 100vw, 420px" />
+                  <img
+                    :src="optSrc('versailles-glaces', 640)"
+                    :srcset="optSrcSet('versailles-glaces', portraitWidths)"
+                    sizes="(max-width: 760px) 100vw, 420px"
+                    alt="ヴェルサイユ宮殿 鏡の回廊"
+                    loading="lazy"
+                    decoding="async"
+                    width="825"
+                    height="1100"
+                  />
+                </picture>
               </figure>
             </article>
 
@@ -129,13 +148,19 @@ const rays = (() => {
                 </p>
               </div>
               <figure class="stop-photo">
-                <img
-                  :src="optimizeImageUrl('/images/destinations/versailles/gallery-reine.jpg', 825, 68)"
-                  alt="ヴェルサイユ宮殿 王妃の寝室"
-                  loading="lazy"
-                  width="825"
-                  height="1100"
-                />
+                <picture>
+                  <source type="image/avif" :srcset="optSrcSet('versailles-reine', portraitWidths, 'avif')" sizes="(max-width: 760px) 100vw, 420px" />
+                  <img
+                    :src="optSrc('versailles-reine', 640)"
+                    :srcset="optSrcSet('versailles-reine', portraitWidths)"
+                    sizes="(max-width: 760px) 100vw, 420px"
+                    alt="ヴェルサイユ宮殿 王妃の寝室"
+                    loading="lazy"
+                    decoding="async"
+                    width="825"
+                    height="1100"
+                  />
+                </picture>
               </figure>
             </article>
 
@@ -157,13 +182,19 @@ const rays = (() => {
                 </ul>
               </div>
               <figure class="stop-photo">
-                <img
-                  :src="optimizeImageUrl('/images/destinations/versailles/gallery-jardins.jpg', 1100, 68)"
-                  alt="ヴェルサイユ宮殿 庭園"
-                  loading="lazy"
-                  width="1100"
-                  height="825"
-                />
+                <picture>
+                  <source type="image/avif" :srcset="optSrcSet('versailles-jardins', landscapeWidths, 'avif')" sizes="(max-width: 760px) 100vw, 420px" />
+                  <img
+                    :src="optSrc('versailles-jardins', 960)"
+                    :srcset="optSrcSet('versailles-jardins', landscapeWidths)"
+                    sizes="(max-width: 760px) 100vw, 420px"
+                    alt="ヴェルサイユ宮殿 庭園"
+                    loading="lazy"
+                    decoding="async"
+                    width="1100"
+                    height="825"
+                  />
+                </picture>
               </figure>
             </article>
           </div>
@@ -208,13 +239,19 @@ const rays = (() => {
                 </p>
               </div>
               <figure class="stop-photo">
-                <img
-                  :src="optimizeImageUrl('/images/destinations/versailles/gallery-trianon.jpg', 1100, 68)"
-                  alt="ヴェルサイユ グラン・トリアノン"
-                  loading="lazy"
-                  width="1100"
-                  height="825"
-                />
+                <picture>
+                  <source type="image/avif" :srcset="optSrcSet('versailles-trianon', landscapeWidths, 'avif')" sizes="(max-width: 760px) 100vw, 420px" />
+                  <img
+                    :src="optSrc('versailles-trianon', 960)"
+                    :srcset="optSrcSet('versailles-trianon', landscapeWidths)"
+                    sizes="(max-width: 760px) 100vw, 420px"
+                    alt="ヴェルサイユ グラン・トリアノン"
+                    loading="lazy"
+                    decoding="async"
+                    width="1100"
+                    height="825"
+                  />
+                </picture>
               </figure>
             </article>
           </div>
@@ -343,6 +380,7 @@ const rays = (() => {
   --indigo-deep: #141f38;
   --brass: #b89150;
   --brass-light: #d8b878;
+  --brass-text: #7a5e30;
   --ivory: #f6f1e7;
   --ivory-soft: #efe7d6;
   --ink: #20222b;
@@ -372,9 +410,13 @@ const rays = (() => {
   font-family: var(--serif);
   font-style: italic;
   letter-spacing: 0.14em;
-  color: var(--brass);
+  color: var(--brass-text);
   font-size: clamp(0.9rem, 1.3vw, 1.1rem);
   margin: 0;
+}
+
+.versailles-page .hero .eyebrow {
+  color: var(--brass-light);
 }
 
 .versailles-page .wrap {
@@ -385,7 +427,8 @@ const rays = (() => {
 
 .versailles-page .hero {
   position: relative;
-  min-height: 88vh;
+  aspect-ratio: 4 / 3;
+  min-height: 0;
   background-color: var(--indigo-deep);
   color: var(--ivory);
   display: flex;
@@ -397,12 +440,16 @@ const rays = (() => {
   overflow: hidden;
 }
 
+.versailles-page .hero-media,
 .versailles-page .hero-photo {
   position: absolute;
   inset: 0;
   z-index: 0;
   width: 100%;
   height: 100%;
+}
+
+.versailles-page .hero-photo {
   object-fit: cover;
   object-position: center 42%;
 }
@@ -580,6 +627,10 @@ const rays = (() => {
   border: 1px solid var(--line);
 }
 
+.versailles-page .stop-photo picture {
+  display: block;
+}
+
 .versailles-page .stop h3 {
   font-family: var(--mincho);
   font-weight: 600;
@@ -591,7 +642,7 @@ const rays = (() => {
 }
 
 .versailles-page .num {
-  color: var(--brass);
+  color: var(--brass-text);
   letter-spacing: 0.08em;
   margin-right: 0.2em;
 }
@@ -599,7 +650,7 @@ const rays = (() => {
 .versailles-page .place {
   font-family: var(--serif);
   font-style: italic;
-  color: var(--brass);
+  color: var(--brass-text);
   font-size: 0.95rem;
   letter-spacing: 0.06em;
   display: block;
@@ -654,7 +705,7 @@ const rays = (() => {
   padding: 0 20px;
   font-family: var(--serif);
   font-style: italic;
-  color: var(--brass);
+  color: var(--brass-text);
   letter-spacing: 0.1em;
   font-size: 0.95rem;
 }
@@ -696,7 +747,7 @@ const rays = (() => {
   font-family: var(--serif);
   font-size: 2.5rem;
   line-height: 1;
-  color: var(--brass);
+  color: var(--brass-text);
   letter-spacing: 0.02em;
   margin: 0;
 }
@@ -834,7 +885,7 @@ const rays = (() => {
 .versailles-page .cancel td {
   font-family: var(--serif);
   font-size: 1.25rem;
-  color: var(--brass);
+  color: var(--brass-text);
   letter-spacing: 0.04em;
   text-align: right;
 }
@@ -890,12 +941,41 @@ const rays = (() => {
 
 .versailles-page .versailles-foot {
   background: var(--indigo-deep);
-  color: rgba(246, 241, 231, 0.42);
+  color: #c9c2b2;
   text-align: center;
   padding: 30px 26px;
   font-size: 0.8rem;
   letter-spacing: 0.12em;
   border-top: 1px solid rgba(184, 145, 80, 0.16);
+}
+
+@media (max-width: 900px) {
+  .versailles-page .hero {
+    aspect-ratio: auto;
+    padding: 0 0 3.2rem;
+    justify-content: flex-start;
+  }
+
+  .versailles-page .hero-media,
+  .versailles-page .hero-photo {
+    position: relative;
+    height: auto;
+  }
+
+  .versailles-page .hero-photo {
+    display: block;
+  }
+
+  .versailles-page .hero::after,
+  .versailles-page .sun {
+    display: none;
+  }
+
+  .versailles-page .hero-inner {
+    position: relative;
+    z-index: 2;
+    padding: 2.2rem 26px 0;
+  }
 }
 
 @media (max-width: 760px) {

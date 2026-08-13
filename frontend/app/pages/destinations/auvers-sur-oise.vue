@@ -1,12 +1,23 @@
 <script setup lang="ts">
+const heroWidths = [640, 960, 1280, 1500]
+const heroSrc = optSrc('auvers-hero', 1280)
+const heroSrcset = optSrcSet('auvers-hero', heroWidths)
+const heroAvifSrc = optSrc('auvers-hero', 1280, 'avif')
+const heroAvifSrcset = optSrcSet('auvers-hero', heroWidths, 'avif')
+const figWidths = [400, 640, 900]
+const graveWidths = [640, 960, 1100]
+const heroSizes = '(max-width: 960px) 100vw, 960px'
+
 useHead({
   link: [
     {
       rel: 'preload',
       as: 'image',
-      href: optimizeImageUrl('/images/destinations/auvers-sur-oise/hero-church.jpg', 1400, 70),
+      href: heroAvifSrc,
+      imageSrcset: heroAvifSrcset,
+      imageSizes: heroSizes,
       fetchpriority: 'high',
-      type: 'image/webp',
+      type: 'image/avif',
     },
   ],
 })
@@ -86,17 +97,20 @@ onBeforeUnmount(() => {
     </header>
 
     <figure class="hero-figure reveal">
-      <img
-        :src="optimizeImageUrl('/images/destinations/auvers-sur-oise/hero-church.jpg', 1400, 70)"
-        :srcset="imageSrcSet('/images/destinations/auvers-sur-oise/hero-church.jpg', [800, 1100, 1400], 70)"
-        sizes="(max-width: 960px) 100vw, 960px"
-        alt="オーヴェルの教会"
-        width="1400"
-        height="933"
-        loading="eager"
-        fetchpriority="high"
-        decoding="async"
-      />
+      <picture>
+        <source type="image/avif" :srcset="heroAvifSrcset" :sizes="heroSizes" />
+        <img
+          :src="heroSrc"
+          :srcset="heroSrcset"
+          :sizes="heroSizes"
+          alt="オーヴェルの教会"
+          width="1500"
+          height="1261"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </picture>
       <figcaption>オーヴェルの教会 ― ゴッホが描いた、今も変わらぬ姿</figcaption>
     </figure>
 
@@ -118,16 +132,21 @@ onBeforeUnmount(() => {
       <article class="stop reveal">
         <span class="node">1</span>
         <p class="stop-jp-label">見どころ</p>
-        <p class="stop-fr">芸術家達を魅了してやまない田舎町</p>
+        <h3 class="stop-fr">芸術家達を魅了してやまない田舎町</h3>
         <figure class="stop-figure reveal">
-          <img
-            :src="optimizeImageUrl('/images/destinations/auvers-sur-oise/wheatfield.jpg', 900, 68)"
-            alt="麦畑と『カラスのいる麦畑』の解説板"
-            width="900"
-            height="675"
-            loading="lazy"
-            decoding="async"
-          />
+          <picture>
+            <source type="image/avif" :srcset="optSrcSet('auvers-wheatfield', figWidths, 'avif')" sizes="(max-width: 700px) 100vw, 520px" />
+            <img
+              :src="optSrc('auvers-wheatfield', 640)"
+              :srcset="optSrcSet('auvers-wheatfield', figWidths)"
+              sizes="(max-width: 700px) 100vw, 520px"
+              alt="麦畑と『カラスのいる麦畑』の解説板"
+              width="1000"
+              height="700"
+              loading="lazy"
+              decoding="async"
+            />
+          </picture>
           <figcaption>『カラスのいる麦畑』が描かれた、その場所で</figcaption>
         </figure>
         <p>ゴッホは亡くなるまでの約2か月をここで過ごし、その間にこの街を題材に70点以上の作品を残しています。</p>
@@ -139,16 +158,21 @@ onBeforeUnmount(() => {
 
       <article class="stop reveal">
         <span class="node">2</span>
-        <p class="stop-fr">カフェ兼ワイン販売店<br />ラヴー亭のゴッホの部屋</p>
+        <h3 class="stop-fr">カフェ兼ワイン販売店<br />ラヴー亭のゴッホの部屋</h3>
         <figure class="stop-figure reveal">
-          <img
-            :src="optimizeImageUrl('/images/destinations/auvers-sur-oise/ravoux.jpg', 900, 68)"
-            alt="ラヴー亭の店内"
-            width="900"
-            height="675"
-            loading="lazy"
-            decoding="async"
-          />
+          <picture>
+            <source type="image/avif" :srcset="optSrcSet('auvers-ravoux', figWidths, 'avif')" sizes="(max-width: 700px) 100vw, 520px" />
+            <img
+              :src="optSrc('auvers-ravoux', 640)"
+              :srcset="optSrcSet('auvers-ravoux', figWidths)"
+              sizes="(max-width: 700px) 100vw, 520px"
+              alt="ラヴー亭の店内"
+              width="1000"
+              height="700"
+              loading="lazy"
+              decoding="async"
+            />
+          </picture>
           <figcaption>ラヴー亭 ― ゴッホが暮らした建物の中</figcaption>
         </figure>
         <p>印象派の画家ピサロの勧めでこの街に移り、ラヴー亭の一室を間借りしていました。</p>
@@ -160,16 +184,21 @@ onBeforeUnmount(() => {
 
       <article class="stop reveal">
         <span class="node">3</span>
-        <p class="stop-fr">印象派絵画の愛好家<br />ガシェ医師の家</p>
+        <h3 class="stop-fr">印象派絵画の愛好家<br />ガシェ医師の家</h3>
         <figure class="stop-figure reveal">
-          <img
-            :src="optimizeImageUrl('/images/destinations/auvers-sur-oise/gachet.jpg', 900, 68)"
-            alt="ガシェ医師の家の室内と絵画"
-            width="900"
-            height="675"
-            loading="lazy"
-            decoding="async"
-          />
+          <picture>
+            <source type="image/avif" :srcset="optSrcSet('auvers-gachet', figWidths, 'avif')" sizes="(max-width: 700px) 100vw, 520px" />
+            <img
+              :src="optSrc('auvers-gachet', 640)"
+              :srcset="optSrcSet('auvers-gachet', figWidths)"
+              sizes="(max-width: 700px) 100vw, 520px"
+              alt="ガシェ医師の家の室内と絵画"
+              width="1000"
+              height="700"
+              loading="lazy"
+              decoding="async"
+            />
+          </picture>
           <figcaption>絵に囲まれた、ガシェ医師の家の室内</figcaption>
         </figure>
         <p>ゴッホの主治医であり、親しい間柄でもあったガシェ医師の家を見学します。</p>
@@ -183,14 +212,19 @@ onBeforeUnmount(() => {
     </div>
 
     <figure class="closing-figure reveal">
-      <img
-        :src="optimizeImageUrl('/images/destinations/auvers-sur-oise/grave.jpg', 1100, 68)"
-        alt="ゴッホの墓"
-        width="1100"
-        height="733"
-        loading="lazy"
-        decoding="async"
-      />
+      <picture>
+        <source type="image/avif" :srcset="optSrcSet('auvers-grave', graveWidths, 'avif')" sizes="(max-width: 960px) 100vw, 700px" />
+        <img
+          :src="optSrc('auvers-grave', 960)"
+          :srcset="optSrcSet('auvers-grave', graveWidths)"
+          sizes="(max-width: 960px) 100vw, 700px"
+          alt="ゴッホの墓"
+          width="1100"
+          height="620"
+          loading="lazy"
+          decoding="async"
+        />
+      </picture>
       <figcaption>ひまわりに見守られて ― ゴッホの眠る場所</figcaption>
     </figure>
 
@@ -301,6 +335,7 @@ onBeforeUnmount(() => {
   --ink-soft: #3a4d6e;
   --wheat: #c1912b;
   --wheat-deep: #a4741a;
+  --wheat-text: #6b4e10;
   --wheat-soft: #e6cf8a;
   --cobalt: #2a5a8c;
   --cobalt-deep: #1e4568;
@@ -387,7 +422,7 @@ onBeforeUnmount(() => {
 }
 
 .hmi-auvers .lede .accent {
-  color: var(--wheat-deep);
+  color: var(--wheat-text);
   font-weight: 600;
 }
 
@@ -455,7 +490,7 @@ onBeforeUnmount(() => {
   height: 1.65rem;
   border: 1.5px solid var(--wheat);
   border-radius: 50%;
-  color: var(--wheat-deep);
+  color: var(--wheat-text);
   font-family: var(--serif);
   font-weight: 600;
   font-size: 0.98rem;
@@ -510,7 +545,7 @@ onBeforeUnmount(() => {
   font-size: 1.15rem;
   line-height: 1.5;
   letter-spacing: 0.34em;
-  color: var(--wheat-deep);
+  color: var(--wheat-text);
   font-weight: 600;
   margin: 0 0 0.3rem;
 }
@@ -587,12 +622,23 @@ onBeforeUnmount(() => {
   position: relative;
 }
 
-.hmi-auvers .hero-figure img {
+.hmi-auvers .hero-figure img,
+.hmi-auvers .stop-figure img,
+.hmi-auvers .closing-figure img {
   display: block;
   width: 100%;
   height: auto;
   border-radius: 3px;
+}
+
+.hmi-auvers .hero-figure img {
   box-shadow: 0 30px 60px -34px rgba(22, 35, 59, 0.62);
+}
+
+.hmi-auvers .hero-figure picture,
+.hmi-auvers .stop-figure picture,
+.hmi-auvers .closing-figure picture {
+  display: block;
 }
 
 .hmi-auvers .stop-figure {
@@ -600,10 +646,6 @@ onBeforeUnmount(() => {
 }
 
 .hmi-auvers .stop-figure img {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: 3px;
   box-shadow: 0 22px 44px -30px rgba(22, 35, 59, 0.55);
 }
 
@@ -613,10 +655,6 @@ onBeforeUnmount(() => {
 }
 
 .hmi-auvers .closing-figure img {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: 3px;
   box-shadow: 0 26px 52px -32px rgba(22, 35, 59, 0.55);
 }
 
@@ -684,7 +722,7 @@ onBeforeUnmount(() => {
   font-family: var(--serif);
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--wheat-deep);
+  color: var(--wheat-text);
   letter-spacing: 0.02em;
 }
 
@@ -731,7 +769,7 @@ onBeforeUnmount(() => {
   content: '\203B';
   position: absolute;
   left: 0;
-  color: var(--wheat-deep);
+  color: var(--wheat-text);
 }
 
 .hmi-auvers .cancel-h {
@@ -766,7 +804,7 @@ onBeforeUnmount(() => {
   font-family: var(--serif);
   font-size: 1.2rem;
   font-weight: 600;
-  color: var(--wheat-deep);
+  color: var(--wheat-text);
   white-space: nowrap;
   padding-right: 0;
 }

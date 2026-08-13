@@ -1,12 +1,22 @@
 <script setup lang="ts">
+const heroWidths = [640, 960, 1280, 1600]
+const heroSrc = optSrc('champagne-hero', 1280)
+const heroSrcset = optSrcSet('champagne-hero', heroWidths)
+const heroAvifSrc = optSrc('champagne-hero', 1280, 'avif')
+const heroAvifSrcset = optSrcSet('champagne-hero', heroWidths, 'avif')
+const galleryWidths = [400, 640, 900]
+const wideWidths = [640, 960, 1280]
+
 useHead({
   link: [
     {
       rel: 'preload',
       as: 'image',
-      href: optimizeImageUrl('/images/destinations/champagne/hero.jpg', 1600, 70),
+      href: heroAvifSrc,
+      imageSrcset: heroAvifSrcset,
+      imageSizes: '100vw',
       fetchpriority: 'high',
-      type: 'image/webp',
+      type: 'image/avif',
     },
   ],
 })
@@ -19,11 +29,42 @@ useSeoMeta({
 })
 
 const gallery = [
-  { src: '/images/destinations/champagne/gallery-01.jpg', alt: 'シャンパーニュ地方' },
-  { src: '/images/destinations/champagne/gallery-02.jpg', alt: 'シャンパーニュ地方' },
-  { src: '/images/destinations/champagne/gallery-03.jpg', alt: 'シャンパーニュ地方' },
-  { src: '/images/destinations/champagne/gallery-04.jpg', alt: 'シャンパーニュ地方' },
-  { src: '/images/destinations/champagne/gallery-05.jpg', alt: 'シャンパーニュ地方' },
+  {
+    name: 'champagne-gallery-01',
+    alt: 'シャンパーニュの葡萄畑',
+    w: 1400,
+    h: 933,
+    widths: galleryWidths,
+  },
+  {
+    name: 'champagne-gallery-02',
+    alt: 'シャンパーニュの丘陵',
+    w: 1400,
+    h: 933,
+    widths: galleryWidths,
+  },
+  {
+    name: 'champagne-gallery-03',
+    alt: 'シャンパーニュの村並み',
+    w: 1400,
+    h: 933,
+    widths: galleryWidths,
+  },
+  {
+    name: 'champagne-gallery-04',
+    alt: 'シャンパーニュのカーヴとボトル',
+    w: 1800,
+    h: 700,
+    widths: wideWidths,
+    wide: true,
+  },
+  {
+    name: 'champagne-gallery-05',
+    alt: 'シャンパーニュのメゾン',
+    w: 1400,
+    h: 933,
+    widths: galleryWidths,
+  },
 ]
 
 const bubblesEl = ref<HTMLElement | null>(null)
@@ -48,20 +89,22 @@ onMounted(() => {
 <template>
   <div class="champagne-page">
     <header class="hero">
-      <img
-        class="hero-photo"
-        :src="optimizeImageUrl('/images/destinations/champagne/hero.jpg', 1600, 70)"
-        :srcset="imageSrcSet('/images/destinations/champagne/hero.jpg', [800, 1200, 1600, 2000], 70)"
-        sizes="100vw"
-        alt="シャンパーニュ地方"
-        width="1600"
-        height="1067"
-        loading="eager"
-        fetchpriority="high"
-        decoding="async"
-      />
+      <picture class="hero-photo">
+        <source type="image/avif" :srcset="heroAvifSrcset" sizes="100vw" />
+        <img
+          :src="heroSrc"
+          :srcset="heroSrcset"
+          sizes="100vw"
+          alt="シャンパーニュ地方の葡萄畑"
+          width="1800"
+          height="1000"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </picture>
       <div class="hero-veil" />
-      <div ref="bubblesEl" class="bubbles" />
+      <div ref="bubblesEl" class="bubbles" aria-hidden="true" />
       <div class="hero-mark">Champagne</div>
       <h1>
         シャンパーニュ地方<br /><span class="accent">― 白亜のカーヴをめぐる、泡の旅</span>
@@ -82,7 +125,7 @@ onMounted(() => {
     <section class="places">
       <article class="place">
         <div class="place-head">
-          <span class="place-jp">エペルネー</span>
+          <h2 class="place-jp">エペルネー</h2>
           <span class="place-latin">Épernay</span>
         </div>
         <p>
@@ -97,7 +140,7 @@ onMounted(() => {
 
       <article class="place">
         <div class="place-head">
-          <span class="place-jp">オーヴィレール</span>
+          <h2 class="place-jp">オーヴィレール</h2>
           <span class="place-latin">Hautvillers</span>
         </div>
         <p class="place-kicker">
@@ -110,7 +153,7 @@ onMounted(() => {
 
       <article class="place">
         <div class="place-head">
-          <span class="place-jp">ランス</span>
+          <h2 class="place-jp">ランス</h2>
           <span class="place-latin">Reims</span>
         </div>
         <p>
@@ -134,21 +177,26 @@ onMounted(() => {
 
     <section class="gallery">
       <div class="gallery-grid">
-        <figure v-for="item in gallery" :key="item.src">
-          <img
-            :src="optimizeImageUrl(item.src, 900, 68)"
-            :alt="item.alt"
-            width="900"
-            height="700"
-            loading="lazy"
-            decoding="async"
-          />
+        <figure v-for="item in gallery" :key="item.name" :class="{ wide: item.wide }">
+          <picture>
+            <source type="image/avif" :srcset="optSrcSet(item.name, item.widths, 'avif')" sizes="(max-width: 700px) 100vw, 540px" />
+            <img
+              :src="optSrc(item.name, item.wide ? 960 : 640)"
+              :srcset="optSrcSet(item.name, item.widths)"
+              sizes="(max-width: 700px) 100vw, 540px"
+              :alt="item.alt"
+              :width="item.w"
+              :height="item.h"
+              loading="lazy"
+              decoding="async"
+            />
+          </picture>
         </figure>
       </div>
     </section>
 
     <section class="courses">
-      <div class="courses-title"><span class="star">★</span> お選びいただける2つのコース</div>
+      <h2 class="courses-title"><span class="star">★</span> お選びいただける2つのコース</h2>
       <div class="courses-sub">Deux itinéraires au choix</div>
       <div class="course-grid">
         <div class="course">
@@ -282,6 +330,7 @@ onMounted(() => {
   --indigo-deep: #141f38;
   --brass: #b89150;
   --brass-light: #d8b878;
+  --brass-text: #7a5e30;
   --ivory: #f6f1e7;
   --ivory-soft: #efe7d6;
   --ink: #20222b;
@@ -310,13 +359,14 @@ onMounted(() => {
   font-family: var(--serif);
   font-style: italic;
   letter-spacing: 0.12em;
-  color: var(--brass);
+  color: var(--brass-text);
   font-size: clamp(0.95rem, 1.4vw, 1.15rem);
 }
 
 .champagne-page .hero {
   position: relative;
-  min-height: 92vh;
+  aspect-ratio: 1800 / 1000;
+  min-height: 0;
   background: linear-gradient(165deg, var(--indigo) 0%, var(--indigo-deep) 100%);
   color: var(--ivory);
   display: flex;
@@ -331,6 +381,11 @@ onMounted(() => {
 .champagne-page .hero-photo {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.champagne-page .hero-photo img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -374,16 +429,14 @@ onMounted(() => {
   grid-column: span 2;
 }
 
-.champagne-page .gallery figure:nth-child(n + 4) {
-  grid-column: span 3;
+.champagne-page .gallery figure.wide {
+  grid-column: 1 / -1;
 }
 
 .champagne-page .gallery img {
   display: block;
   width: 100%;
-  height: 100%;
-  aspect-ratio: 3 / 2;
-  object-fit: cover;
+  height: auto;
   transition: transform 1.2s ease;
 }
 
@@ -532,13 +585,14 @@ onMounted(() => {
   font-size: clamp(1.5rem, 3vw, 2.1rem);
   letter-spacing: 0.08em;
   color: var(--indigo);
+  margin: 0;
 }
 
 .champagne-page .place-latin {
   font-family: var(--serif);
   font-style: italic;
   font-size: clamp(1.1rem, 2vw, 1.5rem);
-  color: var(--brass);
+  color: var(--brass-text);
   letter-spacing: 0.03em;
 }
 
@@ -575,7 +629,7 @@ onMounted(() => {
 }
 
 .champagne-page .option .eyebrow {
-  color: var(--brass);
+  color: var(--brass-text);
   display: block;
   margin-bottom: 0.8rem;
 }
@@ -592,7 +646,7 @@ onMounted(() => {
 .champagne-page .option .cath-latin {
   font-family: var(--serif);
   font-style: italic;
-  color: var(--brass);
+  color: var(--brass-text);
   font-size: 1.2rem;
   margin-bottom: 2rem;
   display: block;
@@ -619,11 +673,11 @@ onMounted(() => {
   font-size: clamp(1.3rem, 2.4vw, 1.7rem);
   color: var(--indigo);
   letter-spacing: 0.08em;
-  margin-bottom: 0.6rem;
+  margin: 0 0 0.6rem;
 }
 
 .champagne-page .courses-title .star {
-  color: var(--brass);
+  color: var(--brass-text);
 }
 
 .champagne-page .courses-sub {
@@ -659,7 +713,7 @@ onMounted(() => {
 .champagne-page .course-num {
   font-family: var(--serif);
   font-size: 2.6rem;
-  color: var(--brass);
+  color: var(--brass-text);
   line-height: 1;
   display: block;
   margin-bottom: 1.2rem;
@@ -675,7 +729,7 @@ onMounted(() => {
 }
 
 .champagne-page .course-stops .plus {
-  color: var(--brass);
+  color: var(--brass-text);
   margin: 0 0.35em;
 }
 
@@ -752,7 +806,7 @@ onMounted(() => {
 
 .champagne-page .dval li::before {
   content: '―';
-  color: var(--brass);
+  color: var(--brass-text);
   margin-right: 0.5em;
 }
 
@@ -779,7 +833,7 @@ onMounted(() => {
   text-align: right;
   font-family: var(--serif);
   font-size: 1.1rem;
-  color: var(--brass);
+  color: var(--brass-text);
   letter-spacing: 0.03em;
   white-space: nowrap;
 }
@@ -820,7 +874,7 @@ onMounted(() => {
 .champagne-page .contact .sub {
   font-family: var(--serif);
   font-style: italic;
-  color: var(--brass);
+  color: var(--brass-text);
   letter-spacing: 0.06em;
   margin-bottom: 1.8rem;
 }
@@ -873,7 +927,7 @@ onMounted(() => {
 }
 
 .champagne-page .contact-mail:hover {
-  color: var(--brass);
+  color: var(--brass-text);
 }
 
 .champagne-page .foot {
@@ -900,9 +954,35 @@ onMounted(() => {
   letter-spacing: 0.08em;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 900px) {
   .champagne-page {
     line-height: 2;
+  }
+
+  .champagne-page .hero {
+    aspect-ratio: auto;
+    padding: 0 1.5rem 2.8rem;
+    justify-content: flex-start;
+  }
+
+  .champagne-page .hero-photo {
+    position: relative;
+    height: auto;
+  }
+
+  .champagne-page .hero-photo img {
+    display: block;
+    height: auto;
+    opacity: 0.72;
+  }
+
+  .champagne-page .hero-veil,
+  .champagne-page .bubbles {
+    display: none;
+  }
+
+  .champagne-page .hero-mark {
+    margin-top: 2rem;
   }
 
   .champagne-page .gallery-grid {
@@ -910,7 +990,8 @@ onMounted(() => {
   }
 
   .champagne-page .gallery figure:nth-child(-n + 3),
-  .champagne-page .gallery figure:nth-child(n + 4) {
+  .champagne-page .gallery figure:nth-child(n + 4),
+  .champagne-page .gallery figure.wide {
     grid-column: span 1;
   }
 

@@ -115,7 +115,6 @@ useSeoMeta({
     <DestinationStrip />
     <TravelStyles />
     <WhyHmi />
-    <NewsSection />
     <ContactBanner />
   </div>
 </template>

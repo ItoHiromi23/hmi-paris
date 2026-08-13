@@ -1,12 +1,26 @@
 <script setup lang="ts">
+const heroWidths = [640, 960, 1280, 1600]
+const heroSrc = optSrc('paris-hero', 1280)
+const heroSrcset = optSrcSet('paris-hero', heroWidths)
+const heroAvifSrc = optSrc('paris-hero', 1280, 'avif')
+const heroAvifSrcset = optSrcSet('paris-hero', heroWidths, 'avif')
+const tileWidths = [400, 640, 800]
+const featureWidths = [640, 960, 1200]
+
+function parisName(src: string) {
+  return `paris-${(src.split('/').pop() || '').replace(/\.[^.]+$/, '')}`
+}
+
 useHead({
   link: [
     {
       rel: 'preload',
       as: 'image',
-      href: optimizeImageUrl('/images/destinations/paris/hero.jpg', 1600, 70),
+      href: heroAvifSrc,
+      imageSrcset: heroAvifSrcset,
+      imageSizes: '100vw',
       fetchpriority: 'high',
-      type: 'image/webp',
+      type: 'image/avif',
     },
   ],
 })
@@ -19,51 +33,54 @@ useSeoMeta({
 })
 
 const maraisGallery = [
-  { src: '/images/destinations/paris/marais-01.jpg', alt: 'マレ地区の街並み' },
-  { src: '/images/destinations/paris/marais-02.jpg', alt: 'マレ地区の街並み' },
-  { src: '/images/destinations/paris/marais-03.jpg', alt: 'マレ地区の街並み' },
-  { src: '/images/destinations/paris/marais-04.jpg', alt: 'マレ地区の街並み' },
+  { src: '/images/destinations/paris/marais-01.jpg', alt: 'マレ地区の街並み', w: 750, h: 1000 },
+  { src: '/images/destinations/paris/marais-02.jpg', alt: 'マレ地区の街並み', w: 750, h: 1000 },
+  { src: '/images/destinations/paris/marais-03.jpg', alt: 'マレ地区の街並み', w: 750, h: 1000 },
+  { src: '/images/destinations/paris/marais-04.jpg', alt: 'マレ地区の街並み', w: 750, h: 1000 },
 ]
 
 const montmartreGallery = [
-  { src: '/images/destinations/paris/montmartre-01.jpg', alt: 'モンマルトルの街並み' },
-  { src: '/images/destinations/paris/montmartre-02.jpg', alt: 'モンマルトルの街並み' },
-  { src: '/images/destinations/paris/montmartre-03.jpg', alt: 'モンマルトルの街並み' },
+  { src: '/images/destinations/paris/montmartre-01.jpg', alt: 'モンマルトルの街並み', w: 750, h: 1000 },
+  { src: '/images/destinations/paris/montmartre-02.jpg', alt: 'モンマルトルの街並み', w: 750, h: 1000 },
+  { src: '/images/destinations/paris/montmartre-03.jpg', alt: 'モンマルトルの街並み', w: 750, h: 1000 },
 ]
 
 const classicsGallery = [
-  { src: '/images/destinations/paris/classics-01.jpg', alt: 'パリの主要観光名所' },
-  { src: '/images/destinations/paris/classics-02.jpg', alt: 'パリの主要観光名所' },
-  { src: '/images/destinations/paris/classics-03.jpg', alt: 'パリの主要観光名所' },
+  { src: '/images/destinations/paris/classics-01.jpg', alt: 'パリの主要観光名所', w: 750, h: 1000 },
+  { src: '/images/destinations/paris/classics-02.jpg', alt: 'パリの主要観光名所', w: 750, h: 1000 },
+  { src: '/images/destinations/paris/classics-03.jpg', alt: 'パリの主要観光名所', w: 1000, h: 965 },
 ]
 
 const fulldayGalleryA = [
-  { src: '/images/destinations/paris/fullday-01.jpg', alt: 'パリの街歩き' },
-  { src: '/images/destinations/paris/fullday-02.jpg', alt: 'パリの街歩き' },
+  { src: '/images/destinations/paris/fullday-01.jpg', alt: 'パリの街歩き', w: 1100, h: 825 },
+  { src: '/images/destinations/paris/fullday-02.jpg', alt: 'パリの街歩き', w: 1100, h: 809 },
 ]
 
 const fulldayGalleryB = [
-  { src: '/images/destinations/paris/fullday-03.jpg', alt: 'パリの街歩き' },
-  { src: '/images/destinations/paris/fullday-04.jpg', alt: 'パリの街角の看板（サドル職人の店）' },
-  { src: '/images/destinations/paris/fullday-05.jpg', alt: 'パリの街歩き' },
+  { src: '/images/destinations/paris/fullday-03.jpg', alt: 'パリの街歩き', w: 675, h: 900 },
+  { src: '/images/destinations/paris/fullday-04.jpg', alt: 'パリの街角の看板（サドル職人の店）', w: 900, h: 843 },
+  { src: '/images/destinations/paris/fullday-05.jpg', alt: 'パリの街歩き', w: 675, h: 900 },
 ]
 </script>
 
 <template>
   <div class="paris-page">
     <header class="hero" id="top">
-      <img
-        class="hero-img"
-        :src="optimizeImageUrl('/images/destinations/paris/hero.jpg', 1600, 70)"
-        :srcset="imageSrcSet('/images/destinations/paris/hero.jpg', [800, 1200, 1600, 2000], 70)"
-        sizes="100vw"
-        alt="パリの街並み"
-        width="1600"
-        height="1067"
-        loading="eager"
-        fetchpriority="high"
-        decoding="async"
-      />
+      <picture>
+        <source type="image/avif" :srcset="heroAvifSrcset" sizes="100vw" />
+        <img
+          class="hero-img"
+          :src="heroSrc"
+          :srcset="heroSrcset"
+          sizes="100vw"
+          alt="パリの街並み"
+          width="1800"
+          height="1013"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </picture>
       <div class="hero-overlay">
         <div class="eyebrow">HMI Paris · Walking Tour</div>
         <p class="tagline">屋根のない美術館を、日本語で歩く。</p>
@@ -123,10 +140,12 @@ const fulldayGalleryB = [
             <img
               v-for="item in maraisGallery"
               :key="item.src"
-              :src="optimizeImageUrl(item.src, 800, 68)"
+              :src="optSrc(parisName(item.src), 400)"
+              :srcset="optSrcSet(parisName(item.src), tileWidths)"
+              sizes="(max-width: 640px) 50vw, 215px"
               :alt="item.alt"
-              width="800"
-              height="600"
+              :width="item.w"
+              :height="item.h"
               loading="lazy"
               decoding="async"
             />
@@ -150,10 +169,12 @@ const fulldayGalleryB = [
         <article class="course">
           <img
             class="feature"
-            :src="optimizeImageUrl('/images/destinations/paris/montmartre-feature.jpg', 1100, 68)"
+            :src="optSrc('paris-montmartre-feature', 960)"
+            :srcset="optSrcSet('paris-montmartre-feature', [640, 960, 1100])"
+            sizes="(max-width: 860px) 100vw, 860px"
             alt="ムーラン・ルージュ（モンマルトル）"
-            width="1100"
-            height="733"
+            width="1400"
+            height="984"
             loading="lazy"
             decoding="async"
           />
@@ -161,10 +182,12 @@ const fulldayGalleryB = [
             <img
               v-for="item in montmartreGallery"
               :key="item.src"
-              :src="optimizeImageUrl(item.src, 800, 68)"
+              :src="optSrc(parisName(item.src), 400)"
+              :srcset="optSrcSet(parisName(item.src), tileWidths)"
+              sizes="(max-width: 640px) 50vw, 287px"
               :alt="item.alt"
-              width="800"
-              height="600"
+              :width="item.w"
+              :height="item.h"
               loading="lazy"
               decoding="async"
             />
@@ -205,10 +228,12 @@ const fulldayGalleryB = [
             <img
               v-for="item in classicsGallery"
               :key="item.src"
-              :src="optimizeImageUrl(item.src, 800, 68)"
+              :src="optSrc(parisName(item.src), 400)"
+              :srcset="optSrcSet(parisName(item.src), tileWidths)"
+              sizes="(max-width: 640px) 50vw, 287px"
               :alt="item.alt"
-              width="800"
-              height="600"
+              :width="item.w"
+              :height="item.h"
               loading="lazy"
               decoding="async"
             />
@@ -239,10 +264,12 @@ const fulldayGalleryB = [
         <article class="course">
           <img
             class="feature feature-wide"
-            :src="optimizeImageUrl('/images/destinations/paris/fullday-feature.jpg', 1200, 68)"
+            :src="optSrc('paris-fullday-feature', 960)"
+            :srcset="optSrcSet('paris-fullday-feature', featureWidths)"
+            sizes="(max-width: 860px) 100vw, 860px"
             alt="オペラ界隈のパッサージュ（ガラス屋根のアーケード）"
-            width="1200"
-            height="800"
+            width="1170"
+            height="654"
             loading="lazy"
             decoding="async"
           />
@@ -250,10 +277,12 @@ const fulldayGalleryB = [
             <img
               v-for="item in fulldayGalleryA"
               :key="item.src"
-              :src="optimizeImageUrl(item.src, 800, 68)"
+              :src="optSrc(parisName(item.src), 640)"
+              :srcset="optSrcSet(parisName(item.src), tileWidths)"
+              sizes="(max-width: 640px) 100vw, 430px"
               :alt="item.alt"
-              width="800"
-              height="600"
+              :width="item.w"
+              :height="item.h"
               loading="lazy"
               decoding="async"
             />
@@ -262,10 +291,12 @@ const fulldayGalleryB = [
             <img
               v-for="item in fulldayGalleryB"
               :key="item.src"
-              :src="optimizeImageUrl(item.src, 800, 68)"
+              :src="optSrc(parisName(item.src), 400)"
+              :srcset="optSrcSet(parisName(item.src), tileWidths)"
+              sizes="(max-width: 640px) 50vw, 287px"
               :alt="item.alt"
-              width="800"
-              height="600"
+              :width="item.w"
+              :height="item.h"
               loading="lazy"
               decoding="async"
             />
@@ -539,24 +570,34 @@ const fulldayGalleryB = [
 
 .paris-page .hero {
   position: relative;
+  aspect-ratio: 1800 / 1013;
   color: var(--paper);
   text-align: center;
   overflow: hidden;
   border-bottom: 3px solid var(--brass);
 }
 
+.paris-page .hero picture,
 .paris-page .hero-img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
+}
+
+.paris-page .hero-img {
   object-fit: cover;
   object-position: center 42%;
 }
 
 .paris-page .hero-overlay {
-  position: relative;
+  position: absolute;
+  inset: 0;
   z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   padding: 120px 24px 104px;
   background:
     radial-gradient(ellipse at 50% 50%, rgba(12, 20, 38, 0.62) 0%, rgba(12, 20, 38, 0.74) 70%, rgba(12, 20, 38, 0.82) 100%),
@@ -725,17 +766,12 @@ const fulldayGalleryB = [
 
 .paris-page .gallery img {
   width: 100%;
-  aspect-ratio: 3 / 4;
-  object-fit: cover;
+  height: auto;
   display: block;
   transition:
     filter 0.3s,
     transform 0.3s;
   filter: saturate(0.94);
-}
-
-.paris-page .gallery.cols-2 img {
-  aspect-ratio: 3 / 2;
 }
 
 .paris-page .gallery img:hover {
@@ -745,14 +781,13 @@ const fulldayGalleryB = [
 
 .paris-page .feature {
   width: 100%;
-  aspect-ratio: 3 / 2;
-  object-fit: cover;
+  height: auto;
   display: block;
   border-bottom: 1px solid var(--line);
 }
 
 .paris-page .feature-wide {
-  aspect-ratio: 16 / 9;
+  height: auto;
 }
 
 .paris-page .course-inner {
@@ -1135,13 +1170,29 @@ const fulldayGalleryB = [
   background: linear-gradient(90deg, transparent, var(--brass), transparent);
 }
 
-@media (max-width: 720px) {
-  .paris-page .wrap {
-    padding: 0 18px 68px;
+@media (max-width: 900px) {
+  .paris-page .hero {
+    aspect-ratio: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .paris-page .hero picture,
+  .paris-page .hero-img {
+    position: relative;
+    height: auto;
   }
 
   .paris-page .hero-overlay {
-    padding: 88px 24px 72px;
+    position: relative;
+    padding: 2.2rem 1.4rem 2.4rem;
+    background: #0b1220;
+  }
+}
+
+@media (max-width: 720px) {
+  .paris-page .wrap {
+    padding: 0 18px 68px;
   }
 
   .paris-page .hero h1 {

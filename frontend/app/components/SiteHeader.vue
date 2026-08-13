@@ -48,6 +48,7 @@ watch(
           class="block h-7 w-auto md:h-[28px]"
           width="160"
           height="28"
+          fetchpriority="low"
           decoding="async"
         />
       </NuxtLink>

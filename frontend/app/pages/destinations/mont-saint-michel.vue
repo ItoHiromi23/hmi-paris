@@ -1,12 +1,22 @@
 <script setup lang="ts">
+const heroWidths = [640, 960, 1280, 1500]
+const heroSrc = optSrc('msm-hero', 960)
+const heroSrcset = optSrcSet('msm-hero', heroWidths)
+const heroAvifSrc = optSrc('msm-hero', 1280, 'avif')
+const heroAvifSrcset = optSrcSet('msm-hero', heroWidths, 'avif')
+const heroSizes = '(max-width: 800px) 100vw, 720px'
+const galleryWidths = [400, 640, 900]
+
 useHead({
   link: [
     {
       rel: 'preload',
       as: 'image',
-      href: optimizeImageUrl('/images/destinations/mont-saint-michel/hero.jpg', 1200, 70),
+      href: heroAvifSrc,
+      imageSrcset: heroAvifSrcset,
+      imageSizes: heroSizes,
       fetchpriority: 'high',
-      type: 'image/webp',
+      type: 'image/avif',
     },
   ],
 })
@@ -20,40 +30,54 @@ useSeoMeta({
 
 const gallery = [
   {
-    src: '/images/destinations/mont-saint-michel/gallery-01.jpg',
+    name: 'msm-gallery-01',
     alt: '干潟に映るモンサンミッシェル',
     caption: '干潟に映るモンサンミッシェル',
     wide: true,
+    w: 900,
+    h: 721,
   },
   {
-    src: '/images/destinations/mont-saint-michel/gallery-02.jpg',
+    name: 'msm-gallery-02',
     alt: '修道院へ続くメイン通り',
     caption: '修道院へ続くメイン通り',
+    w: 900,
+    h: 716,
   },
   {
-    src: '/images/destinations/mont-saint-michel/gallery-03.jpg',
+    name: 'msm-gallery-03',
     alt: '島の路地',
     caption: '島の路地',
+    w: 900,
+    h: 927,
   },
   {
-    src: '/images/destinations/mont-saint-michel/gallery-04.jpg',
+    name: 'msm-gallery-04',
     alt: '湾を見渡せる城壁',
     caption: '湾を見渡せる城壁',
+    w: 900,
+    h: 741,
   },
   {
-    src: '/images/destinations/mont-saint-michel/gallery-05.jpg',
+    name: 'msm-gallery-05',
     alt: '修道院の回廊',
     caption: '修道院の回廊',
+    w: 900,
+    h: 679,
   },
   {
-    src: '/images/destinations/mont-saint-michel/gallery-06.jpg',
+    name: 'msm-gallery-06',
     alt: '村のカフェ',
     caption: '村のカフェ',
+    w: 900,
+    h: 896,
   },
   {
-    src: '/images/destinations/mont-saint-michel/gallery-07.jpg',
+    name: 'msm-gallery-07',
     alt: 'ノルマンディーの田舎村',
     caption: 'ノルマンディーの田舎村',
+    w: 900,
+    h: 649,
   },
 ]
 </script>
@@ -69,17 +93,20 @@ const gallery = [
       </header>
 
       <div class="hero">
-        <img
-          :src="optimizeImageUrl('/images/destinations/mont-saint-michel/hero.jpg', 1200, 70)"
-          :srcset="imageSrcSet('/images/destinations/mont-saint-michel/hero.jpg', [640, 900, 1200, 1600], 70)"
-          sizes="(max-width: 720px) 100vw, 720px"
-          alt="モン・サン＝ミッシェル"
-          width="1200"
-          height="800"
-          loading="eager"
-          fetchpriority="high"
-          decoding="async"
-        />
+        <picture>
+          <source type="image/avif" :srcset="heroAvifSrcset" :sizes="heroSizes" />
+          <img
+            :src="heroSrc"
+            :srcset="heroSrcset"
+            :sizes="heroSizes"
+            alt="モン・サン＝ミッシェル"
+            width="1500"
+            height="870"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+          />
+        </picture>
       </div>
 
       <section class="lead">
@@ -125,15 +152,24 @@ const gallery = [
       <h2 class="gallery-title">ギャラリー</h2>
 
       <div class="gallery">
-        <figure v-for="item in gallery" :key="item.src" :class="{ wide: item.wide }">
-          <img
-            :src="optimizeImageUrl(item.src, 800, 68)"
-            :alt="item.alt"
-            width="800"
-            height="600"
-            loading="lazy"
-            decoding="async"
-          />
+        <figure v-for="item in gallery" :key="item.name" :class="{ wide: item.wide }">
+          <picture>
+            <source
+              type="image/avif"
+              :srcset="optSrcSet(item.name, galleryWidths, 'avif')"
+              :sizes="item.wide ? '(max-width: 800px) 100vw, 720px' : '(max-width: 800px) 50vw, 350px'"
+            />
+            <img
+              :src="optSrc(item.name, 640)"
+              :srcset="optSrcSet(item.name, galleryWidths)"
+              :sizes="item.wide ? '(max-width: 800px) 100vw, 720px' : '(max-width: 800px) 50vw, 350px'"
+              :alt="item.alt"
+              :width="item.w"
+              :height="item.h"
+              loading="lazy"
+              decoding="async"
+            />
+          </picture>
           <figcaption>{{ item.caption }}</figcaption>
         </figure>
       </div>
@@ -477,15 +513,22 @@ const gallery = [
   background: var(--indigo-900);
 }
 
+.msm-page .gallery picture {
+  display: block;
+}
+
 .msm-page .gallery img {
   display: block;
   width: 100%;
-  height: 200px;
-  object-fit: cover;
+  height: auto;
   transition:
     transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1),
     filter 0.6s;
   filter: saturate(0.94);
+}
+
+.msm-page .gallery figure.wide img {
+  height: auto;
 }
 
 .msm-page .gallery figure:hover img,
@@ -496,10 +539,6 @@ const gallery = [
 
 .msm-page .gallery figure.wide {
   grid-column: 1 / -1;
-}
-
-.msm-page .gallery figure.wide img {
-  height: 260px;
 }
 
 .msm-page .gallery figcaption {
@@ -713,14 +752,6 @@ const gallery = [
 
   .msm-page .details {
     padding: 30px 20px 26px;
-  }
-
-  .msm-page .gallery img {
-    height: 150px;
-  }
-
-  .msm-page .gallery figure.wide img {
-    height: 190px;
   }
 }
 

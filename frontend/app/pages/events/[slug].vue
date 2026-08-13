@@ -346,6 +346,7 @@ useSeoMeta({
   --event-indigo-deep: #141f38;
   --event-brass: #b08d57;
   --event-brass-light: #c9a96e;
+  --event-brass-text: #7a5e30;
   --event-paper: #f7f3ea;
   --event-paper-2: #efe8d8;
   --event-ink: #2b2a28;
@@ -509,7 +510,7 @@ useSeoMeta({
   letter-spacing: 0.3em;
   text-transform: uppercase;
   font-size: 0.72rem;
-  color: var(--event-brass);
+  color: var(--event-brass-text);
   display: block;
   margin-bottom: 14px;
 }
@@ -589,7 +590,7 @@ useSeoMeta({
 }
 
 .event-num {
-  color: var(--event-brass);
+  color: var(--event-brass-text);
   font-family: var(--serif);
   margin-right: 10px;
 }
@@ -683,7 +684,7 @@ useSeoMeta({
 
 .event-time {
   font-family: var(--serif);
-  color: var(--event-brass);
+  color: var(--event-brass-text);
   letter-spacing: 0.14em;
   font-size: 0.9rem;
   display: block;

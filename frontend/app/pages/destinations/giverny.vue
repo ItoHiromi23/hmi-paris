@@ -1,8 +1,8 @@
 <script setup lang="ts">
-const heroWidths = [640, 960, 1024]
+const heroWidths = [640, 960, 1024, 1600]
 const heroSrc = optSrc('giverny-hero', 960)
 const heroSrcset = optSrcSet('giverny-hero', heroWidths)
-const heroAvifSrc = optSrc('giverny-hero', 1024, 'avif')
+const heroAvifSrc = optSrc('giverny-hero', 1600, 'avif')
 const heroAvifSrcset = optSrcSet('giverny-hero', heroWidths, 'avif')
 const figWidths = [400, 640, 750]
 
@@ -39,8 +39,8 @@ useSeoMeta({
             :srcset="heroSrcset"
             sizes="(max-width: 760px) 100vw, 760px"
             alt="緑の鎧戸とバラのアーチに彩られた、ジヴェルニーのモネの家"
-            width="1024"
-            height="438"
+            width="1600"
+            height="684"
             loading="eager"
             fetchpriority="high"
             decoding="async"
@@ -286,7 +286,7 @@ useSeoMeta({
   --ink-soft: #3c5147;
   --pond: #2f6b4f;
   --pond-deep: #245240;
-  --willow: #5e7a5c;
+  --willow: #456344;
   --lily: #a85d72;
   --mist: #eef1ec;
   --paper: #f7f9f5;
