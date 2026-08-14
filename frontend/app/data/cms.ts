@@ -60,7 +60,7 @@ export const cmsBundle: CmsBundle = {
     "heroCtaSecondary": "グループツアー",
     "greetVertical": "言葉の不安を、\n旅の自由に。",
     "greetEyebrow": "ごあいさつ",
-    "greetTitle": "はじめてのパリも、何度目かのパリも。",
+    "greetTitle": "はじめてのパリも、\n何度目かのパリも。",
     "greetLead": "HMI Paris は、現地に暮らす日本語スタッフが、移動・観光・ビジネスのあらゆる場面をサポートする、パリ発の旅行・コンシェルジュサービスです。言葉の不安をなくし、安心して「自分だけのパリ」を楽しんでいただくこと。快適で上質な旅行体験をお届けします。",
     "destinationsEyebrow": "人気の行き先",
     "destinationsTitle": "パリから、忘れられない一日へ。",

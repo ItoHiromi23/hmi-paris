@@ -4,12 +4,19 @@ export interface ContactEmailPayload {
   firstName: string
   lastName: string
   email: string
-  people: number
-  date: string
+  people?: number | null
+  date?: string
   description: string
   to: string
   tourTitle?: string
   tourSlug?: string
+  formType?: 'enquiry' | 'reservation'
+  service?: string
+  preferredDate?: string
+  secondDate?: string
+  hotel?: string
+  phone?: string
+  source?: string
 }
 
 export interface ContactEmailResult {
@@ -28,12 +35,13 @@ function escapeHtml(value: string) {
 }
 
 function formatDateLabel(isoDate: string) {
+  if (!isoDate) return '未定'
   const d = new Date(`${isoDate}T12:00:00`)
   if (Number.isNaN(d.getTime())) return isoDate
-  return d.toLocaleDateString('en-GB', {
-    day: '2-digit',
-    month: 'short',
+  return d.toLocaleDateString('ja-JP', {
     year: 'numeric',
+    month: 'short',
+    day: 'numeric',
   })
 }
 
@@ -41,14 +49,66 @@ function fullName(payload: ContactEmailPayload) {
   return `${payload.firstName} ${payload.lastName}`.trim()
 }
 
-function buildHtml(payload: ContactEmailPayload) {
-  const name = fullName(payload)
-  const tourRow = payload.tourTitle
-    ? `<tr>
-      <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; color: #64748b;">Tour</td>
-      <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right;">${escapeHtml(payload.tourTitle)}</td>
+function row(label: string, value: string) {
+  return `<tr>
+      <td translate="no" style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; color: #64748b;">${escapeHtml(label)}</td>
+      <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right;">${value}</td>
     </tr>`
-    : ''
+}
+
+function buildReservationHtml(payload: ContactEmailPayload) {
+  const name = fullName(payload)
+  const people = payload.people ? String(payload.people) : '未定'
+  return `<!DOCTYPE html>
+<html lang="ja">
+<body style="font-family: 'Hiragino Mincho ProN', Georgia, serif; color: #1a2332; line-height: 1.6; max-width: 560px; margin: 0 auto; padding: 24px;">
+  <p style="letter-spacing: 0.2em; text-transform: uppercase; font-size: 11px; color: #a9854c;">HMI PARIS</p>
+  <h1 translate="no" style="font-size: 28px; font-weight: 400; margin: 8px 0 16px;">ご予約・お問い合わせ</h1>
+  <table style="width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 14px;">
+    ${row('ご希望のサービス／ツアー', escapeHtml(payload.service || '—'))}
+    ${row('お名前', escapeHtml(name))}
+    ${row('メールアドレス', `<a href="mailto:${escapeHtml(payload.email)}" style="color: #a9854c;">${escapeHtml(payload.email)}</a>`)}
+    ${row('電話番号', escapeHtml(payload.phone || '—'))}
+    ${row('ご希望日', escapeHtml(formatDateLabel(payload.preferredDate || '')))}
+    ${row('第2希望日', escapeHtml(formatDateLabel(payload.secondDate || '')))}
+    ${row('参加人数', escapeHtml(people))}
+    ${row('ご宿泊ホテル', escapeHtml(payload.hotel || '—'))}
+  </table>
+  <p translate="no" style="font-size: 14px; color: #64748b; margin-bottom: 8px;">ご希望・お問い合わせ内容</p>
+  <p style="white-space: pre-wrap; font-size: 15px; margin: 0;">${escapeHtml(payload.description)}</p>
+  <p style="margin-top: 32px; font-size: 13px; color: #64748b;">
+    このメールに返信すると ${escapeHtml(name)} 様へ直接届きます。
+  </p>
+</body>
+</html>`
+}
+
+function buildReservationText(payload: ContactEmailPayload) {
+  const name = fullName(payload)
+  return [
+    'HMI PARIS ご予約・お問い合わせ',
+    '',
+    `ご希望のサービス／ツアー: ${payload.service || '—'}`,
+    `お名前: ${name}`,
+    `メールアドレス: ${payload.email}`,
+    `電話番号: ${payload.phone || '—'}`,
+    `ご希望日: ${formatDateLabel(payload.preferredDate || '')}`,
+    `第2希望日: ${formatDateLabel(payload.secondDate || '')}`,
+    `参加人数: ${payload.people ?? '未定'}`,
+    `ご宿泊ホテル: ${payload.hotel || '—'}`,
+    '',
+    'ご希望・お問い合わせ内容:',
+    payload.description,
+    '',
+    '— このメールに返信すると送信者へ届きます。',
+  ].join('\n')
+}
+
+function buildHtml(payload: ContactEmailPayload) {
+  if (payload.formType === 'reservation') return buildReservationHtml(payload)
+
+  const name = fullName(payload)
+  const tourRow = payload.tourTitle ? row('Tour', escapeHtml(payload.tourTitle)) : ''
 
   return `<!DOCTYPE html>
 <html>
@@ -57,28 +117,11 @@ function buildHtml(payload: ContactEmailPayload) {
   <h1 style="font-size: 28px; font-weight: 400; margin: 8px 0 16px;">New enquiry</h1>
   <table style="width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 14px;">
     ${tourRow}
-    <tr>
-      <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; color: #64748b;">First name</td>
-      <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right;">${escapeHtml(payload.firstName)}</td>
-    </tr>
-    <tr>
-      <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; color: #64748b;">Last name</td>
-      <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right;">${escapeHtml(payload.lastName)}</td>
-    </tr>
-    <tr>
-      <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; color: #64748b;">Email</td>
-      <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right;">
-        <a href="mailto:${escapeHtml(payload.email)}" style="color: #0f766e;">${escapeHtml(payload.email)}</a>
-      </td>
-    </tr>
-    <tr>
-      <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; color: #64748b;">Number of people</td>
-      <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right;">${payload.people}</td>
-    </tr>
-    <tr>
-      <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; color: #64748b;">Date</td>
-      <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right;">${escapeHtml(formatDateLabel(payload.date))}</td>
-    </tr>
+    ${row('First name', escapeHtml(payload.firstName))}
+    ${row('Last name', escapeHtml(payload.lastName))}
+    ${row('Email', `<a href="mailto:${escapeHtml(payload.email)}" style="color: #0f766e;">${escapeHtml(payload.email)}</a>`)}
+    ${row('Number of people', String(payload.people ?? ''))}
+    ${row('Date', escapeHtml(formatDateLabel(payload.date || '')))}
   </table>
   <p style="font-size: 14px; color: #64748b; margin-bottom: 8px;">Description</p>
   <p style="white-space: pre-wrap; font-size: 15px; margin: 0;">${escapeHtml(payload.description)}</p>
@@ -90,6 +133,8 @@ function buildHtml(payload: ContactEmailPayload) {
 }
 
 function buildText(payload: ContactEmailPayload) {
+  if (payload.formType === 'reservation') return buildReservationText(payload)
+
   const lines = [
     'New enquiry from the HMI Paris website',
     '',
@@ -98,7 +143,7 @@ function buildText(payload: ContactEmailPayload) {
     `Last name: ${payload.lastName}`,
     `Email: ${payload.email}`,
     `Number of people: ${payload.people}`,
-    `Date: ${formatDateLabel(payload.date)}`,
+    `Date: ${formatDateLabel(payload.date || '')}`,
     '',
     'Description:',
     payload.description,
@@ -133,12 +178,15 @@ export async function sendContactEmail(
   try {
     const resend = new Resend(apiKey)
     const name = fullName(payload)
-    const subjectTour = payload.tourTitle ? ` — ${payload.tourTitle}` : ''
+    const subject =
+      payload.formType === 'reservation'
+        ? `ご予約・お問い合わせ: ${name} — ${payload.service || 'HMI Paris'}`
+        : `Enquiry: ${name}${payload.tourTitle ? ` — ${payload.tourTitle}` : ''} — ${formatDateLabel(payload.date || '')} (${payload.people})`
     const { data, error } = await resend.emails.send({
       from,
       to: payload.to,
       replyTo: payload.email,
-      subject: `Enquiry: ${name}${subjectTour} — ${formatDateLabel(payload.date)} (${payload.people})`,
+      subject,
       html: buildHtml(payload),
       text: buildText(payload),
     })
