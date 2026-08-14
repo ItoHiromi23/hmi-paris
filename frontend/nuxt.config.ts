@@ -71,6 +71,11 @@ export default defineNuxtConfig({
     detectBrowserLanguage: false,
   },
   css: ['~/assets/css/main.css'],
+  router: {
+    options: {
+      scrollBehaviorType: 'auto',
+    },
+  },
   image: {
     provider: 'ipx',
     domains: ['localhost', '127.0.0.1'],

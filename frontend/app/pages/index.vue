@@ -44,7 +44,7 @@ useSeoMeta({
   <div>
     <section
       v-if="title || heroImage"
-      class="relative flex min-h-[clamp(560px,82vh,780px)] items-center overflow-hidden bg-[var(--ink)] text-[var(--paper)]"
+      class="relative flex h-[calc(100svh-74px-2.75rem)] min-h-[32rem] items-center overflow-hidden bg-[var(--ink)] text-[var(--paper)]"
     >
       <picture v-if="heroImage" class="contents">
         <source

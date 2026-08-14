@@ -153,8 +153,9 @@
     "p3": "ご連絡は"
   },
   "contact": {
-    "title": "お気軽にお問い合わせください",
-    "eyebrow": "お問い合わせ",
+    "title": "ご予約・お問い合わせ",
+    "eyebrow": "Réservation & Contact",
+    "latin": "HMI Paris — Japanese Concierge & Travel Service",
     "studio": "パリ・スタジオ",
     "intro": "ご希望の日付・人数・詳細をご記入ください。メールにてご返信いたします。",
     "thanks": "ありがとうございます",

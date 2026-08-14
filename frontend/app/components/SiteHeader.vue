@@ -16,6 +16,7 @@ const links = computed(() => {
     { to: '/', label: s.value?.navHome?.trim() || '', home: true },
     { to: '/#event', label: s.value?.navEvent?.trim() || '' },
     { to: '/#services', label: s.value?.navServices?.trim() || '' },
+    { to: '/#destinations', label: s.value?.navTours?.trim() || '' },
     { to: '/about', label: s.value?.navAbout?.trim() || '' },
     { to: '/contact', label: s.value?.navContact?.trim() || '' },
   ]

@@ -141,6 +141,7 @@ export interface CmsSiteSettings {
   navHome: string
   navEvent: string
   navServices: string
+  navTours: string
   navAbout: string
   navContact: string
   navMenu: string

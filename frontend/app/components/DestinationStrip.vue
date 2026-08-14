@@ -19,7 +19,11 @@ function destOptName(url: string) {
 </script>
 
 <template>
-  <section v-if="hasContent" class="bg-[var(--paper)] py-[88px]">
+  <section
+    v-if="hasContent"
+    id="destinations"
+    class="scroll-mt-[calc(74px+2.75rem)] bg-[var(--paper)] py-[88px]"
+  >
     <div class="wrap">
       <p v-if="eyebrow" class="sec-eyebrow">{{ eyebrow }}</p>
       <h2 v-if="title" class="sec-title mt-2.5">{{ title }}</h2>
