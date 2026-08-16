@@ -26,143 +26,45 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Generate static site
         run: npm run generate
 
-      - name: Install SFTP tools
-        working-directory: .
-        run: python3 -m pip install paramiko
-
       - name: Check generated files
         working-directory: .
         run: |
-          echo "Checking Nuxt output..."
           ls -la frontend/.output/public
 
-      - name: Enable IPv6 for SFTP
-        uses: fscarmen/warp-on-actions@v1.4
-        with:
-          stack: dual
-          mode: client
-
-      - name: Deploy to IONOS over SFTP
+      - name: Install sshpass
         working-directory: .
-        timeout-minutes: 5
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y sshpass
+
+      - name: Deploy to IONOS via SFTP
+        working-directory: .
         env:
           SFTP_HOST: ${{ secrets.SFTP_HOST }}
           SFTP_USERNAME: ${{ secrets.SFTP_USERNAME }}
           SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
           SFTP_PORT: ${{ secrets.SFTP_PORT }}
         run: |
-          python3 << 'PY'
-          import os
-          import socket
-          from pathlib import Path
-          import paramiko
+          PORT="${SFTP_PORT:-22}"
 
-          def trim(value: str) -> str:
-              return (value or "").replace("\r", "").strip()
+          echo "Deploying to ${SFTP_HOST}:${PORT}"
 
-          host = trim(os.environ.get("SFTP_HOST", "")).removeprefix("sftp://")
-          user = trim(os.environ.get("SFTP_USERNAME", ""))
-          password = trim(os.environ.get("SFTP_PASSWORD", ""))
-          port_raw = trim(os.environ.get("SFTP_PORT", "")) or "22"
+          cd frontend/.output/public
 
-          if not all([host, user, password]):
-              raise SystemExit("Missing GitHub Actions secrets: SFTP_HOST, SFTP_USERNAME, SFTP_PASSWORD")
+          sshpass -p "$SFTP_PASSWORD" sftp \
+            -o StrictHostKeyChecking=no \
+            -o PreferredAuthentications=password \
+            -o PubkeyAuthentication=no \
+            -P "$PORT" \
+            "$SFTP_USERNAME@$SFTP_HOST" <<EOF
+          cd /public
+          put -r *
+          bye
+          EOF
 
-          port = int(port_raw)
-          if port in (21, 990):
-              raise SystemExit(
-                  f"Port {port} is FTP/FTPS. IONOS Linux hosting requires SFTP on port 22."
-              )
-
-          local_root = Path("frontend/.output/public")
-          remote_root = "/public"
-
-          if not local_root.is_dir():
-              raise SystemExit(f"Missing generated site at {local_root}")
-
-          print(f"SFTP {user}@{host}:{port} -> {remote_root}")
-
-          def resolve_targets(hostname: str, tcp_port: int):
-              seen = set()
-              targets = []
-              for family in (socket.AF_INET6, socket.AF_INET):
-                  try:
-                      infos = socket.getaddrinfo(
-                          hostname,
-                          tcp_port,
-                          family,
-                          socket.SOCK_STREAM,
-                          socket.IPPROTO_TCP,
-                          socket.AI_NUMERICSERV,
-                      )
-                  except OSError as exc:
-                      print(f"DNS {family}: {exc}")
-                      continue
-                  for info in infos:
-                      sockaddr = info[4]
-                      ip = sockaddr[0]
-                      if ip.startswith("::ffff:") or ip in seen:
-                          continue
-                      seen.add(ip)
-                      targets.append((info[0], info[1], info[2], sockaddr, ip))
-              return targets
-
-          def connect_tcp(hostname: str, tcp_port: int, timeout: float = 12):
-              targets = resolve_targets(hostname, tcp_port)
-              if not targets:
-                  raise SystemExit(f"No SFTP addresses found for {hostname}:{tcp_port}")
-              errors = []
-              for family, socktype, proto, sockaddr, ip in targets:
-                  kind = "IPv6" if family == socket.AF_INET6 else "IPv4"
-                  print(f"SFTP TCP {kind} {ip}:{tcp_port} ...")
-                  sock = socket.socket(family, socktype, proto)
-                  sock.settimeout(timeout)
-                  try:
-                      sock.connect(sockaddr)
-                      sock.settimeout(None)
-                      print(f"SFTP TCP connected via {kind} {ip}")
-                      return sock
-                  except OSError as exc:
-                      errors.append(f"{kind} {ip}:{tcp_port} -> {exc}")
-                      sock.close()
-              raise SystemExit("SFTP TCP connect failed:\n" + "\n".join(errors))
-
-          sock = connect_tcp(host, port)
-          transport = paramiko.Transport(sock)
-          transport.banner_timeout = 30
-          transport.connect(username=user, password=password)
-          sftp = paramiko.SFTPClient.from_transport(transport)
-          if sftp is None:
-              raise SystemExit("SSH connected but the server did not offer the SFTP subsystem")
-
-          def ensure_dir(remote_path: str) -> None:
-              parts = [part for part in remote_path.split("/") if part]
-              current = ""
-              for part in parts:
-                  current += f"/{part}"
-                  try:
-                      sftp.stat(current)
-                  except OSError:
-                      sftp.mkdir(current)
-
-          ensure_dir(remote_root)
-          uploaded = 0
-          for path in local_root.rglob("*"):
-              rel = path.relative_to(local_root).as_posix()
-              remote = f"{remote_root}/{rel}"
-              if path.is_dir():
-                  ensure_dir(remote)
-                  continue
-              ensure_dir(str(Path(remote).parent).replace("\\", "/"))
-              sftp.put(str(path), remote)
-              uploaded += 1
-
-          sftp.close()
-          transport.close()
-          print(f"SFTP deploy complete ({uploaded} files)")
-          PY
+          echo "Deployment completed."
