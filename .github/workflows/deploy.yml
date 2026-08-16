@@ -1,0 +1,50 @@
+name: Deploy Nuxt to IONOS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate static site
+        run: npm run generate
+
+      - name: Install lftp
+        working-directory: .
+        run: sudo apt-get update && sudo apt-get install -y lftp
+
+      - name: Deploy to IONOS
+        working-directory: .
+        env:
+          SFTP_HOST: ${{ secrets.SFTP_HOST }}
+          SFTP_USERNAME: ${{ secrets.SFTP_USERNAME }}
+          SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
+          SFTP_PORT: ${{ secrets.SFTP_PORT }}
+        run: |
+          lftp -c "
+          set sftp:auto-confirm yes;
+          open -u \"$SFTP_USERNAME\",\"$SFTP_PASSWORD\" sftp://$SFTP_HOST:$SFTP_PORT;
+          mirror -R --verbose ./frontend/.output/public/ /public/;
+          bye
+          "
