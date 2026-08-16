@@ -44,17 +44,22 @@ jobs:
         working-directory: .
         timeout-minutes: 5
         env:
-          SFTP_HOST: ${{ secrets.SFTP_HOST }}
-          SFTP_USERNAME: ${{ secrets.SFTP_USERNAME }}
+          SFTP_HOST: access-5021134109.webspace-host.com
+          SFTP_USERNAME: su662229
           SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
-          SFTP_PORT: ${{ secrets.SFTP_PORT }}
+          SFTP_PORT: "22"
         run: |
           set -euo pipefail
-          PORT="${SFTP_PORT:-22}"
-          echo "Using SFTP on port ${PORT}"
+
+          if [ -z "${SFTP_PASSWORD}" ]; then
+            echo "Missing GitHub secret SFTP_PASSWORD"
+            exit 1
+          fi
+
+          echo "SFTP ${SFTP_USERNAME}@${SFTP_HOST}:${SFTP_PORT} -> /public"
 
           echo "Checking TCP reachability..."
-          if timeout 12 bash -c "echo >/dev/tcp/${SFTP_HOST}/${PORT}"; then
+          if timeout 12 bash -c "echo >/dev/tcp/${SFTP_HOST}/${SFTP_PORT}"; then
             echo "TCP connect succeeded"
           else
             echo "TCP connect failed — GitHub cannot reach this SFTP host/port"
@@ -66,7 +71,7 @@ jobs:
             -o StrictHostKeyChecking=no \
             -o UserKnownHostsFile=/dev/null \
             -o ConnectTimeout=20 \
-            -P "$PORT" \
+            -P "$SFTP_PORT" \
             "$SFTP_USERNAME@$SFTP_HOST" <<'EOF'
           -mkdir public
           put -r frontend/.output/public/. /public/
