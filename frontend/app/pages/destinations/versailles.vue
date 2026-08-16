@@ -367,7 +367,7 @@ const rays = (() => {
       <p>
         鏡の回廊から大運河の水面まで、すべては一本の直線の上に。<br />その線を離れた先に、王妃の小さな村があります。
       </p>
-      <NuxtLink class="cta latin" to="/contact">ご予約・お問い合わせ</NuxtLink>
+      <NuxtLink class="cta latin" to="/contact?tour=versailles">ご予約・お問い合わせ</NuxtLink>
     </section>
 
     <footer class="versailles-foot">HMI PARIS &nbsp;·&nbsp; CONCIERGE &amp; TRAVEL GUIDE, IN JAPANESE</footer>

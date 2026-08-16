@@ -274,7 +274,7 @@ useSeoMeta({
 
       <div class="cta-band">
         <p class="cta-note">少人数・専用車の特別な一日を、ご一緒に。</p>
-        <NuxtLink class="cta" to="/contact">ご予約・お問い合わせ</NuxtLink>
+        <NuxtLink class="cta" to="/contact?tour=giverny">ご予約・お問い合わせ</NuxtLink>
       </div>
     </div>
   </section>

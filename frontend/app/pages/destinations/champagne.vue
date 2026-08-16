@@ -312,7 +312,7 @@ onMounted(() => {
         <p>
           ご希望の日程、ご人数、コース（①または②）をお知らせください。空き状況をお調べのうえ、折り返しご連絡いたします。お気軽にお申し付けください。
         </p>
-        <NuxtLink class="contact-btn" to="/contact">メールでお問い合わせ</NuxtLink>
+        <NuxtLink class="contact-btn" to="/contact?tour=champagne">メールでお問い合わせ</NuxtLink>
         <a class="contact-mail" href="mailto:info@hmiparis.com">info@hmiparis.com</a>
       </div>
     </section>

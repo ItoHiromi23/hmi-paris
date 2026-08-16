@@ -11,8 +11,6 @@ const eyebrow = computed(() => s.value?.heroEyebrow?.trim() || '')
 const title = computed(() => s.value?.heroTitle?.trim() || '')
 const latin = computed(() => s.value?.heroLatin?.trim() || '')
 const lead = computed(() => s.value?.heroSubtitle?.trim() || '')
-const ctaPrimary = computed(() => s.value?.heroCtaPrimary?.trim() || '')
-const ctaSecondary = computed(() => s.value?.heroCtaSecondary?.trim() || '')
 const heroWidths = [640, 750, 960, 1280, 1600]
 const heroSrc = optSrc('hero', 960)
 const heroSrcset = optSrcSet('hero', heroWidths)
@@ -95,17 +93,6 @@ useSeoMeta({
           >
             {{ lead }}
           </p>
-          <div
-            v-if="ctaPrimary || ctaSecondary"
-            class="fade-up d5 mt-8 flex flex-wrap justify-end gap-4 max-md:justify-start"
-          >
-            <NuxtLink v-if="ctaPrimary" to="/#services" class="btn-solid">{{
-              ctaPrimary
-            }}</NuxtLink>
-            <NuxtLink v-if="ctaSecondary" to="/contact" class="btn-ghost">{{
-              ctaSecondary
-            }}</NuxtLink>
-          </div>
         </div>
       </div>
     </section>

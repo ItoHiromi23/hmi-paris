@@ -26,12 +26,33 @@ const SERVICE_OPTIONS = [
 
 const TOUR_QUERY_MAP: Record<string, string> = {
   'paris-walking-tour': 'パリ街歩きツアー',
+  paris: 'パリ街歩きツアー',
   'mont-saint-michel': 'モンサンミッシェル',
   giverny: 'ジヴェルニー＆ヴェトゥイユ',
   auvers: 'オーヴェル＝シュル＝オワーズ',
+  'auvers-sur-oise': 'オーヴェル＝シュル＝オワーズ',
   versailles: 'ヴェルサイユ宮殿',
   champagne: 'シャンパーニュ地方',
   arc2026: '凱旋門賞2026 観戦バスツアー',
+  'arc-de-triomphe-2026': '凱旋門賞2026 観戦バスツアー',
+}
+
+function resolveServiceFromQuery(raw: string) {
+  const value = asTrimmed(raw)
+  if (!value) return ''
+  const mapped = TOUR_QUERY_MAP[value] || TOUR_QUERY_MAP[value.toLowerCase()]
+  if (mapped) return mapped
+  const options = [...TOUR_OPTIONS, ...SERVICE_OPTIONS]
+  return options.find((option) => option === value) || ''
+}
+
+function prefillFromQuery() {
+  const key = String(route.query.tour || route.query.service || '')
+  const service = resolveServiceFromQuery(key)
+  if (service) {
+    form.service = service
+    form.source = asTrimmed(key) || 'contact-page'
+  }
 }
 
 const form = reactive({
@@ -70,14 +91,6 @@ function asTrimmed(value: unknown): string {
 
 function clearFieldError(key: string) {
   fieldErrors[key] = ''
-}
-
-function prefillFromQuery() {
-  const key = String(route.query.tour || route.query.service || '').trim()
-  if (key && TOUR_QUERY_MAP[key]) {
-    form.service = TOUR_QUERY_MAP[key]
-    form.source = key
-  }
 }
 
 prefillFromQuery()

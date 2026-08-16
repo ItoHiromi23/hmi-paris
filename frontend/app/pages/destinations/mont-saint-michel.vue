@@ -267,7 +267,7 @@ const gallery = [
       </section>
 
       <div class="cta">
-        <NuxtLink to="/contact">お問い合わせはこちら</NuxtLink>
+        <NuxtLink to="/contact?tour=mont-saint-michel">お問い合わせはこちら</NuxtLink>
       </div>
 
       <footer class="msm-foot">

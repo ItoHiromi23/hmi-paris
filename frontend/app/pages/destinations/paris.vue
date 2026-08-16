@@ -491,7 +491,7 @@ const fulldayGalleryB = [
         <p>
           ご希望のエリアやテーマ、日程が決まっていなくても大丈夫です。まずはお気軽にお問い合わせください。
         </p>
-        <NuxtLink to="/contact">お問い合わせはこちら</NuxtLink>
+        <NuxtLink to="/contact?tour=paris">お問い合わせはこちら</NuxtLink>
       </div>
 
       <footer class="paris-foot">

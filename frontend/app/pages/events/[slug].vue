@@ -329,7 +329,7 @@ useSeoMeta({
         <h2 v-if="event.ctaTitle">{{ event.ctaTitle }}</h2>
         <NuxtLink
           v-if="event.ctaButton"
-          :to="localePath('/contact')"
+          :to="{ path: localePath('/contact'), query: { tour: event.slug } }"
           class="event-btn"
         >
           {{ event.ctaButton }}

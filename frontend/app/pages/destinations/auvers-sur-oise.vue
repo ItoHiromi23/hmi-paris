@@ -324,7 +324,7 @@ onBeforeUnmount(() => {
 
     <div class="cta-wrap reveal">
       <p class="cta-note">彼の足跡を、あなた自身の目で。</p>
-      <NuxtLink class="cta" to="/contact">このツアーを予約・お問い合わせ</NuxtLink>
+      <NuxtLink class="cta" to="/contact?tour=auvers-sur-oise">このツアーを予約・お問い合わせ</NuxtLink>
     </div>
   </section>
 </template>
