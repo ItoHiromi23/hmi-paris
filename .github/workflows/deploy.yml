@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -44,35 +45,42 @@ jobs:
         working-directory: .
         timeout-minutes: 5
         env:
-          SFTP_HOST: access-5021134109.webspace-host.com
-          SFTP_USERNAME: su662229
+          SFTP_HOST: ${{ secrets.SFTP_HOST }}
+          SFTP_USERNAME: ${{ secrets.SFTP_USERNAME }}
           SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
-          SFTP_PORT: "22"
+          SFTP_PORT: ${{ secrets.SFTP_PORT }}
         run: |
           set -euo pipefail
 
-          if [ -z "${SFTP_PASSWORD}" ]; then
-            echo "Missing GitHub Actions secret SFTP_PASSWORD"
+          trim() { printf '%s' "$1" | tr -d '\r' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'; }
+          HOST="$(trim "${SFTP_HOST}")"
+          USER="$(trim "${SFTP_USERNAME}")"
+          PASS="$(trim "${SFTP_PASSWORD}")"
+          PORT="$(trim "${SFTP_PORT}")"
+          HOST="${HOST#sftp://}"
+
+          if [ -z "$HOST" ] || [ -z "$USER" ] || [ -z "$PASS" ] || [ -z "$PORT" ]; then
+            echo "Missing GitHub Actions secrets. Add SFTP_HOST, SFTP_USERNAME, SFTP_PORT, and SFTP_PASSWORD."
             exit 1
           fi
 
-          echo "SFTP ${SFTP_USERNAME}@${SFTP_HOST}:${SFTP_PORT} -> /public"
+          echo "SFTP ${USER}@${HOST}:${PORT} -> /public"
 
           echo "Checking TCP reachability..."
-          if timeout 12 bash -c "echo >/dev/tcp/${SFTP_HOST}/${SFTP_PORT}"; then
+          if timeout 12 bash -c "echo >/dev/tcp/${HOST}/${PORT}"; then
             echo "TCP connect succeeded"
           else
             echo "TCP connect failed — GitHub cannot reach this SFTP host/port"
             exit 1
           fi
 
-          export SSHPASS="$SFTP_PASSWORD"
+          export SSHPASS="$PASS"
           sshpass -e sftp -v \
             -o StrictHostKeyChecking=no \
             -o UserKnownHostsFile=/dev/null \
             -o ConnectTimeout=20 \
-            -P "$SFTP_PORT" \
-            "$SFTP_USERNAME@$SFTP_HOST" <<'EOF'
+            -P "$PORT" \
+            "$USER@$HOST" <<'EOF'
           -mkdir public
           put -r frontend/.output/public/. /public/
           bye
