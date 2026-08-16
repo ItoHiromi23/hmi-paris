@@ -142,7 +142,7 @@ export default defineNuxtConfig({
     // Contact form emails via Resend (https://resend.com)
     resendApiKey: process.env.RESEND_API_KEY || '',
     emailFrom: process.env.EMAIL_FROM || 'onboarding@resend.dev',
-    contactTo: process.env.CONTACT_TO || 'arditbhoti@gmail.com',
+    contactTo: process.env.CONTACT_TO || 'info@hmiparis.com',
     public: {
       siteUrl,
     },

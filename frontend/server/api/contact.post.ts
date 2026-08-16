@@ -150,7 +150,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const config = useRuntimeConfig()
-  const fallbackTo = String(config.contactTo || '').trim() || 'arditbhoti@gmail.com'
+  const fallbackTo = String(config.contactTo || '').trim() || 'info@hmiparis.com'
 
   if (body.formType === 'reservation') {
     const name = trimStr(body.name, MAX.name)
