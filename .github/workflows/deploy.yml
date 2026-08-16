@@ -33,7 +33,7 @@ jobs:
 
       - name: Install SFTP tools
         working-directory: .
-        run: sudo apt-get update && sudo apt-get install -y sshpass openssh-client
+        run: sudo apt-get update && sudo apt-get install -y openssh-client
 
       - name: Check generated files
         working-directory: .
@@ -74,14 +74,28 @@ jobs:
             exit 1
           fi
 
-          export SSHPASS="$PASS"
-          sshpass -e sftp -v \
+          ASKPASS="$(mktemp)"
+          BATCH="$(mktemp)"
+          printf '%s\n' '#!/bin/sh' 'printf "%s\n" "$SFTP_ASKPASS_PASSWORD"' > "$ASKPASS"
+          chmod 700 "$ASKPASS"
+          printf '%s\n' \
+            '-mkdir public' \
+            'put -r frontend/.output/public/. /public/' \
+            'bye' > "$BATCH"
+
+          export SFTP_ASKPASS_PASSWORD="$PASS"
+          export SSH_ASKPASS="$ASKPASS"
+          export SSH_ASKPASS_REQUIRE=force
+          export DISPLAY="${DISPLAY:-:0}"
+          unset SSH_AUTH_SOCK
+
+          setsid -w sftp -v \
             -o StrictHostKeyChecking=no \
             -o UserKnownHostsFile=/dev/null \
             -o ConnectTimeout=20 \
+            -o PreferredAuthentications=password \
+            -o PubkeyAuthentication=no \
+            -o NumberOfPasswordPrompts=1 \
             -P "$PORT" \
-            "$USER@$HOST" <<'EOF'
-          -mkdir public
-          put -r frontend/.output/public/. /public/
-          bye
-          EOF
+            -b "$BATCH" \
+            "$USER@$HOST"
