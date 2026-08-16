@@ -44,15 +44,15 @@ jobs:
         working-directory: .
         timeout-minutes: 5
         env:
-          SFTP_HOST: access-5021134109.webspace-host.com
-          SFTP_USERNAME: su662229
+          SFTP_HOST: ${{ secrets.SFTP_HOST }}
+          SFTP_USERNAME: ${{ secrets.SFTP_USERNAME }}
           SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
-          SFTP_PORT: "22"
+          SFTP_PORT: ${{ secrets.SFTP_PORT }}
         run: |
           set -euo pipefail
 
-          if [ -z "${SFTP_PASSWORD}" ]; then
-            echo "Missing GitHub secret SFTP_PASSWORD"
+          if [ -z "${SFTP_HOST}" ] || [ -z "${SFTP_USERNAME}" ] || [ -z "${SFTP_PASSWORD}" ] || [ -z "${SFTP_PORT}" ]; then
+            echo "Missing GitHub Actions secrets: SFTP_HOST, SFTP_USERNAME, SFTP_PASSWORD, SFTP_PORT"
             exit 1
           fi
 
