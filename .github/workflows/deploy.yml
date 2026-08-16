@@ -30,9 +30,9 @@ jobs:
       - name: Generate static site
         run: npm run generate
 
-      - name: Install SFTP tools
+      - name: Install deploy tools
         working-directory: .
-        run: sudo apt-get update && sudo apt-get install -y sshpass openssh-client
+        run: sudo apt-get update && sudo apt-get install -y sshpass openssh-client lftp
 
       - name: Check generated files
         working-directory: .
@@ -49,21 +49,42 @@ jobs:
           SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
           SFTP_PORT: ${{ secrets.SFTP_PORT }}
         run: |
-          set -euo pipefail
+          set -uo pipefail
           PORT="${SFTP_PORT:-22}"
+          echo "Host chars: ${#SFTP_HOST} / user chars: ${#SFTP_USERNAME} / port chars: ${#PORT}"
 
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
-          ssh-keyscan -4 -p "$PORT" -T 20 "$SFTP_HOST" >> ~/.ssh/known_hosts
+          echo "Checking TCP reachability..."
+          if timeout 12 bash -c "echo >/dev/tcp/${SFTP_HOST}/${PORT}"; then
+            echo "TCP connect succeeded"
+          else
+            echo "TCP connect failed — GitHub cannot reach this host/port"
+            exit 1
+          fi
 
-          export SSHPASS="$SFTP_PASSWORD"
-
-          sshpass -e sftp -v \
-            -o AddressFamily=inet \
-            -o StrictHostKeyChecking=yes \
-            -P "$PORT" \
-            "$SFTP_USERNAME@$SFTP_HOST" <<'EOF'
+          if [ "$PORT" = "21" ] || [ "$PORT" = "990" ]; then
+            echo "Using FTPS"
+            lftp -c "
+            set ssl:verify-certificate no;
+            set ftp:ssl-force true;
+            set ftp:ssl-protect-data true;
+            set net:timeout 25;
+            set net:max-retries 2;
+            set cmd:fail-exit yes;
+            open -u \"${SFTP_USERNAME}\",\"${SFTP_PASSWORD}\" ftp://${SFTP_HOST}:${PORT};
+            mirror -R --verbose --parallel=1 ./frontend/.output/public/ /public/;
+            bye
+            "
+          else
+            echo "Using SFTP"
+            export SSHPASS="$SFTP_PASSWORD"
+            sshpass -e sftp -v \
+              -o StrictHostKeyChecking=no \
+              -o UserKnownHostsFile=/dev/null \
+              -o ConnectTimeout=20 \
+              -P "$PORT" \
+              "$SFTP_USERNAME@$SFTP_HOST" <<'EOF'
           -mkdir public
           put -r frontend/.output/public/. /public/
           bye
           EOF
+          fi
