@@ -30,9 +30,9 @@ jobs:
       - name: Generate static site
         run: npm run generate
 
-      - name: Install lftp
+      - name: Install SFTP tools
         working-directory: .
-        run: sudo apt-get update && sudo apt-get install -y lftp
+        run: sudo apt-get update && sudo apt-get install -y sshpass openssh-client
 
       - name: Check generated files
         working-directory: .
@@ -42,32 +42,28 @@ jobs:
 
       - name: Deploy to IONOS
         working-directory: .
-        timeout-minutes: 3
+        timeout-minutes: 5
         env:
           SFTP_HOST: ${{ secrets.SFTP_HOST }}
           SFTP_USERNAME: ${{ secrets.SFTP_USERNAME }}
           SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
           SFTP_PORT: ${{ secrets.SFTP_PORT }}
         run: |
-          echo "Connecting to $SFTP_HOST:$SFTP_PORT..."
+          set -euo pipefail
+          PORT="${SFTP_PORT:-22}"
 
-          lftp -c "
-          set net:timeout 15;
-          set net:max-retries 1;
-          set net:reconnect-interval-base 5;
-          set sftp:auto-confirm yes;
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          ssh-keyscan -4 -p "$PORT" -T 20 "$SFTP_HOST" >> ~/.ssh/known_hosts
 
-          open -u \"$SFTP_USERNAME\",\"$SFTP_PASSWORD\" sftp://$SFTP_HOST:$SFTP_PORT;
+          export SSHPASS="$SFTP_PASSWORD"
 
-          echo Connected to IONOS;
-
-          pwd;
-          ls;
-
-          mirror -R \
-            --verbose \
-            ./frontend/.output/public/ \
-            /public/;
-
-          bye;
-          "
+          sshpass -e sftp -v \
+            -o AddressFamily=inet \
+            -o StrictHostKeyChecking=yes \
+            -P "$PORT" \
+            "$SFTP_USERNAME@$SFTP_HOST" <<'EOF'
+          -mkdir public
+          put -r frontend/.output/public/. /public/
+          bye
+          EOF
