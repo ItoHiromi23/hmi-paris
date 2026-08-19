@@ -62,7 +62,13 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   // Devtools adds third-party cookies / console noise in Lighthouse — local only
   devtools: { enabled: !isProd },
-  modules: ['@nuxtjs/tailwindcss', '@nuxt/image', '@nuxtjs/i18n', '@vercel/analytics'],
+  modules: [
+    '@nuxtjs/tailwindcss',
+    '@nuxt/image',
+    '@nuxtjs/i18n',
+    '@vercel/analytics/nuxt',
+    '@vercel/speed-insights/nuxt',
+  ],
   i18n: {
     locales: [{ code: 'ja', language: 'ja', name: '日本語', file: 'ja.json' }],
     defaultLocale: 'ja',
