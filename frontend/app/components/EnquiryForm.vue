@@ -20,15 +20,19 @@ const LATIN_NAME_RE = /^[A-Za-z]+(?:[ '\-][A-Za-z]+)*$/
 /** Characters allowed while typing names. */
 const LATIN_NAME_CHARS_RE = /[^A-Za-z '\-]/g
 
-const form = reactive({
-  firstName: '',
-  lastName: '',
-  email: '',
-  people: '' as string | number,
-  date: '',
-  description: '',
-  website: '',
-})
+function initialForm() {
+  return {
+    firstName: '',
+    lastName: '',
+    email: '',
+    people: '' as string | number,
+    date: '',
+    description: '',
+    website: '',
+  }
+}
+
+const form = reactive(initialForm())
 
 const fieldErrors = reactive<Record<string, string>>({
   firstName: '',
@@ -42,6 +46,7 @@ const fieldErrors = reactive<Record<string, string>>({
 const sent = ref(false)
 const sending = ref(false)
 const formError = ref('')
+let suppressSentReset = false
 
 const minDate = computed(() => {
   const d = new Date()
@@ -65,6 +70,23 @@ function asTrimmed(value: unknown): string {
 function clearFieldError(key: keyof typeof fieldErrors) {
   fieldErrors[key] = ''
 }
+
+function resetForm() {
+  suppressSentReset = true
+  Object.assign(form, initialForm())
+  for (const key of Object.keys(fieldErrors)) fieldErrors[key] = ''
+  formError.value = ''
+  suppressSentReset = false
+}
+
+watch(
+  form,
+  () => {
+    if (suppressSentReset || !sent.value) return
+    sent.value = false
+  },
+  { deep: true },
+)
 
 function sanitizeLatinName(value: string): string {
   return value.replace(LATIN_NAME_CHARS_RE, '')
@@ -180,6 +202,7 @@ async function onSubmit() {
 
   sending.value = true
   formError.value = ''
+  sent.value = false
 
   try {
     await $fetch('/api/contact', {
@@ -195,6 +218,7 @@ async function onSubmit() {
         tourSlug: props.tourSlug || undefined,
       },
     })
+    resetForm()
     sent.value = true
   } catch (err: unknown) {
     const payload = err as {
@@ -214,13 +238,13 @@ async function onSubmit() {
 
 <template>
   <form class="relative space-y-6" novalidate @submit.prevent="onSubmit">
-    <div v-if="sent" class="text-[var(--heading)]">
+    <div v-if="sent" class="mb-8 text-[var(--heading)]" role="status">
       <p class="font-display text-3xl text-[var(--teal)]">{{ t('contact.thanks') }}</p>
       <p class="mt-3 text-[var(--muted-fg)]">
         {{ t('contact.successNote') }}
       </p>
     </div>
-    <template v-else>
+    <template>
       <div class="absolute -left-[9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
         <label>
           Website

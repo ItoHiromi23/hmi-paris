@@ -117,7 +117,7 @@ async function deliver(payload: Parameters<typeof sendContactEmail>[0]) {
   const result = await sendContactEmail(payload)
 
   if (!result.sent) {
-    if (result.reason === 'not_configured') {
+    if (result.reason === 'not_configured' && process.env.NODE_ENV !== 'production') {
       console.info('[contact] Accepted (email not configured)', {
         formType: payload.formType || 'enquiry',
         email: payload.email,
@@ -128,9 +128,14 @@ async function deliver(payload: Parameters<typeof sendContactEmail>[0]) {
     }
 
     throw createError({
-      statusCode: 502,
+      statusCode: result.reason === 'not_configured' ? 503 : 502,
       statusMessage: 'Failed to send message',
-      data: { reason: result.reason || 'send_failed' },
+      data: {
+        reason: result.reason || 'send_failed',
+        ...(result.detail && process.env.NODE_ENV !== 'production'
+          ? { detail: result.detail }
+          : {}),
+      },
     })
   }
 

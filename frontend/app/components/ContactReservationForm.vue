@@ -55,19 +55,23 @@ function prefillFromQuery() {
   }
 }
 
-const form = reactive({
-  service: '',
-  preferredDate: '',
-  secondDate: '',
-  partySize: '',
-  hotel: '',
-  name: '',
-  email: '',
-  phone: '',
-  message: '',
-  website: '',
-  source: 'contact-page',
-})
+function initialForm() {
+  return {
+    service: '',
+    preferredDate: '',
+    secondDate: '',
+    partySize: '',
+    hotel: '',
+    name: '',
+    email: '',
+    phone: '',
+    message: '',
+    website: '',
+    source: 'contact-page',
+  }
+}
+
+const form = reactive(initialForm())
 
 const fieldErrors = reactive<Record<string, string>>({
   service: '',
@@ -83,6 +87,7 @@ const fieldErrors = reactive<Record<string, string>>({
 const sent = ref(false)
 const sending = ref(false)
 const formError = ref('')
+let suppressSentReset = false
 
 function asTrimmed(value: unknown): string {
   if (value == null) return ''
@@ -93,11 +98,29 @@ function clearFieldError(key: string) {
   fieldErrors[key] = ''
 }
 
+function resetForm() {
+  suppressSentReset = true
+  Object.assign(form, initialForm())
+  for (const key of Object.keys(fieldErrors)) fieldErrors[key] = ''
+  formError.value = ''
+  prefillFromQuery()
+  suppressSentReset = false
+}
+
 prefillFromQuery()
 
 watch(
   () => [route.query.tour, route.query.service],
   () => prefillFromQuery(),
+)
+
+watch(
+  form,
+  () => {
+    if (suppressSentReset || !sent.value) return
+    sent.value = false
+  },
+  { deep: true },
 )
 
 function todayIso() {
@@ -211,6 +234,7 @@ async function onSubmit() {
 
   sending.value = true
   formError.value = ''
+  sent.value = false
 
   try {
     await $fetch('/api/contact', {
@@ -230,6 +254,7 @@ async function onSubmit() {
         source: form.source,
       },
     })
+    resetForm()
     sent.value = true
   } catch (err: unknown) {
     const payload = err as {
@@ -249,11 +274,11 @@ async function onSubmit() {
 
 <template>
   <section aria-label="お問い合わせフォーム" class="form-card">
-    <div v-if="sent">
+    <div v-if="sent" class="thanks" role="status">
       <p class="thanks-title">{{ t('contact.thanks') }}</p>
       <p class="thanks-note">{{ t('contact.successNote') }}</p>
     </div>
-    <form v-else novalidate @submit.prevent="onSubmit">
+    <form novalidate @submit.prevent="onSubmit">
       <p class="form-note">
         <span class="req">＊</span>
         {{ t('contact.formNote') }}
@@ -542,6 +567,11 @@ async function onSubmit() {
   max-width: 31em;
   line-height: 1.65;
   margin: 0;
+}
+.thanks {
+  margin-bottom: 28px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--line);
 }
 .thanks-title {
   font-family: var(--mincho);

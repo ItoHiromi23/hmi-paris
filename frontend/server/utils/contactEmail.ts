@@ -23,6 +23,7 @@ export interface ContactEmailResult {
   sent: boolean
   provider: 'resend' | 'none'
   reason?: string
+  detail?: string
   id?: string
 }
 
@@ -153,6 +154,10 @@ function buildText(payload: ContactEmailPayload) {
   return lines.filter((line) => line !== null).join('\n')
 }
 
+function env(name: string) {
+  return String(process.env[name] || '').trim()
+}
+
 /**
  * Sends a contact-form enquiry via Resend when RESEND_API_KEY is set.
  * Sets replyTo to the visitor so studio staff can answer in-thread.
@@ -161,8 +166,15 @@ export async function sendContactEmail(
   payload: ContactEmailPayload,
 ): Promise<ContactEmailResult> {
   const config = useRuntimeConfig()
-  const apiKey = String(config.resendApiKey || '')
-  const from = String(config.emailFrom || 'onboarding@resend.dev')
+  const apiKey =
+    String(config.resendApiKey || '').trim() ||
+    env('RESEND_API_KEY') ||
+    env('NUXT_RESEND_API_KEY')
+  const from =
+    String(config.emailFrom || '').trim() ||
+    env('EMAIL_FROM') ||
+    env('NUXT_EMAIL_FROM') ||
+    'HMI Paris <onboarding@resend.dev>'
 
   if (!payload.to?.includes('@')) {
     return { sent: false, provider: 'none', reason: 'missing_recipient' }
@@ -192,13 +204,28 @@ export async function sendContactEmail(
     })
 
     if (error) {
-      console.error('[email] Resend error', error)
-      return { sent: false, provider: 'resend', reason: 'send_failed' }
+      console.error('[email] Resend error', {
+        name: error.name,
+        message: error.message,
+        from,
+        to: payload.to,
+      })
+      return {
+        sent: false,
+        provider: 'resend',
+        reason: 'send_failed',
+        detail: error.message,
+      }
     }
 
     return { sent: true, provider: 'resend', id: data?.id }
   } catch (err) {
     console.error('[email] Failed to send contact message', err)
-    return { sent: false, provider: 'resend', reason: 'send_failed' }
+    return {
+      sent: false,
+      provider: 'resend',
+      reason: 'send_failed',
+      detail: err instanceof Error ? err.message : 'send_failed',
+    }
   }
 }

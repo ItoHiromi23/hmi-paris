@@ -140,8 +140,9 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     // Contact form emails via Resend (https://resend.com)
+    // Set these on the host (Vercel/Railway). Nuxt also accepts NUXT_RESEND_API_KEY, etc.
     resendApiKey: process.env.RESEND_API_KEY || '',
-    emailFrom: process.env.EMAIL_FROM || 'onboarding@resend.dev',
+    emailFrom: process.env.EMAIL_FROM || 'HMI Paris <onboarding@resend.dev>',
     contactTo: process.env.CONTACT_TO || 'info@hmiparis.com',
     public: {
       siteUrl,
@@ -156,8 +157,9 @@ export default defineNuxtConfig({
     },
   },
   nitro: {
-    // Node process: prerendered pages + /api/contact for mail
-    preset: 'node-server',
+    // Vercel needs its own preset so POST /api/contact becomes a serverless function.
+    // Railway / a plain Node host still uses the standalone server.
+    preset: process.env.VERCEL ? 'vercel' : 'node-server',
     compressPublicAssets: true,
     minify: true,
     prerender: {
