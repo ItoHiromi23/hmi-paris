@@ -18,6 +18,8 @@
     "@nuxt/image": "^2.0.0",
     "@nuxtjs/i18n": "^10.4.1",
     "@nuxtjs/tailwindcss": "^6.14.0",
+    "@esbuild/linux-x64": "0.28.1",
+    "@rolldown/binding-linux-x64-gnu": "1.1.5",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
     "nuxt": "^4.4.8",
