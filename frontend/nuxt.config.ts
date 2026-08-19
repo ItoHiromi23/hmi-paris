@@ -62,13 +62,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   // Devtools adds third-party cookies / console noise in Lighthouse — local only
   devtools: { enabled: !isProd },
-  modules: [
-    '@nuxtjs/tailwindcss',
-    '@nuxt/image',
-    '@nuxtjs/i18n',
-    '@vercel/analytics/nuxt',
-    '@vercel/speed-insights/nuxt',
-  ],
+  modules: ['@nuxtjs/tailwindcss', '@nuxt/image', '@nuxtjs/i18n'],
   i18n: {
     locales: [{ code: 'ja', language: 'ja', name: '日本語', file: 'ja.json' }],
     defaultLocale: 'ja',
@@ -120,6 +114,12 @@ export default defineNuxtConfig({
         { name: 'twitter:image:alt', content: 'HMI Paris' },
         { name: 'robots', content: 'index, follow' },
       ],
+      script: process.env.VERCEL
+        ? [
+            { src: '/_vercel/insights/script.js', defer: true },
+            { src: '/_vercel/speed-insights/script.js', defer: true },
+          ]
+        : [],
       link: [
         { rel: 'icon', href: '/favicon.ico', sizes: '32x32' },
         { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon-16x16.png' },
