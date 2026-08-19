@@ -21,8 +21,8 @@ if (isProd) {
     "img-src 'self' data: blob:",
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' data: https://fonts.gstatic.com",
-    "script-src 'self' 'unsafe-inline'",
-    "connect-src 'self'",
+    "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com",
+    "connect-src 'self' https://vitals.vercel-insights.com https://va.vercel-scripts.com",
     "frame-ancestors 'self'",
     "base-uri 'self'",
     "form-action 'self'",
@@ -62,7 +62,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   // Devtools adds third-party cookies / console noise in Lighthouse — local only
   devtools: { enabled: !isProd },
-  modules: ['@nuxtjs/tailwindcss', '@nuxt/image', '@nuxtjs/i18n'],
+  modules: ['@nuxtjs/tailwindcss', '@nuxt/image', '@nuxtjs/i18n', '@vercel/analytics'],
   i18n: {
     locales: [{ code: 'ja', language: 'ja', name: '日本語', file: 'ja.json' }],
     defaultLocale: 'ja',
