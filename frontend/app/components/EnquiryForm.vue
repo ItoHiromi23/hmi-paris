@@ -43,10 +43,9 @@ const fieldErrors = reactive<Record<string, string>>({
   description: '',
 })
 
-const sent = ref(false)
 const sending = ref(false)
 const formError = ref('')
-let suppressSentReset = false
+const { showThanks } = useContactThanks()
 
 const minDate = computed(() => {
   const d = new Date()
@@ -70,23 +69,6 @@ function asTrimmed(value: unknown): string {
 function clearFieldError(key: keyof typeof fieldErrors) {
   fieldErrors[key] = ''
 }
-
-function resetForm() {
-  suppressSentReset = true
-  Object.assign(form, initialForm())
-  for (const key of Object.keys(fieldErrors)) fieldErrors[key] = ''
-  formError.value = ''
-  suppressSentReset = false
-}
-
-watch(
-  form,
-  () => {
-    if (suppressSentReset || !sent.value) return
-    sent.value = false
-  },
-  { deep: true },
-)
 
 function sanitizeLatinName(value: string): string {
   return value.replace(LATIN_NAME_CHARS_RE, '')
@@ -202,7 +184,6 @@ async function onSubmit() {
 
   sending.value = true
   formError.value = ''
-  sent.value = false
 
   try {
     await $fetch('/api/contact', {
@@ -218,8 +199,7 @@ async function onSubmit() {
         tourSlug: props.tourSlug || undefined,
       },
     })
-    resetForm()
-    sent.value = true
+    showThanks()
   } catch (err: unknown) {
     const payload = err as {
       data?: { data?: { fieldErrors?: Record<string, string> }; fieldErrors?: Record<string, string> }
@@ -238,13 +218,6 @@ async function onSubmit() {
 
 <template>
   <form class="relative space-y-6" novalidate @submit.prevent="onSubmit">
-    <div v-if="sent" class="mb-8 text-[var(--heading)]" role="status">
-      <p class="font-display text-3xl text-[var(--teal)]">{{ t('contact.thanks') }}</p>
-      <p class="mt-3 text-[var(--muted-fg)]">
-        {{ t('contact.successNote') }}
-      </p>
-    </div>
-    <template>
       <div class="absolute -left-[9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
         <label>
           Website
@@ -379,6 +352,5 @@ async function onSubmit() {
       <button type="submit" class="btn-primary mt-4" :disabled="sending">
         {{ sending ? t('contact.sending') : buttonLabel }}
       </button>
-    </template>
-  </form>
+    </form>
 </template>

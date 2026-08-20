@@ -39,6 +39,7 @@ const prerenderRoutes = [
   '/events',
   '/about',
   '/contact',
+  '/thanks',
   '/privacy',
   '/legal',
   '/cookies',
@@ -147,9 +148,13 @@ export default defineNuxtConfig({
   runtimeConfig: {
     // Contact form emails via Resend (https://resend.com)
     // Set these on the host (Vercel/Railway). Nuxt also accepts NUXT_RESEND_API_KEY, etc.
-    resendApiKey: process.env.RESEND_API_KEY || '',
-    emailFrom: process.env.EMAIL_FROM || 'HMI Paris <onboarding@resend.dev>',
-    contactTo: process.env.CONTACT_TO || 'info@hmiparis.com',
+    resendApiKey: process.env.NUXT_RESEND_API_KEY || process.env.RESEND_API_KEY || '',
+    emailFrom:
+      process.env.NUXT_EMAIL_FROM ||
+      process.env.EMAIL_FROM ||
+      'HMI Paris <onboarding@resend.dev>',
+    contactTo:
+      process.env.NUXT_CONTACT_TO || process.env.CONTACT_TO || 'info@hmiparis.com',
     public: {
       siteUrl,
     },
@@ -198,6 +203,7 @@ export default defineNuxtConfig({
           'Cache-Control': 'public, max-age=2592000, stale-while-revalidate=604800',
         },
       },
+      '/thanks.html': { redirect: { to: '/thanks', statusCode: 301 } },
       '/api/contact': {
         prerender: false,
         headers: { ...securityHeaders, 'Cache-Control': 'no-store' },

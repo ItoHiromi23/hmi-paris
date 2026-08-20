@@ -249,6 +249,27 @@ const jobs = [
     webp: 55,
   })),
   {
+    src: 'public/images/events/arc-about.jpg',
+    name: 'arc-about',
+    widths: [640, 900, 1200],
+    avif: 48,
+    webp: 55,
+  },
+  {
+    src: 'public/images/events/arc-highlights.jpg',
+    name: 'arc-highlights',
+    widths: [640, 900, 1200],
+    avif: 48,
+    webp: 55,
+  },
+  {
+    src: 'public/images/events/arc-meeting.jpg',
+    name: 'arc-meeting',
+    widths: [400, 760],
+    avif: 48,
+    webp: 55,
+  },
+  {
     src: 'public/images/home/logo-header.png',
     name: 'logo-header',
     widths: [160, 200, 320],

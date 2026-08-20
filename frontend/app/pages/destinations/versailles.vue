@@ -952,29 +952,15 @@ const rays = (() => {
 @media (max-width: 900px) {
   .versailles-page .hero {
     aspect-ratio: auto;
-    padding: 0 0 3.2rem;
-    justify-content: flex-start;
-  }
-
-  .versailles-page .hero-media,
-  .versailles-page .hero-photo {
-    position: relative;
-    height: auto;
-  }
-
-  .versailles-page .hero-photo {
-    display: block;
-  }
-
-  .versailles-page .hero::after,
-  .versailles-page .sun {
-    display: none;
+    min-height: min(92svh, 720px);
+    padding: 6rem 1.4rem 3.4rem;
+    justify-content: center;
   }
 
   .versailles-page .hero-inner {
     position: relative;
     z-index: 2;
-    padding: 2.2rem 26px 0;
+    padding: 0;
   }
 }
 

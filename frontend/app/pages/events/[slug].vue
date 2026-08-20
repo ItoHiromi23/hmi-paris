@@ -97,6 +97,13 @@ useSeoMeta({
   title: () => `${event.value?.title || ''} | HMI Paris`,
   description: () => event.value?.summary || '',
 })
+
+const storyWidths = [640, 900, 1200]
+const meetingWidths = [400, 760]
+
+function optName(url: string) {
+  return (url.split('/').pop() || '').replace(/\.[^.]+$/, '')
+}
 </script>
 
 <template>
@@ -145,16 +152,23 @@ useSeoMeta({
         <p v-if="event.aboutLead" class="event-lead">{{ event.aboutLead }}</p>
         <p v-for="(paragraph, i) in aboutParagraphs" :key="i">{{ paragraph }}</p>
         <figure v-if="event.aboutImageUrl">
-          <img
-            :src="optimizeImageUrl(event.aboutImageUrl, 1200, 70)"
-            :srcset="imageSrcSet(event.aboutImageUrl, [640, 900, 1200], 70)"
-            sizes="(max-width: 900px) 100vw, 720px"
-            :alt="event.aboutImageCaption || event.aboutTitle"
-            width="1400"
-            height="1050"
-            loading="lazy"
-            decoding="async"
-          />
+          <picture>
+            <source
+              type="image/avif"
+              :srcset="optSrcSet(optName(event.aboutImageUrl), storyWidths, 'avif')"
+              sizes="(max-width: 900px) 100vw, 720px"
+            />
+            <img
+              :src="optSrc(optName(event.aboutImageUrl), 1200)"
+              :srcset="optSrcSet(optName(event.aboutImageUrl), storyWidths)"
+              sizes="(max-width: 900px) 100vw, 720px"
+              :alt="event.aboutImageCaption || event.aboutTitle"
+              width="1400"
+              height="1050"
+              loading="lazy"
+              decoding="async"
+            />
+          </picture>
           <figcaption v-if="event.aboutImageCaption">{{ event.aboutImageCaption }}</figcaption>
         </figure>
       </div>
@@ -178,16 +192,23 @@ useSeoMeta({
         </div>
 
         <figure v-if="event.highlightsImageUrl">
-          <img
-            :src="optimizeImageUrl(event.highlightsImageUrl, 1200, 70)"
-            :srcset="imageSrcSet(event.highlightsImageUrl, [640, 900, 1200], 70)"
-            sizes="(max-width: 900px) 100vw, 720px"
-            :alt="event.highlightsImageCaption || event.highlightsTitle"
-            width="1400"
-            height="1050"
-            loading="lazy"
-            decoding="async"
-          />
+          <picture>
+            <source
+              type="image/avif"
+              :srcset="optSrcSet(optName(event.highlightsImageUrl), storyWidths, 'avif')"
+              sizes="(max-width: 900px) 100vw, 720px"
+            />
+            <img
+              :src="optSrc(optName(event.highlightsImageUrl), 1200)"
+              :srcset="optSrcSet(optName(event.highlightsImageUrl), storyWidths)"
+              sizes="(max-width: 900px) 100vw, 720px"
+              :alt="event.highlightsImageCaption || event.highlightsTitle"
+              width="1400"
+              height="1050"
+              loading="lazy"
+              decoding="async"
+            />
+          </picture>
           <figcaption v-if="event.highlightsImageCaption">
             {{ event.highlightsImageCaption }}
           </figcaption>
@@ -234,16 +255,23 @@ useSeoMeta({
           class="event-meet"
         >
           <figure v-if="event.meetingImageUrl">
-            <img
-              :src="optimizeImageUrl(event.meetingImageUrl, 760, 70)"
-              :srcset="imageSrcSet(event.meetingImageUrl, [400, 760], 70)"
-              sizes="(max-width: 768px) 100vw, 380px"
-              :alt="event.meetingImageCaption || event.meetingTitle"
-              width="760"
-              height="1013"
-              loading="lazy"
-              decoding="async"
-            />
+            <picture>
+              <source
+                type="image/avif"
+                :srcset="optSrcSet(optName(event.meetingImageUrl), meetingWidths, 'avif')"
+                sizes="(max-width: 768px) 100vw, 380px"
+              />
+              <img
+                :src="optSrc(optName(event.meetingImageUrl), 760)"
+                :srcset="optSrcSet(optName(event.meetingImageUrl), meetingWidths)"
+                sizes="(max-width: 768px) 100vw, 380px"
+                :alt="event.meetingImageCaption || event.meetingTitle"
+                width="760"
+                height="1013"
+                loading="lazy"
+                decoding="async"
+              />
+            </picture>
             <figcaption v-if="event.meetingImageCaption">
               {{ event.meetingImageCaption }}
             </figcaption>

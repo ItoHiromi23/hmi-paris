@@ -1173,20 +1173,16 @@ const fulldayGalleryB = [
 @media (max-width: 900px) {
   .paris-page .hero {
     aspect-ratio: auto;
+    min-height: min(92svh, 720px);
     display: flex;
     flex-direction: column;
   }
 
-  .paris-page .hero picture,
-  .paris-page .hero-img {
-    position: relative;
-    height: auto;
-  }
-
   .paris-page .hero-overlay {
     position: relative;
-    padding: 2.2rem 1.4rem 2.4rem;
-    background: #0b1220;
+    flex: 1;
+    min-height: inherit;
+    padding: 6rem 1.4rem 3.4rem;
   }
 }
 

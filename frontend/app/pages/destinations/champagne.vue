@@ -73,14 +73,16 @@ onMounted(() => {
   const wrap = bubblesEl.value
   if (!wrap) return
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-  for (let i = 0; i < 26; i++) {
+  for (let i = 0; i < 18; i++) {
     const b = document.createElement('span')
-    const size = 4 + Math.random() * 12
+    const size = 4 + Math.random() * 10
+    const drift = (Math.random() - 0.5) * 8
     b.style.width = `${size}px`
     b.style.height = `${size}px`
-    b.style.left = `${Math.random() * 100}%`
-    b.style.animationDuration = `${7 + Math.random() * 9}s`
-    b.style.animationDelay = `${-Math.random() * 12}s`
+    b.style.left = `calc(50% + ${drift}px)`
+    b.style.marginLeft = `${-size / 2}px`
+    b.style.animationDuration = `${4 + Math.random() * 5}s`
+    b.style.animationDelay = `${-Math.random() * 8}s`
     wrap.appendChild(b)
   }
 })
@@ -104,8 +106,10 @@ onMounted(() => {
         />
       </picture>
       <div class="hero-veil" />
-      <div ref="bubblesEl" class="bubbles" aria-hidden="true" />
-      <div class="hero-mark">Champagne</div>
+      <div class="hero-spark">
+        <div ref="bubblesEl" class="bubbles" aria-hidden="true" />
+        <div class="hero-mark">Champagne</div>
+      </div>
       <h1>
         シャンパーニュ地方<br /><span class="accent">― 白亜のカーヴをめぐる、泡の旅</span>
       </h1>
@@ -401,9 +405,14 @@ onMounted(() => {
     linear-gradient(180deg, rgba(20, 31, 56, 0.72) 0%, rgba(20, 31, 56, 0.55) 45%, rgba(20, 31, 56, 0.88) 100%);
 }
 
-.champagne-page .hero > *:not(.hero-photo):not(.hero-veil):not(.bubbles) {
+.champagne-page .hero > *:not(.hero-photo):not(.hero-veil) {
   position: relative;
   z-index: 2;
+}
+
+.champagne-page .hero-spark {
+  position: relative;
+  margin-bottom: 2.4rem;
 }
 
 .champagne-page .gallery {
@@ -446,14 +455,19 @@ onMounted(() => {
 
 .champagne-page .bubbles {
   position: absolute;
-  inset: 0;
+  left: 50%;
+  bottom: 0.4em;
+  transform: translateX(-50%);
+  width: 22px;
+  height: min(36vh, 240px);
+  overflow: hidden;
   z-index: 1;
   pointer-events: none;
 }
 
 .champagne-page .bubbles span {
   position: absolute;
-  bottom: -40px;
+  bottom: 0;
   border-radius: 50%;
   background: radial-gradient(circle at 35% 30%, rgba(216, 184, 120, 0.55), rgba(184, 145, 80, 0.08) 70%);
   box-shadow: 0 0 6px rgba(216, 184, 120, 0.25);
@@ -463,28 +477,32 @@ onMounted(() => {
 
 @keyframes champagne-rise {
   0% {
-    transform: translateY(0) scale(0.8);
+    bottom: 0;
+    transform: scale(0.8);
     opacity: 0;
   }
   12% {
     opacity: 0.9;
   }
   88% {
-    opacity: 0.6;
+    opacity: 0.55;
   }
   100% {
-    transform: translateY(-96vh) scale(1.1);
+    bottom: 100%;
+    transform: scale(1.05);
     opacity: 0;
   }
 }
 
 .champagne-page .hero-mark {
+  position: relative;
+  z-index: 2;
   font-family: var(--serif);
   letter-spacing: 0.5em;
   font-size: 0.9rem;
   color: var(--brass-light);
   text-transform: uppercase;
-  margin-bottom: 2.4rem;
+  margin-bottom: 0;
   padding-left: 0.5em;
   opacity: 0;
   animation: champagne-fade 1.4s ease 0.2s forwards;
@@ -961,28 +979,9 @@ onMounted(() => {
 
   .champagne-page .hero {
     aspect-ratio: auto;
-    padding: 0 1.5rem 2.8rem;
-    justify-content: flex-start;
-  }
-
-  .champagne-page .hero-photo {
-    position: relative;
-    height: auto;
-  }
-
-  .champagne-page .hero-photo img {
-    display: block;
-    height: auto;
-    opacity: 0.72;
-  }
-
-  .champagne-page .hero-veil,
-  .champagne-page .bubbles {
-    display: none;
-  }
-
-  .champagne-page .hero-mark {
-    margin-top: 2rem;
+    min-height: min(92svh, 720px);
+    padding: 6rem 1.4rem 3.4rem;
+    justify-content: center;
   }
 
   .champagne-page .gallery-grid {
